@@ -17,6 +17,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      themeMode: ThemeMode.system,
+      theme: ThemeData(
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(fontSize: 14, color: Colors.green)
+        )
+      ),
+      darkTheme: ThemeData(),
       color: Colors.black,
       routes: {
         '/onboarding': (context) => OnboardingScreen(),
