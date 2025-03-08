@@ -1,4 +1,3 @@
-import 'package:fitness_tracker/screens/Login/login.dart';
 import 'package:fitness_tracker/screens/signup.widgets/signup.dart';
 import 'package:fitness_tracker/utils/helpers/helpers_function.dart';
 import 'package:flutter/material.dart';
