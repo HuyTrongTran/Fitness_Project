@@ -1,7 +1,8 @@
-import 'package:fitness_tracker/utils/constants/colors%20.dart';
 import 'package:fitness_tracker/models/DetailPageButton.dart';
 import 'package:fitness_tracker/models/DetailPageTitle.dart';
 import 'package:flutter/material.dart';
+
+import '../../utils/constants/colors.dart';
 
 class GenderPage extends StatefulWidget {
   const GenderPage({super.key});
@@ -18,7 +19,7 @@ class _GenderPageState extends State<GenderPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: TColors.light,
       body: Container(
         padding: EdgeInsets.only(
           top: size.height * 0.06,
@@ -27,13 +28,13 @@ class _GenderPageState extends State<GenderPage> {
           bottom: size.height * 0.03,
         ),
         width: size.width,
-        height: size.height,
+        height: size.height * 0.95,
         child: Column(
           children: [
             Detailpagetitle(
-              title: "Tell Us ABout Yourself",
+              title: "Tell Us About Yourself",
               text: "This will help us to find the best \n content for you",
-              color: Colors.white,
+              color: TColors.textPrimary,
             ),
             SizedBox(height: size.height * 0.02),
             GenderIcon(
@@ -94,34 +95,37 @@ class GenderIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    final double circleSize =
+        size.width * 0.3; // Adjust this value to make the circle smaller
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        width: circleSize, // Set fixed width
+        height: circleSize, // Set fixed height
         padding: EdgeInsets.all(size.width * 0.05),
         decoration: BoxDecoration(
-          color: isSelected ? PrimaryColor : Colors.transparent,
+          color: isSelected ? TColors.primary : Colors.transparent,
           shape: BoxShape.circle,
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Icon(
-                icon,
-                size: size.width * 0.1,
-                color: isSelected ? Colors.black : Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: size.width * 0.08, // Adjust icon size to make it smaller
+              color: isSelected ? TColors.light : TColors.textPrimary,
+            ),
+            SizedBox(height: size.height * 0.01),
+            Text(
+              title,
+              style: TextStyle(
+                color: isSelected ? TColors.light : TColors.textPrimary,
+                fontSize: 16, // Adjust font size to make it smaller
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(height: size.height * 0.01),
-              Text(
-                title,
-                style: TextStyle(
-                  color: isSelected ? Colors.black : Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

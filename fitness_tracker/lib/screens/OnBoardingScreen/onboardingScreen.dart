@@ -1,4 +1,4 @@
-import 'package:fitness_tracker/utils/constants/colors%20.dart';
+import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:http/http.dart' as http;
@@ -31,16 +31,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             children: [
               _buildPageIndicator(
-              text: 'Meet your coach, \n start your journey now!',
-              imageAsset: 'assets/onboardingImages/img_background_2.png',
+                text: 'Meet your coach, \n start your journey now!',
+                imageAsset: 'assets/onboardingImages/img_background_2.png',
               ),
               _buildPageIndicator(
-              text: 'Create a workout plan \n that fits your schedule',
-              imageAsset: 'assets/onboardingImages/img_background_1.png',
+                text: 'Create a workout plan \n that fits your schedule',
+                imageAsset: 'assets/onboardingImages/img_background_1.png',
               ),
               _buildPageIndicator(
-              text: 'Action is the \nkey to all success',
-              imageAsset: 'assets/onboardingImages/img_background_3.png',
+                text: 'Action is the \nkey to all success',
+                imageAsset: 'assets/onboardingImages/img_background_3.png',
               ),
             ],
           ),
@@ -80,7 +80,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   width: size.width * 0.5,
                   decoration: BoxDecoration(
-                    color: PrimaryColor,
+                    color: TColors.primary,
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Row(
@@ -96,7 +96,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         child: const Text(
                           'Get Started',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: TColors.textPrimary,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -120,7 +120,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 dotHeight: 10,
                 dotWidth: 10,
                 dotColor: Colors.grey,
-                activeDotColor: PrimaryColor,
+                activeDotColor: TColors.buttonPrimary,
               ),
             ),
           ),

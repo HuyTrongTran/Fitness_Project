@@ -1,6 +1,7 @@
 import 'package:fitness_tracker/models/DetailPageButton.dart';
 import 'package:fitness_tracker/models/DetailPageTitle.dart';
 import 'package:fitness_tracker/models/ListWheelViewScroller.dart';
+import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class HeightPage extends StatefulWidget {
@@ -11,6 +12,8 @@ class HeightPage extends StatefulWidget {
 }
 
 class _HeightPageState extends State<HeightPage> {
+
+  double height = 160;
   @override
   Widget build(BuildContext context) {
     List<String> items = [];
@@ -19,7 +22,7 @@ class _HeightPageState extends State<HeightPage> {
     }
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: TColors.light,
       body: Container(
         width: size.width,
         height: size.height,
@@ -34,12 +37,12 @@ class _HeightPageState extends State<HeightPage> {
             Detailpagetitle(
               text: "This helps us to create a personlized plan for you",
               title: "What is your height",
-              color: Colors.white,
+              color: TColors.textPrimary,
             ),
             SizedBox(height: size.height * 0.055),
             SizedBox(
               height: size.height * 0.5,
-              child: Listwheelviewscroller(items: items),
+              child: Listwheelviewscroller(items: items, ),
             ),
             DetailPageButton(
               text: "Next",

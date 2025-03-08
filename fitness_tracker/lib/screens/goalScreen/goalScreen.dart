@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/DetailPageButton.dart';
 import '../../models/DetailPageTitle.dart';
 import '../../models/ListWheelViewScroller.dart';
+import '../../utils/constants/colors.dart';
 
 class GoalPage extends StatefulWidget {
   const GoalPage({super.key});
@@ -27,7 +28,7 @@ class _GoalPageState extends State<GoalPage> {
     ];
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: TColors.light,
       body: Container(
         width: size.width,
         height: size.height,
@@ -42,16 +43,19 @@ class _GoalPageState extends State<GoalPage> {
             Detailpagetitle(
               text: "This helps us to create a personlized plan for you",
               title: "What is your goal?",
-              color: Colors.white,
+              color: TColors.textPrimary,
             ),
-            SizedBox(height: size.height * 0.055),
+            SizedBox(height: size.height * 0.01),
             SizedBox(
               height: size.height * 0.5,
               child: Listwheelviewscroller(items: items),
             ),
+            SizedBox(height: size.height * 0.055),
             DetailPageButton(
               text: "Next",
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, '/activity');
+              },
               showBackButton: true,
               onBackTap: () {
                 Navigator.pop(context);

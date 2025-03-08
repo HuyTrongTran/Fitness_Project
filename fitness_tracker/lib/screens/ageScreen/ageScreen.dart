@@ -1,6 +1,7 @@
 import 'package:fitness_tracker/models/DetailPageButton.dart';
 import 'package:fitness_tracker/models/DetailPageTitle.dart';
 import 'package:fitness_tracker/models/ListWheelViewScroller.dart';
+import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class AgePage extends StatefulWidget {
@@ -19,7 +20,7 @@ class _AgePageState extends State<AgePage> {
     }
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: TColors.light,
       body: Container(
         padding: EdgeInsets.only(
           top: size.height * 0.06,
@@ -29,13 +30,14 @@ class _AgePageState extends State<AgePage> {
         ),
         width: size.width,
         height: size.height,
+        
         child: Column(
           children: [
             Detailpagetitle(
               title: "How Old Are You?",
               text:
                   "This will help us to create a personalized fitness plan for you",
-              color: Colors.white,
+              color: TColors.textPrimary,
             ),
             SizedBox(height: size.height * 0.055),
             SizedBox(

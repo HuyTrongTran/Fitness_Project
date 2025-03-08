@@ -1,4 +1,13 @@
-class TImages {
-  static const String darkAppLogo = 'fitness_tracking/assets/icons/logos/Logo-white.png';
-  static const String lightAppLogo = 'fitness_tracking/assets/icons/logos/Logo-black.png';
+class Images {
+  static const String darkAppLogo = 'assets/icons/logos/Logo-white.png';
+  static const String lightAppLogo = 'assets/icons/logos/Logo-black.png';
+
+  //Onboarding Images
+  static const String onBoardingImage1 = "assets/onboardingImages/onboarding_1.gif";
+  static const String onBoardingImage2 = "assets/onboardingImages/img_background_2.png";
+  static const String onBoardingImage3 = "assets/onboardingImages/img_background_3.png";
+
+  static const String google = "assets/images/google.png";
+  static const String apple = "assets/images/apple.png";
+  static const String facebook = "assets/images/facebook.png";
 }

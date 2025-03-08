@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/constants/colors .dart';
+import '../utils/constants/colors.dart';
 
 class Listwheelviewscroller extends StatelessWidget {
   final List<String> items;
@@ -20,8 +20,8 @@ class Listwheelviewscroller extends StatelessWidget {
             return Text(
               level,
               style: TextStyle(
-                fontSize: 30, 
-                color: contentColor,
+                fontSize: 30,
+                color: TColors.buttonPrimary,
                 fontWeight: FontWeight.bold,
               ),
             );
