@@ -1,8 +1,8 @@
 import 'package:fitness_tracker/screens/GenderScreen/genderScreen.dart';
-import 'package:fitness_tracker/screens/Login/login.dart';
 import 'package:fitness_tracker/screens/OnBoardingScreen/onboardingScreen.dart';
 import 'package:fitness_tracker/screens/activityLevelScreen/activityLevelScreen.dart';
 import 'package:fitness_tracker/screens/goalScreen/goalScreen.dart';
+import 'package:fitness_tracker/screens/splash_screen/splash_screen.dart';
 import 'package:fitness_tracker/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -35,43 +35,7 @@ class MyApp extends StatelessWidget {
         '/activity': (context) => ActivityPage(),
       },
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(), // Change this
-    );
-  }
-}
-
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
-
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Login()),
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Image.asset(
-          "assets/icons/splash_logo/splash_logo_white.png",
-          fit: BoxFit.cover, // Crop the image to cover the available space
-          width:
-              MediaQuery.of(context).size.width *
-              0.5, // Set width to screen width
-        ),
-      ),
+      home: const SplashScreen(),
     );
   }
 }

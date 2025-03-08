@@ -15,6 +15,7 @@ class TTexts {
   // Authentication Form Text
   static const String firstName = "First Name";
   static const String lastName = "Last Name";
+  static const String hintLastName = "Enter your last name";
   static const String email = "Email";
   static const String hintEmail = "Enter your email";
   static const String password = "Password";
@@ -23,11 +24,12 @@ class TTexts {
   static const String confirmPassword = "Confirm Password";
   static const String rememberMe = "Remember Me";
   static const String signIn = "Sign In";
-  static const String signUp = "Sign Up";
+  static const String signUp = "Create your account";
   static const String createAccount = "Create Account";
   static const String orSignInWith = "Or Sign In with";
   static const String orSignUpWith = "Or Sign Up with";
   static const String privacyPolicy = "Privacy Policy";
+  static const String and = "and";
   static const String termsOfUse = "Terms of Service";
   static const String verificationCode = "Verification Code";
   static const String resendEmail = "Resend Email";
@@ -37,7 +39,7 @@ class TTexts {
   static const String loginTitle = "Welcome Back";
   static const String loginSubTitle = "Make it work";
   static const String signUpTitle = "Let's build your lifestyle";
-  static const String forgetPasswordTitle = "Forget Password";
+  static const String forgetPasswordTitle = "Forget Password?";
   static const String forgetPasswordSubTitle =
       "Enter your email to reset your password";
   static const String changePasswordTitle = "Change Password";
@@ -52,4 +54,13 @@ class TTexts {
   // Home
   static const String homeAppbarTitle = "";
   static const String homeAppbarSubTitle = "";
+
+
+  // Signup Screen Text
+  static const String username = "Username";
+  static const String hintUsername = "Enter your user name";
+  static const String phoneNumber = "Phone Number";
+  static const String hintPhoneNumber = "Enter your phone number";
+  static const String iAgreeTo = "I agree to";
+  
 }
