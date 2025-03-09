@@ -3,6 +3,7 @@ import 'package:fitness_tracker/screens/OnBoardingScreen/onboardingScreen.dart';
 import 'package:fitness_tracker/screens/activityLevelScreen/activityLevelScreen.dart';
 import 'package:fitness_tracker/screens/goalScreen/goalScreen.dart';
 import 'package:fitness_tracker/screens/splash_screen/splash_screen.dart';
+import 'package:fitness_tracker/navigation_menu.dart';
 import 'package:fitness_tracker/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/goal': (context) => GoalPage(),
         '/weight': (context) => WeightPage(),
         '/activity': (context) => ActivityPage(),
+        '/navigation': (context) => const NavigationMenu(),
       },
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),

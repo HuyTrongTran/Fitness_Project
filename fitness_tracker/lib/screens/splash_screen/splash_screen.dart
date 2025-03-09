@@ -1,4 +1,4 @@
-import 'package:fitness_tracker/screens/signup.widgets/signup.dart';
+import 'package:fitness_tracker/screens/Login/login.dart';
 import 'package:fitness_tracker/utils/helpers/helpers_function.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Signup()),
+        MaterialPageRoute(builder: (context) => const Login()),
       );
     });
   }

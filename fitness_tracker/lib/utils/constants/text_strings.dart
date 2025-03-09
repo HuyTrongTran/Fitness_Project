@@ -42,19 +42,20 @@ class TTexts {
   static const String forgetPasswordTitle = "Forget Password?";
   static const String forgetPasswordSubTitle =
       "Enter your email to reset your password";
-  static const String changePasswordTitle = "Change Password";
-  static const String changePasswordSubTitle = "Enter your new password";
+  static const String changePasswordTitle = "Password Resent Email Sent";
+  static const String changePasswordSubTitle = "Your account security is our priority. We have sent a Secure link to Change your password. Check your email address.";
   static const String confirmEmail = "Verify your email address";
   static const String confirmEmailSubtitle =
-      "Congratulations! Your account has been successfully created.";
+      "Congratulations! Your account has been successfully created. Verify your email address to build your fitness journey.";
   static const String emailNotReceived =
       "Didn't receive the email? Check your spam folder";
-  static const String yourAccountCreatedTitle = "Your Account Created Successfully";
-  static const String yourAccountCreatedSubtitle = "Welcome to your fitness universe";
+  static const String yourAccountCreatedTitle =
+      "Your Account Created Successfully";
+  static const String yourAccountCreatedSubtitle =
+      "Welcome to your fitness universe";
   // Home
-  static const String homeAppbarTitle = "";
-  static const String homeAppbarSubTitle = "";
-
+  static const String homeAppbarTitle = "Fitness Tracker";
+  static const String homeAppbarSubTitle = "Your Personal Trainer";
 
   // Signup Screen Text
   static const String username = "Username";
@@ -62,5 +63,8 @@ class TTexts {
   static const String phoneNumber = "Phone Number";
   static const String hintPhoneNumber = "Enter your phone number";
   static const String iAgreeTo = "I agree to";
+  static const String iContinue = "Continue";
   
+  // Forget Password Screen Text
+  static const String submit = "Submit";
 }

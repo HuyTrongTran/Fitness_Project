@@ -1,6 +1,6 @@
 import 'package:fitness_tracker/common/styles/spacing_styles.dart';
-import 'package:fitness_tracker/common/widget.login_signup/form_divider.dart';
-import 'package:fitness_tracker/common/widget.login_signup/socialButton.dart';
+import 'package:fitness_tracker/common/widgets/login_signup/form_divider.dart';
+import 'package:fitness_tracker/common/widgets/login_signup/socialButton.dart';
 import 'package:fitness_tracker/screens/Login/widgets/login_form.dart';
 import 'package:fitness_tracker/screens/Login/widgets/login_header.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';

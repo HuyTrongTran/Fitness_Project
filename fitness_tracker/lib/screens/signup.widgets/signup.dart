@@ -1,5 +1,5 @@
-import 'package:fitness_tracker/common/widget.login_signup/form_divider.dart';
-import 'package:fitness_tracker/common/widget.login_signup/socialButton.dart';
+import 'package:fitness_tracker/common/widgets/login_signup/form_divider.dart';
+import 'package:fitness_tracker/common/widgets/login_signup/socialButton.dart';
 import 'package:fitness_tracker/screens/signup.widgets/widgets/signUpForm.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
@@ -18,50 +18,47 @@ class Signup extends StatelessWidget {
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(TSizes.dividerHeight),
+          padding: const EdgeInsets.all(TSizes.defaultSpace),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.only(left: TSizes.md),
-                child: Image(
-                  height: 100,
-                  alignment: Alignment.centerLeft,
-                  fit: BoxFit.contain,
-                  image: AssetImage(
-                    dark ? Images.darkAppLogo : Images.lightAppLogo,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: TSizes.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      TTexts.signUp,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    const SizedBox(height: TSizes.xs),
-                    Text(
-                      TTexts.signUpTitle,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
+              // Logo
+              Image(
+                height: 100,
+                alignment: Alignment.centerLeft,
+                fit: BoxFit.contain,
+                image: AssetImage(
+                  dark ? Images.darkAppLogo : Images.lightAppLogo,
                 ),
               ),
 
-              const SizedBox(height: TSizes.spaceBtwSections),
-              //Form
+              // Title & Subtitle
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    TTexts.signUp,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: TSizes.xs),
+                  Text(
+                    TTexts.signUpTitle,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: TSizes.spaceBtwItems),
+
+              // Form
               const SignUpForm(),
               const SizedBox(height: TSizes.spaceBtwSections),
 
-              //Divider
+              // Divider
               FormDivider(dividerText: TTexts.orSignUpWith.capitalize!),
-              const SizedBox(height: TSizes.spaceBtwSections),
+              const SizedBox(height: TSizes.spaceBtwItems),
 
-              // Social Login
+              // Social Buttons
               const Socialbutton(),
             ],
           ),

@@ -4,6 +4,7 @@ import 'package:fitness_tracker/utils/theme/custom_themes/checkbox_theme.dart';
 import 'package:fitness_tracker/utils/theme/custom_themes/chip_theme.dart';
 import 'package:fitness_tracker/utils/theme/custom_themes/elevated_button_theme.dart';
 import 'package:fitness_tracker/utils/theme/custom_themes/outlined_button_theme.dart';
+import 'package:fitness_tracker/utils/theme/custom_themes/text_button_theme.dart';
 import 'package:fitness_tracker/utils/theme/custom_themes/text_field_theme.dart';
 import 'package:fitness_tracker/utils/theme/custom_themes/text_theme.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class AppTheme {
     bottomSheetTheme: TBottomSheetTheme.lightBottomSheetTheme,
     elevatedButtonTheme: TElevatedButtonTheme.lightElevatedButtonTheme,
     outlinedButtonTheme: TOutlinedButtonTheme.lightOutlinedButtonTheme,
+    textButtonTheme: TTextButtonTheme.lightTextButtonTheme,
     inputDecorationTheme: TTextFormFieldTheme.lightInputDecorationTheme,
   );
 
@@ -36,6 +38,7 @@ class AppTheme {
     textTheme: TTextTheme.darkTextTheme,
     elevatedButtonTheme: TElevatedButtonTheme.darkElevatedButtonTheme,
     outlinedButtonTheme: TOutlinedButtonTheme.darkOutlinedButtonTheme,
+    textButtonTheme: TTextButtonTheme.darkTextButtonTheme,
     chipTheme: TChipTheme.darkChipTheme,
     appBarTheme: TAppBarTheme.darkAppBarTheme,
     checkboxTheme: TCheckboxTheme.darkCheckboxTheme,

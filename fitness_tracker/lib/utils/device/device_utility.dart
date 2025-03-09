@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 // ... rest of the code remains the same
 
-class TDeviceUtils {
+class DeviceUtils {
   static void hideKeyBoard(BuildContext context) {
     FocusScope.of(context).requestFocus(FocusNode());
   }
@@ -52,6 +52,10 @@ class TDeviceUtils {
   static double getKeyboardHeight(BuildContext context) {
     final viewInset = MediaQuery.of(context).viewInsets;
     return viewInset.bottom;
+  }
+
+  static double getAppBarHeight() {
+    return kToolbarHeight;
   }
 
   static Future<bool> isKeyboardVisible(BuildContext context) async {

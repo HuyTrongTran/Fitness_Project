@@ -1,3 +1,5 @@
+import 'package:fitness_tracker/navigation_menu.dart';
+import 'package:fitness_tracker/screens/password_configuration/forget_password.dart';
 import 'package:fitness_tracker/screens/signup.widgets/signup.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
@@ -37,27 +39,32 @@ class LoginForm extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Remember me
                 Row(
                   children: [
                     Checkbox(value: true, onChanged: (value) {}),
                     Text(TTexts.rememberMe),
                   ],
                 ),
+                // Forget Password
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => Get.to(() => const ForgetPassword()),
                   child: const Text(TTexts.forgetPasswordTitle),
                 ),
               ],
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
 
+            // Sign In Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => Get.to(() => const NavigationMenu()),
                 child: const Text(TTexts.signIn),
               ),
             ),
+
+            // Create Account
             const SizedBox(height: TSizes.spaceBtwItems),
             SizedBox(
               width: double.infinity,
