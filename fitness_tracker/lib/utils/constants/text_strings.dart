@@ -67,4 +67,7 @@ class TTexts {
   
   // Forget Password Screen Text
   static const String submit = "Submit";
+
+  // Home Screen Text
+  static const String search = "Typing here...";
 }

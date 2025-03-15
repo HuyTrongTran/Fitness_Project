@@ -17,4 +17,7 @@ class Images {
   // Animations Images
   static const String verifyEmail = "assets/animations/verify_animation.png";
   static const String success = "assets/animations/success_animation.png";
+
+  // Categories Images
+  static const String heart = "assets/categories/dumbbell.png";
 }

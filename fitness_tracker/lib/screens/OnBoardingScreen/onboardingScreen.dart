@@ -83,28 +83,40 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     color: TColors.primary,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Row(
-                    children: [
-                      TextButton(
-                        onPressed: () async {
-                          Navigator.pushNamed(context, '/gender');
-                          final response = await http.get(
-                            Uri.parse('http://10.0.2.2:3000/api/data'),
-                          );
-                          print("Response from node.js: ${response.body}");
-                        },
-                        child: const Text(
-                          'Get Started',
-                          style: TextStyle(
-                            color: TColors.textPrimary,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () async {
+                        Navigator.pushNamed(context, '/gender');
+                        final response = await http.get(
+                          Uri.parse('http://10.0.2.2:3000/api/data'),
+                        );
+                        print("Response from node.js: ${response.body}");
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: TColors.primary,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Get Started',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: TColors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(Icons.arrow_forward, color: TColors.white),
+                          ],
                         ),
                       ),
-                      SizedBox(width: 5),
-                      const Icon(Icons.arrow_forward_ios, color: Colors.black),
-                    ],
+                    ),
                   ),
                 ),
               )
@@ -146,6 +158,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Text(
                 text.toUpperCase(),
                 style: TextStyle(
+                  fontFamily: 'Poppins',
                   color: Colors.white,
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
