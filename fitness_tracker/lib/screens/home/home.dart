@@ -3,9 +3,12 @@ import 'package:fitness_tracker/common/widgets/custome_shape/containers/search_b
 import 'package:fitness_tracker/common/widgets/texts/section_heading.dart';
 import 'package:fitness_tracker/screens/home/widgets/homeAppBar.dart';
 import 'package:fitness_tracker/screens/home/widgets/home_Categories.dart';
+import 'package:fitness_tracker/screens/home/widgets/promo_slider.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
+import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
+import 'package:fitness_tracker/utils/helpers/helpers_function.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -14,11 +17,12 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = HelpersFunction.isDarkMode(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header -- Tutorial [Section # 3, Video # 2]
+            // Header
             PrimaryHeaderContainer(
               child: Column(
                 children: [
@@ -30,7 +34,7 @@ class Home extends StatelessWidget {
                     text: TTexts.search,
                     icon: Iconsax.search_normal,
                     showBackground: true,
-                    showBorder: true,
+                    showBorder: dark ? false : true,
                   ),
                   const SizedBox(height: TSizes.spaceBtwItems),
 
@@ -52,6 +56,10 @@ class Home extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(TSizes.defaultSpace),
+              child: PromoSlider(banner: [Images.slider1, Images.slider2]),
             ),
           ],
         ),

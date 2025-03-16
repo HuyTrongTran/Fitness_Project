@@ -87,7 +87,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
                       onTap: () async {
-                        Navigator.pushNamed(context, '/gender');
+                        Navigator.pushNamed(context, '/login');
                         final response = await http.get(
                           Uri.parse('http://10.0.2.2:3000/api/data'),
                         );

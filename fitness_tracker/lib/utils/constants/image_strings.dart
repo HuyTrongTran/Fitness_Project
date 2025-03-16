@@ -20,4 +20,8 @@ class Images {
 
   // Categories Images
   static const String heart = "assets/categories/dumbbell.png";
+
+  //Slider Images
+  static const String slider1 = "assets/slider_images/slider_1.png";
+  static const String slider2 = "assets/slider_images/slider_2.png";
 }

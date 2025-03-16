@@ -1,4 +1,3 @@
-import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 
 class SectionHeading extends StatelessWidget {

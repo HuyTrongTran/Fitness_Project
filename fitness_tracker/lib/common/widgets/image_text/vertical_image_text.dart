@@ -35,7 +35,7 @@ class VerticalImageText extends StatelessWidget {
                 color:
                     backgroundColor ??
                     (HelpersFunction.isDarkMode(context)
-                        ? TColors.light
+                        ? Colors.transparent
                         : TColors.light),
                 borderRadius: BorderRadius.circular(100),
               ),
@@ -55,7 +55,7 @@ class VerticalImageText extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelMedium!.apply(
                   color:
                       HelpersFunction.isDarkMode(context)
-                          ? TColors.light
+                          ? TColors.dark
                           : TColors.light,
                 ),
                 maxLines: 1,
