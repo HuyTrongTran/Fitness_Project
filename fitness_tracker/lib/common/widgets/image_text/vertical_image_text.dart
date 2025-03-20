@@ -21,6 +21,7 @@ class VerticalImageText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = HelpersFunction.isDarkMode(context);
     return GestureDetector(
       onTap: onTap,
       child: Padding(
@@ -34,16 +35,14 @@ class VerticalImageText extends StatelessWidget {
               decoration: BoxDecoration(
                 color:
                     backgroundColor ??
-                    (HelpersFunction.isDarkMode(context)
-                        ? Colors.transparent
-                        : TColors.light),
+                    (dark ? TColors.darkGrey : TColors.grey.withOpacity(0.2)),
                 borderRadius: BorderRadius.circular(100),
               ),
-              child: const Center(
+              child: Center(
                 child: Image(
-                  image: AssetImage(Images.heart),
+                  image: AssetImage(image),
                   fit: BoxFit.cover,
-                  color: TColors.dark,
+                  color: dark ? TColors.light : TColors.dark,
                 ),
               ),
             ),
@@ -53,10 +52,7 @@ class VerticalImageText extends StatelessWidget {
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.labelMedium!.apply(
-                  color:
-                      HelpersFunction.isDarkMode(context)
-                          ? TColors.dark
-                          : TColors.light,
+                  color: dark ? TColors.light : TColors.dark,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

@@ -13,7 +13,6 @@ class PrimaryHeaderContainer extends StatelessWidget {
     return CurvedWidget(
       child: Container(
         color: TColors.primary,
-        padding: const EdgeInsets.all(0),
         child: Stack(
           children: [
             // Background Custom Shapes

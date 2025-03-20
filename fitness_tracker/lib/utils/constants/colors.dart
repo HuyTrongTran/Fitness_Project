@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-const PrimaryColor = Color(0xFFDC143C);
+const PrimaryColor = Color(0xFF5D77FF);
 const contentColor = Colors.white;
 
 class TColors {
   TColors._();
 
-  static const Color primary = Color(0xFF4b68ff);
+  static const Color primary = Color(0xFF5D77FF);
   static const Color secondary = Color(0xFFFFE24B);
   static const Color accent = Color(0xFFb0c2ff);
 
@@ -14,11 +14,7 @@ class TColors {
   static const Gradient linerGradient = LinearGradient(
     begin: Alignment(0.0, 0.0),
     end: Alignment(0.707, -0.707),
-    colors: [
-      Color(0xffff9a9e),
-      Color(0xfffad0c4),
-      Color(0xfffad0c4)
-    ],
+    colors: [Color(0xFF5D77FF), Color(0xFF7D8FFF), Color(0xFF7D8FFF)],
   );
 
   // Text colors
@@ -36,7 +32,7 @@ class TColors {
   static Color darkContainer = TColors.textWhite.withOpacity(0.1);
 
   //Button Colors
-  static const Color buttonPrimary = Color(0xFF4b68ff);
+  static const Color buttonPrimary = Color(0xFF5D77FF);
   static const Color buttonSecondary = Color(0xFF6C7470);
   static const Color buttonDisable = Color(0xFFC4C4C4);
 

@@ -13,7 +13,7 @@ class CurvedWidget extends StatelessWidget {
       child: Container(
         color: TColors.primary,
         padding: const EdgeInsets.all(0),
-        child: SizedBox(height: 400, child: child),
+        child: SizedBox(child: child),
       ),
     );
   }

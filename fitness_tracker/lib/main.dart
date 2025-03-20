@@ -1,54 +1,50 @@
-import 'package:fitness_tracker/screens/GenderScreen/genderScreen.dart';
+import 'package:fitness_tracker/app.dart';
+import 'package:fitness_tracker/firebase_options.dart';
+import 'package:fitness_tracker/navigation_menu.dart';
 import 'package:fitness_tracker/screens/Login/login.dart';
 import 'package:fitness_tracker/screens/OnBoardingScreen/onboardingScreen.dart';
-import 'package:fitness_tracker/screens/activityLevelScreen/activityLevelScreen.dart';
-import 'package:fitness_tracker/screens/goalScreen/goalScreen.dart';
-import 'package:fitness_tracker/navigation_menu.dart';
-import 'package:fitness_tracker/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'screens/ageScreen/ageScreen.dart';
-import 'screens/heightScreen/heightScreen.dart';
-import 'screens/weightPage/weightPage.dart';
+Future<void> main() async {
+  final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
-void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // Khởi tạo GetStorage
+  await GetStorage.init();
+
+  // Giữ splash screen
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // Do initialization tasks here
-  await Future.delayed(
-    const Duration(seconds: 2),
-  ); // Add some delay to show splash
+  // Khởi tạo Firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  FlutterNativeSplash.remove();
-  runApp(const MyApp());
-}
+  // Kiểm tra trạng thái đăng nhập và onboarding
+  final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('jwt_token');
+  final userEmail = prefs.getString('user_email'); // Lưu email của user hiện tại
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      themeMode: ThemeMode.system,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      routes: {
-        '/onboarding': (context) => const OnboardingScreen(),
-        '/height': (context) => const HeightPage(),
-        '/age': (context) => const AgePage(),
-        '/gender': (context) => const GenderPage(),
-        '/goal': (context) => const GoalPage(),
-        '/weight': (context) => const WeightPage(),
-        '/activity': (context) => const ActivityPage(),
-        '/navigation': (context) => const NavigationMenu(),
-        '/login': (context) => const Login(),
-      },
-      debugShowCheckedModeBanner: false,
-      home:
-          const OnboardingScreen(), // Change to OnboardingScreen instead of SplashScreen
-    );
+  // Quyết định màn hình khởi đầu
+  Widget initialScreen;
+  if (token != null && token.isNotEmpty && userEmail != null) {
+    final onboardingKey = 'has_completed_onboarding_$userEmail'; // Key riêng cho từng email
+    final hasCompletedOnboarding = prefs.getBool(onboardingKey) ?? false;
+    if (hasCompletedOnboarding) {
+      initialScreen = const NavigationMenu();
+    } else {
+      initialScreen = const OnboardingScreen();
+    }
+  } else {
+    initialScreen = const Login();
   }
+
+  // Đợi 2 giây để hiển thị splash screen
+  await Future.delayed(const Duration(seconds: 2));
+
+  // Xóa splash screen
+  FlutterNativeSplash.remove();
+
+  runApp(MyApp(initialScreen: initialScreen));
 }

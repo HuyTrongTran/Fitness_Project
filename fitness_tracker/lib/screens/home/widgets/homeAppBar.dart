@@ -5,9 +5,7 @@ import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 
 class HomeAppBar extends StatelessWidget {
-  const HomeAppBar({
-    super.key,
-  });
+  const HomeAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +28,7 @@ class HomeAppBar extends StatelessWidget {
         ],
       ),
       actions: [
-        CalenderCountericon(
-          onPressed: () {},
-          iconColor: TColors.white,
-        ),
+        CalenderCountericon(onPressed: () {}, iconColor: TColors.white),
       ],
     );
   }

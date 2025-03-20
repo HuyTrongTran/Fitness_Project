@@ -5,16 +5,15 @@ class SectionHeading extends StatelessWidget {
     super.key,
     this.textColor,
     required this.title,
-    this.buttonTitle  = "Show all",
-    this.showActionButton = true,
-    this.onPressed,
+    this.buttonTitle = "Show all",
+    this.showActionButton = false,
+    required this.onPressed,
   });
 
   final Color? textColor;
   final bool showActionButton;
   final String title, buttonTitle;
   final void Function()? onPressed;
-
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +22,12 @@ class SectionHeading extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.headlineSmall!.apply(color: textColor),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall!.apply(color: textColor),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-                  ),
+        ),
         if (showActionButton)
           TextButton(onPressed: onPressed, child: Text(buttonTitle)),
       ],

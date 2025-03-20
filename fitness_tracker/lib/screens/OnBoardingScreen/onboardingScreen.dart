@@ -1,7 +1,9 @@
+import 'package:fitness_tracker/navigation_menu.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -13,6 +15,34 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   PageController controller = PageController();
   bool isLastPage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('jwt_token');
+    final userEmail = prefs.getString('user_email');
+    if (token != null && token.isNotEmpty && userEmail != null) {
+      final onboardingKey = 'has_completed_onboarding_$userEmail';
+      final hasCompletedOnboarding = prefs.getBool(onboardingKey) ?? false;
+      if (hasCompletedOnboarding) {
+        Get.offAll(() => const NavigationMenu());
+      }
+    }
+  }
+
+  Future<void> _completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userEmail = prefs.getString('user_email');
+    if (userEmail != null) {
+      final onboardingKey = 'has_completed_onboarding_$userEmail';
+      await prefs.setBool(onboardingKey, true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +58,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 isLastPage = index == 2;
               });
             },
-
             children: [
               _buildPageIndicator(
                 text: 'Meet your coach, \n start your journey now!',
@@ -47,81 +76,76 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           isLastPage
               ? const SizedBox.shrink()
               : Positioned(
-                top: size.height * 0.05,
-                right: size.width * 0.05,
-                child: TextButton(
-                  onPressed: () {
-                    controller.animateToPage(
-                      2,
-                      duration: const Duration(microseconds: 300),
-                      curve: Curves.ease,
-                    );
-                  },
-                  child: const Text(
-                    'Skip',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-
-          isLastPage
-              ? Positioned(
-                left: size.width * 0.25,
-                right: size.width * 0.25,
-                bottom: size.height * 0.09,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 20,
-                  ),
-                  width: size.width * 0.5,
-                  decoration: BoxDecoration(
-                    color: TColors.primary,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () async {
-                        Navigator.pushNamed(context, '/login');
-                        final response = await http.get(
-                          Uri.parse('http://10.0.2.2:3000/api/data'),
-                        );
-                        print("Response from node.js: ${response.body}");
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: TColors.primary,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Get Started',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: TColors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Icon(Icons.arrow_forward, color: TColors.white),
-                          ],
-                        ),
+                  top: size.height * 0.05,
+                  right: size.width * 0.05,
+                  child: TextButton(
+                    onPressed: () {
+                      controller.animateToPage(
+                        2,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    },
+                    child: const Text(
+                      'Skip',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-              )
-              : SizedBox.shrink(),
-
+          isLastPage
+              ? Positioned(
+                  left: size.width * 0.25,
+                  right: size.width * 0.25,
+                  bottom: size.height * 0.09,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 5,
+                      horizontal: 20,
+                    ),
+                    width: size.width * 0.5,
+                    decoration: BoxDecoration(
+                      color: TColors.primary,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () async {
+                          await _completeOnboarding();
+                          Navigator.pushNamed(context, '/age');
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: TColors.primary,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Get Started',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: TColors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Icon(Icons.arrow_forward, color: TColors.white),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
           Positioned(
             bottom: size.height * 0.03,
             left: size.width * 0.42,
@@ -157,7 +181,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: Center(
               child: Text(
                 text.toUpperCase(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Poppins',
                   color: Colors.white,
                   fontSize: 25,

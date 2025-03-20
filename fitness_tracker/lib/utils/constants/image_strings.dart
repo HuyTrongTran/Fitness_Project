@@ -19,9 +19,14 @@ class Images {
   static const String success = "assets/animations/success_animation.png";
 
   // Categories Images
-  static const String heart = "assets/categories/dumbbell.png";
+  static const String dumbbell = "assets/icons/app_icons/dumbbell.png";
+  static const String rope = "assets/icons/app_icons/rope.png";
+  static const String treadmill = "assets/icons/app_icons/treadmill.png";
 
   //Slider Images
   static const String slider1 = "assets/slider_images/slider_1.png";
   static const String slider2 = "assets/slider_images/slider_2.png";
+
+  // Profile Images
+  static const String profile = "assets/images/profile.jpg";
 }
