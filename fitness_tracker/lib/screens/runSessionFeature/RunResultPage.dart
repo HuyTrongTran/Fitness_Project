@@ -1,5 +1,5 @@
-import 'package:fitness_tracker/RunFeature/class/runSession.dart';
-import 'package:fitness_tracker/RunFeature/runTrackingScreen/runTrackingScreen.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runTrackingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';

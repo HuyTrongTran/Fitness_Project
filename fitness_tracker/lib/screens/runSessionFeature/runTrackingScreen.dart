@@ -4,17 +4,17 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
-import 'package:fitness_tracker/runFeature/runTrackingScreen/controllers/mapControllers/create_marker_icons_controller.dart';
-import 'package:fitness_tracker/runFeature/runTrackingScreen/controllers/locationControllers/request_location_permission_controller.dart';
-import 'package:fitness_tracker/runFeature/runTrackingScreen/controllers/locationControllers/update_current_location_marker_controller.dart';
-import 'package:fitness_tracker/runFeature/runTrackingScreen/controllers/trackingControllers/start_tracking_controller.dart';
-import 'package:fitness_tracker/runFeature/runTrackingScreen/controllers/mapControllers/center_map_to_current_location_controller.dart';
-import 'package:fitness_tracker/runFeature/runTrackingScreen/controllers/mapControllers/toggle_3d_mode_controller.dart';
-import 'package:fitness_tracker/runFeature/runTrackingScreen/controllers/mapControllers/zoom_in_controller.dart';
-import 'package:fitness_tracker/runFeature/runTrackingScreen/controllers/mapControllers/zoom_out_controller.dart';
-import 'package:fitness_tracker/runFeature/runTrackingScreen/controllers/mapControllers/calculate_distance_controller.dart';
-import 'package:fitness_tracker/runFeature/runTrackingScreen/controllers/trackingControllers/start_timer_controller.dart';
-import 'package:fitness_tracker/runFeature/runTrackingScreen/controllers/trackingControllers/stop_tracking_controller.dart';
+import 'package:fitness_tracker/features/controllers/runControllers/mapControllers/create_marker_icons_controller.dart';
+import 'package:fitness_tracker/features/controllers/runControllers/locationControllers/request_location_permission_controller.dart';
+import 'package:fitness_tracker/features/controllers/runControllers/locationControllers/update_current_location_marker_controller.dart';
+import 'package:fitness_tracker/features/controllers/runControllers/trackingControllers/start_tracking_controller.dart';
+import 'package:fitness_tracker/features/controllers/runControllers/mapControllers/center_map_to_current_location_controller.dart';
+import 'package:fitness_tracker/features/controllers/runControllers/mapControllers/toggle_3d_mode_controller.dart';
+import 'package:fitness_tracker/features/controllers/runControllers/mapControllers/zoom_in_controller.dart';
+import 'package:fitness_tracker/features/controllers/runControllers/mapControllers/zoom_out_controller.dart';
+import 'package:fitness_tracker/features/controllers/runControllers/mapControllers/calculate_distance_controller.dart';
+import 'package:fitness_tracker/features/controllers/runControllers/trackingControllers/start_timer_controller.dart';
+import 'package:fitness_tracker/features/controllers/runControllers/trackingControllers/stop_tracking_controller.dart';
 
 class RunTrackingPage extends StatefulWidget {
   const RunTrackingPage({super.key});

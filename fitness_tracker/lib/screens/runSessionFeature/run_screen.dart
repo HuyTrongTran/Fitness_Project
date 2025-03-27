@@ -1,5 +1,5 @@
-import 'package:fitness_tracker/RunFeature/class/runSession.dart';
-import 'package:fitness_tracker/RunFeature/runTrackingScreen/runTrackingScreen.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runTrackingScreen.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
