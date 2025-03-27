@@ -22,6 +22,7 @@ class Detailpagetitle extends StatelessWidget {
               color: color,
               fontSize: screenWidth * 0.06,
               fontWeight: FontWeight.bold,
+              fontFamily: 'Nunito'
             ),
           ),
         ),
@@ -30,7 +31,7 @@ class Detailpagetitle extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: paddingValue),
           child: Text(
             text,
-            style: TextStyle(color: color, fontSize: screenWidth * 0.04),
+            style: TextStyle(color: color, fontSize: screenWidth * 0.04, fontFamily: 'Nunito'),
             textAlign: TextAlign.center,
           ),
         ),

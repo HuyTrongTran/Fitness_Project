@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 
-class TAppBarTheme{
+class TAppBarTheme {
   TAppBarTheme._();
 
   static const lightAppBarTheme = AppBarTheme(
@@ -11,7 +11,12 @@ class TAppBarTheme{
     surfaceTintColor: Colors.transparent,
     iconTheme: IconThemeData(color: Colors.black, size: 24),
     actionsIconTheme: IconThemeData(color: Colors.black, size: 24),
-    titleTextStyle: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
+    titleTextStyle: TextStyle(
+      fontSize: 18,
+      color: Colors.black,
+      fontWeight: FontWeight.w600,
+      fontFamily: 'Nunito',
+    ),
   );
 
   static const darkAppBarTheme = AppBarTheme(
@@ -22,6 +27,11 @@ class TAppBarTheme{
     surfaceTintColor: Colors.transparent,
     iconTheme: IconThemeData(color: Colors.white, size: 24),
     actionsIconTheme: IconThemeData(color: Colors.white, size: 24),
-    titleTextStyle: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
+    titleTextStyle: TextStyle(
+      fontSize: 18,
+      color: Colors.white,
+      fontWeight: FontWeight.w600,
+      fontFamily: 'Nunito',
+    ),
   );
 }

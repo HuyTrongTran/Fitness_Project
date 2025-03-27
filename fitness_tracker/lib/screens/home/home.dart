@@ -6,12 +6,17 @@ import 'package:fitness_tracker/screens/home/widgets/recent_plans.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
 
   @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -19,26 +24,26 @@ class Home extends StatelessWidget {
             PrimaryHeaderContainer(
               child: Column(
                 children: [
-                  HomeAppBar(),
-                  SizedBox(height: TSizes.spaceBtwItems),
-                  // Workout Stats Section
-                  WorkoutPlan(),
-                  SizedBox(height: TSizes.spaceBtwItems),
+                  HomeAppBar(
+                    onDaySelected: (selectedDay) {
+                      // Không cần cập nhật _selectedDate nữa vì Home không dùng nó
+                    },
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwItems),
+                  WorkoutPlan(
+                    selectedDate: DateTime.now(), // Luôn hiển thị ngày hiện tại
+                    isInPopup: false,
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwItems),
                 ],
               ),
             ),
 
             // Workout Stats Section
-            WorkoutStats(),
+            const WorkoutStats(),
 
-            // Workout Plan Section
-            RecentPlans(),
-
-            // Promo Slider
-            // Padding(
-            //   padding: EdgeInsets.all(TSizes.defaultSpace),
-            //   child: PromoSlider(banner: [Images.slider1, Images.slider2]),
-            // ),
+            // Recent Plans Section
+            const RecentPlans(),
           ],
         ),
       ),

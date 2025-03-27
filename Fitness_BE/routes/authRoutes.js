@@ -1,26 +1,20 @@
 const express = require('express');
 const AuthController = require('../controllers/authController');
 const UserModel = require('../models/userModel');
+const jwt = require('jsonwebtoken');
+const getActivityCalendar = require('../controllers/getActivityCalendar');
+const UserProfile = require('../controllers/userController');
 
 const router = express.Router();
 
-// Login route (giữ nguyên)
 router.post('/login', AuthController.login);
 
-// Optional: Registration route for testing (giữ nguyên)
-router.post('/register', async (req, res, next) => {
-  try {
-    const user = await UserModel.createUser(req.body);
-    res.status(201).json({
-      success: true,
-      data: user
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+router.post('/register', AuthController.register);
 
-// Logout route (thêm mới)
 router.post('/logout', AuthController.logout);
+router.post('/complete-onboarding', AuthController.checkBlacklist, AuthController.completeOnboarding);
+router.post('/update-profile', AuthController.checkBlacklist, AuthController.updateProfile);
+router.get('/getProfile', AuthController.checkBlacklist, UserProfile.getProfile);
+router.get('/activity-data', AuthController.checkBlacklist, getActivityCalendar.getActivityData);
 
 module.exports = router;

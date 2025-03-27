@@ -11,12 +11,24 @@ class TTextFormFieldTheme {
     // Focus color
     focusColor: TColors.primary,
     floatingLabelStyle: const TextStyle().copyWith(
-      color: TColors.primary,
+      color: Colors.black,
+      fontFamily: 'Nunito',
       fontSize: 14,
     ),
-    labelStyle: const TextStyle().copyWith(fontSize: 14, color: Colors.black),
-    hintStyle: const TextStyle().copyWith(fontSize: 14, color: Colors.black),
-    errorStyle: const TextStyle().copyWith(fontStyle: FontStyle.normal),
+    labelStyle: const TextStyle().copyWith(
+      fontSize: 14,
+      color: Colors.black,
+      fontFamily: 'Nunito',
+    ),
+    hintStyle: const TextStyle().copyWith(
+      fontSize: 14,
+      color: Colors.black,
+      fontFamily: 'Nunito',
+    ),
+    errorStyle: const TextStyle().copyWith(
+      fontStyle: FontStyle.normal,
+      fontFamily: 'Nunito',
+    ),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(14),
       borderSide: BorderSide(color: Colors.grey, width: 1),
@@ -46,12 +58,24 @@ class TTextFormFieldTheme {
     // Focus color
     focusColor: TColors.primary,
     floatingLabelStyle: const TextStyle().copyWith(
-      color: TColors.primary,
+      color: Colors.white,
+      fontFamily: 'Nunito',
       fontSize: 14,
     ),
-    labelStyle: const TextStyle().copyWith(fontSize: 14, color: Colors.white),
-    hintStyle: const TextStyle().copyWith(fontSize: 14, color: Colors.white),
-    errorStyle: const TextStyle().copyWith(fontStyle: FontStyle.normal),
+    labelStyle: const TextStyle().copyWith(
+      fontSize: 14,
+      color: Colors.white,
+      fontFamily: 'Nunito',
+    ),
+    hintStyle: const TextStyle().copyWith(
+      fontSize: 14,
+      color: Colors.white,
+      fontFamily: 'Nunito',
+    ),
+    errorStyle: const TextStyle().copyWith(
+      fontStyle: FontStyle.normal,
+      fontFamily: 'Nunito',
+    ),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(14),
       borderSide: BorderSide(color: Colors.grey, width: 1),

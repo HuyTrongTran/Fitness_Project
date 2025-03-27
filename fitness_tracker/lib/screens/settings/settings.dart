@@ -5,8 +5,9 @@ import 'package:fitness_tracker/common/widgets/custome_shape/containers/primary_
 import 'package:fitness_tracker/common/widgets/texts/section_heading.dart';
 import 'package:fitness_tracker/screens/settings/widgets/setting_menu_title.dart';
 import 'package:fitness_tracker/screens/settings/widgets/user_profile_title.dart';
+import 'package:fitness_tracker/utils/apiUrl.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
-import 'package:fitness_tracker/screens/Login/login.dart';
+import 'package:fitness_tracker/screens/authentication/Login/login.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,7 +24,7 @@ class Settings extends StatelessWidget {
 
     if (token != null) {
       try {
-        const String apiUrl = 'http://10.0.2.2:3000/api/logout';
+        const String apiUrl = '${ApiConfig.baseUrl}/logout';
         final response = await http.post(
           Uri.parse(apiUrl),
           headers: {

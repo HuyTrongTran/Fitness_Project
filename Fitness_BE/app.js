@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const AuthController = require('./controllers/authController'); // Import AuthController
 const config = require('./config/config');
+const activityRoutes = require('./routes/activityRoutes');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/api', authRoutes);
+app.use('/api', activityRoutes)
 
 // Route bảo vệ sử dụng checkBlacklist
 app.get('/api/protected', AuthController.checkBlacklist, (req, res) => {
@@ -31,7 +33,7 @@ app.get('/api/protected', AuthController.checkBlacklist, (req, res) => {
 // Error handler
 app.use(errorHandler);
 
-app.listen(config.PORT, () => {
+app.listen(config.PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${config.PORT}`);
 });
 

@@ -3,9 +3,12 @@ import 'package:fitness_tracker/common/widgets/calendar/calendar_widget.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
+import 'calendar_popup.dart';
 
 class HomeAppBar extends StatelessWidget {
-  const HomeAppBar({super.key});
+  final Function(DateTime) onDaySelected; // Callback để truyền ngày về Home
+
+  const HomeAppBar({super.key, required this.onDaySelected});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,17 @@ class HomeAppBar extends StatelessWidget {
         ],
       ),
       actions: [
-        CalenderCountericon(onPressed: () {}, iconColor: TColors.white),
+        CalenderCountericon(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => CalendarPopup(
+                onDaySelected: onDaySelected, // Truyền callback
+              ),
+            );
+          },
+          iconColor: TColors.white,
+        ),
       ],
     );
   }

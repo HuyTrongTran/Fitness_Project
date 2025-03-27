@@ -2,6 +2,10 @@ class Images {
   static const String darkAppLogo = 'assets/icons/logos/Logo-white.png';
   static const String lightAppLogo = 'assets/icons/logos/Logo-black.png';
 
+
+  //Background onboarding
+  static const String background = 'assets/images/background.png';
+
   //Onboarding Images
   static const String onBoardingImage1 =
       "assets/onboardingImages/onboarding_1.gif";

@@ -7,7 +7,7 @@ class TTextButtonTheme {
   static final lightTextButtonTheme = TextButtonThemeData(
     style: TextButton.styleFrom(
       foregroundColor: TColors.dark,
-      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Nunito'),
       padding: const EdgeInsets.symmetric(vertical: 16.0),
     ),
   );
@@ -15,7 +15,7 @@ class TTextButtonTheme {
   static final darkTextButtonTheme = TextButtonThemeData(
     style: TextButton.styleFrom(
       foregroundColor: TColors.light,
-      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Nunito'),
       padding: const EdgeInsets.symmetric(vertical: 16.0),
     ),
   );

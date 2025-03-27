@@ -14,7 +14,7 @@ class AppTheme {
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: 'Poppins',
+    fontFamily: 'Nunito',
     brightness: Brightness.light,
     primaryColor: const Color(0xFFFF6079),
     textTheme: TTextTheme.lightTextTheme,
@@ -31,7 +31,7 @@ class AppTheme {
 
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: 'Poppins',
+    fontFamily: 'Nunito',
     brightness: Brightness.dark,
     primaryColor: Colors.blue,
     scaffoldBackgroundColor: Colors.black,

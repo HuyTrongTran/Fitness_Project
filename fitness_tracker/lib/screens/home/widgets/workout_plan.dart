@@ -1,112 +1,335 @@
+import 'package:fitness_tracker/utils/apiUrl.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'dart:async';
 
-class WorkoutPlan extends StatelessWidget {
-  const WorkoutPlan({super.key});
+class WorkoutPlan extends StatefulWidget {
+  final DateTime selectedDate;
+  final bool isInPopup;
+
+  const WorkoutPlan({
+    super.key,
+    required this.selectedDate,
+    this.isInPopup = false,
+  });
+
+  @override
+  State<WorkoutPlan> createState() => _WorkoutPlanState();
+}
+
+class _WorkoutPlanState extends State<WorkoutPlan> {
+  Map<String, dynamic> _workoutPlan = {};
+  bool _isLoading = true;
+  String _errorMessage = '';
+  Map<String, Map<String, dynamic>> _cache = {}; // Cache dữ liệu theo ngày
+  Timer? _debounceTimer; // Timer cho debouncing
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchWorkoutPlan();
+  }
+
+  @override
+  void didUpdateWidget(WorkoutPlan oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedDate != widget.selectedDate) {
+      _fetchWorkoutPlan();
+    }
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _fetchWorkoutPlan() async {
+    // Kiểm tra cache trước
+    final String formattedDate = widget.selectedDate.toIso8601String().split('T')[0];
+    if (_cache.containsKey(formattedDate)) {
+      setState(() {
+        _workoutPlan = _cache[formattedDate]!;
+        _isLoading = false;
+        _errorMessage = '';
+      });
+      return;
+    }
+
+    // Debouncing: Hủy timer trước đó nếu có
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () async {
+      // Giữ dữ liệu cũ trong khi tải dữ liệu mới
+      setState(() {
+        _isLoading = true;
+        _errorMessage = '';
+      });
+
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token');
+
+      if (token == null) {
+        setState(() {
+          _errorMessage = 'No token found. Please log in again.';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      final String apiUrl = '${ApiConfig.baseUrl}/activity-data?date=$formattedDate';
+
+      try {
+        final response = await http.get(
+          Uri.parse(apiUrl),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          if (responseData['success'] == true) {
+            setState(() {
+              _workoutPlan = responseData['data'];
+              _cache[formattedDate] = _workoutPlan; // Lưu vào cache
+              _isLoading = false;
+            });
+          } else {
+            setState(() {
+              _errorMessage = 'Failed to fetch workout plan: ${responseData['message']}';
+              _isLoading = false;
+            });
+          }
+        } else {
+          setState(() {
+            _errorMessage = 'Failed to fetch workout plan: ${response.statusCode} ${response.body}';
+            _isLoading = false;
+          });
+        }
+      } catch (e) {
+        print('Error occurred while fetching workout plan: $e');
+        setState(() {
+          _errorMessage = 'Error occurred while fetching workout plan: $e';
+          _isLoading = false;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Xác định màu sắc dựa trên isInPopup
+    final Color containerColor = widget.isInPopup ? TColors.primary : TColors.white.withOpacity(0.1);
+    final Color textColor = widget.isInPopup ? Colors.white : Colors.white;
+    final Color nextExerciseContainerColor = widget.isInPopup ? Colors.white : TColors.primary;
+    final Color nextExerciseTextColor = widget.isInPopup ? TColors.primary : Colors.white;
+    final Color iconColor = widget.isInPopup ? TColors.primary : Colors.white;
+
+    // Điều chỉnh chiều ngang khi trong pop-up
+    final double horizontalPadding = widget.isInPopup ? TSizes.sm : TSizes.defaultSpace;
+    final double containerWidth = widget.isInPopup ? MediaQuery.of(context).size.width * 0.95 : double.infinity;
+
     return Padding(
-      padding: const EdgeInsets.all(TSizes.defaultSpace),
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontalPadding,
+        vertical: TSizes.defaultSpace,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Text(
-          //   'My Plan',
-          //   style: Theme.of(
-          //     context,
-          //   ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-          // ),
-          // const SizedBox(height: TSizes.spaceBtwItems / 2),
-          // Text(
-          //   'July, 2021',
-          //   style: Theme.of(
-          //     context,
-          //   ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
-          // ),
-          // const SizedBox(height: TSizes.spaceBtwItems),
-          // Workout card
-          Container(
-            padding: const EdgeInsets.all(TSizes.defaultSpace),
-            decoration: BoxDecoration(
-              color: TColors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Week 1 header
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(TSizes.sm),
-                      decoration: const BoxDecoration(
-                        color: TColors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Iconsax.flash_1,
-                        color: TColors.primary,
-                        size: 24,
-                      ),
+          AnimatedCrossFade(
+            firstChild: _errorMessage.isNotEmpty
+                ? Center(
+                    child: Text(
+                      _errorMessage,
+                      style: const TextStyle(color: Colors.red),
                     ),
-                    const SizedBox(width: TSizes.spaceBtwItems),
-                    Column(
+                  )
+                : Container(
+                    width: containerWidth,
+                    padding: const EdgeInsets.all(TSizes.defaultSpace),
+                    decoration: BoxDecoration(
+                      color: containerColor,
+                      borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
+                    ),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'WEEK 1',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodyMedium?.copyWith(color: Colors.white),
+                        // Workout header
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(TSizes.sm),
+                              decoration: const BoxDecoration(
+                                color: TColors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Iconsax.flash_1,
+                                color: TColors.primary,
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(width: TSizes.spaceBtwItems),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _workoutPlan['date'] ?? widget.selectedDate.toString().split(' ')[0],
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: textColor),
+                                ),
+                                Text(
+                                  _workoutPlan['type'] ?? 'Rest Day',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold, color: textColor),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        Text(
-                          'Body Weight',
-                          style: Theme.of(context).textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                        Text(
-                          'Workout 1 of 5',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+                        const SizedBox(height: TSizes.spaceBtwItems),
+                        // Next exercise
+                        Container(
+                          padding: const EdgeInsets.all(TSizes.sm),
+                          decoration: BoxDecoration(
+                            color: nextExerciseContainerColor,
+                            borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.play_arrow,
+                                size: 30,
+                                color: iconColor,
+                              ),
+                              const SizedBox(width: TSizes.spaceBtwItems),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Next exercise',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(color: nextExerciseTextColor),
+                                  ),
+                                  Text(
+                                    _workoutPlan['nextExercise'] ?? 'None',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(fontWeight: FontWeight.bold, color: nextExerciseTextColor),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                // Next exercise
-                Container(
-                  padding: const EdgeInsets.all(TSizes.md),
-                  decoration: BoxDecoration(
-                    color: TColors.primary,
-                    borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
                   ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.play_arrow, size: 30, color: Colors.white),
-                      const SizedBox(width: TSizes.spaceBtwItems),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Next exercise',
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(color: Colors.white),
+            secondChild: _errorMessage.isNotEmpty
+                ? Center(
+                    child: Text(
+                      _errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  )
+                : Container(
+                    width: containerWidth,
+                    padding: const EdgeInsets.all(TSizes.defaultSpace),
+                    decoration: BoxDecoration(
+                      color: containerColor,
+                      borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Workout header
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(TSizes.sm),
+                              decoration: const BoxDecoration(
+                                color: TColors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Iconsax.flash_1,
+                                color: TColors.primary,
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(width: TSizes.spaceBtwItems),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _workoutPlan['date'] ?? widget.selectedDate.toString().split(' ')[0],
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: textColor),
+                                ),
+                                Text(
+                                  _workoutPlan['type'] ?? 'Rest Day',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold, color: textColor),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: TSizes.spaceBtwItems),
+                        // Next exercise
+                        Container(
+                          padding: const EdgeInsets.all(TSizes.md),
+                          decoration: BoxDecoration(
+                            color: nextExerciseContainerColor,
+                            borderRadius: BorderRadius.circular(TSizes.cardRadiusLg),
                           ),
-                          Text(
-                            'Lower Strength',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.play_arrow,
+                                size: 30,
+                                color: iconColor,
+                              ),
+                              const SizedBox(width: TSizes.spaceBtwItems),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Next exercise',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(color: nextExerciseTextColor),
+                                  ),
+                                  Text(
+                                    _workoutPlan['nextExercise'] ?? 'None',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(fontWeight: FontWeight.bold, color: nextExerciseTextColor),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
+            crossFadeState: _isLoading ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            duration: const Duration(milliseconds: 300), // Hiệu ứng chuyển đổi mượt mà
           ),
         ],
       ),

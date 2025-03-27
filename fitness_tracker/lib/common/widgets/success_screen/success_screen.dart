@@ -1,5 +1,5 @@
 import 'package:fitness_tracker/common/styles/spacing_styles.dart';
-import 'package:fitness_tracker/screens/Login/login.dart';
+import 'package:fitness_tracker/screens/authentication/Login/login.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:fitness_tracker/utils/helpers/helpers_function.dart';

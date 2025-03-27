@@ -1,4 +1,5 @@
 import 'package:fitness_tracker/screens/home/home.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/run_screen.dart';
 import 'package:fitness_tracker/screens/settings/settings.dart';
 import 'package:fitness_tracker/utils/helpers/helpers_function.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
@@ -15,109 +16,126 @@ class NavigationMenu extends StatelessWidget {
     final dark = HelpersFunction.isDarkMode(context);
 
     return Scaffold(
-      bottomNavigationBar: Obx(
-        () => Container(
-          height: 80,
-          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-          decoration: BoxDecoration(
-            color: dark ? Colors.transparent : Colors.transparent,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color:
-                    dark
-                        ? Colors.black.withOpacity(0.3)
-                        : Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildNavItem(
-                      icon: Iconsax.home,
-                      label: 'Home',
-                      isSelected: controller.selectedIndex.value == 0,
-                      onTap: () => controller.selectedIndex.value = 0,
-                      isDark: dark,
-                    ),
-                    _buildNavItem(
-                      icon: Iconsax.chart,
-                      label: 'Progress',
-                      isSelected: controller.selectedIndex.value == 1,
-                      onTap: () => controller.selectedIndex.value = 1,
-                      isDark: dark,
-                    ),
-                    const SizedBox(width: 60),
-                    _buildNavItem(
-                      icon: Iconsax.profile_2user,
-                      label: 'Social',
-                      isSelected: controller.selectedIndex.value == 2,
-                      onTap: () => controller.selectedIndex.value = 2,
-                      isDark: dark,
-                    ),
-                    _buildNavItem(
-                      icon: Iconsax.setting_2,
-                      label: 'Settings',
-                      isSelected: controller.selectedIndex.value == 3,
-                      onTap: () => controller.selectedIndex.value = 3,
-                      isDark: dark,
-                    ),
-                  ],
+      bottomNavigationBar: SafeArea(
+        child: Obx(
+          () => Container(
+            height: 90, // Tăng chiều cao để chứa nội dung
+            decoration: BoxDecoration(
+              color: dark ? Colors.white : Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: dark
+                      ? Colors.black.withOpacity(0.3)
+                      : Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
                 ),
-              ),
-              Positioned(
-                top: -25,
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: dark ? TColors.dark : Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color:
-                            dark
-                                ? Colors.black.withOpacity(0.3)
-                                : Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        spreadRadius: 1,
+              ],
+            ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child: _buildNavItem(
+                          icon: Iconsax.home,
+                          label: 'Home',
+                          isSelected: controller.selectedIndex.value == 0,
+                          onTap: () => controller.selectedIndex.value = 0,
+                          isDark: dark,
+                          context: context,
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildNavItem(
+                          icon: Iconsax.chart,
+                          label: 'Progress',
+                          isSelected: controller.selectedIndex.value == 1,
+                          onTap: () => controller.selectedIndex.value = 1,
+                          isDark: dark,
+                          context: context,
+                        ),
+                      ),
+                      const SizedBox(width: 60), // Khoảng trống cho nút Run
+                      Expanded(
+                        child: _buildNavItem(
+                          icon: Iconsax.profile_2user,
+                          label: 'Social',
+                          isSelected: controller.selectedIndex.value == 2,
+                          onTap: () => controller.selectedIndex.value = 2,
+                          isDark: dark,
+                          context: context,
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildNavItem(
+                          icon: Iconsax.setting_2,
+                          label: 'Settings',
+                          isSelected: controller.selectedIndex.value == 3,
+                          onTap: () => controller.selectedIndex.value = 3,
+                          isDark: dark,
+                          context: context,
+                        ),
                       ),
                     ],
                   ),
-                  child: GestureDetector(
-                    onTap: () => controller.selectedIndex.value = 4,
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: TColors.primary,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: TColors.primary.withOpacity(0.3),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
+                ),
+                Positioned(
+                  top: -25,
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: dark ? TColors.dark : Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: dark
+                              ? Colors.black.withOpacity(0.3)
+                              : Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RunPage(),
                           ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.play_arrow_rounded,
-                        color: Colors.white,
-                        size: 35,
+                        );
+                      },
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: TColors.primary,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: TColors.primary.withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Iconsax.map,
+                          color: Colors.white,
+                          size: 35,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -131,11 +149,11 @@ class NavigationMenu extends StatelessWidget {
     required bool isSelected,
     required VoidCallback onTap,
     required bool isDark,
+    required BuildContext context,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 60,
         height: double.infinity,
         child: Stack(
           alignment: Alignment.center,
@@ -155,13 +173,14 @@ class NavigationMenu extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: isDark ? Colors.black : Colors.black, // Đổi màu chữ cho phù hợp
+                          fontSize: 12, // Giảm kích thước chữ
+                        ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis, // Tránh tràn chữ
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2), // Giảm khoảng cách
                   Container(
                     width: 4,
                     height: 4,
@@ -171,7 +190,7 @@ class NavigationMenu extends StatelessWidget {
                     ),
                   ),
                 ],
-            ),
+              ),
           ],
         ),
       ),

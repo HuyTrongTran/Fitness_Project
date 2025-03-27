@@ -49,5 +49,9 @@
 		<false/>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>We need your location to track your running session.</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>We need your location to track your running session.</string>
 	</dict>
 </plist>

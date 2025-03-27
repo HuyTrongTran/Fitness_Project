@@ -1,16 +1,18 @@
-import 'package:fitness_tracker/screens/GenderScreen/genderScreen.dart';
-import 'package:fitness_tracker/screens/Login/login.dart';
-import 'package:fitness_tracker/screens/OnBoardingScreen/onboardingScreen.dart';
-import 'package:fitness_tracker/screens/activityLevelScreen/activityLevelScreen.dart';
-import 'package:fitness_tracker/screens/goalScreen/goalScreen.dart';
+import 'package:fitness_tracker/screens/onboardingFeature/BMIScreen/bmi_screen.dart';
+import 'package:fitness_tracker/screens/onboardingFeature/GenderScreen/genderScreen.dart';
+import 'package:fitness_tracker/screens/authentication/Login/login.dart';
+import 'package:fitness_tracker/screens/onboardingFeature/OnBoardingScreen/onboardingScreen.dart';
+import 'package:fitness_tracker/screens/onboardingFeature/activityLevelScreen/activityLevelScreen.dart';
+import 'package:fitness_tracker/screens/onboardingFeature/goalScreen/goalScreen.dart';
 import 'package:fitness_tracker/navigation_menu.dart';
+import 'package:fitness_tracker/screens/password_configuration/forget_password.dart';
+import 'package:fitness_tracker/screens/authentication/signup/signup.dart';
 import 'package:fitness_tracker/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'screens/ageScreen/ageScreen.dart';
-import 'screens/heightScreen/heightScreen.dart';
-import 'screens/weightPage/weightPage.dart';
+import 'screens/onboardingFeature/ageScreen/ageScreen.dart';
+import 'screens/onboardingFeature/heightScreen/heightScreen.dart';
+import 'screens/onboardingFeature/weightPage/weightPage.dart';
 
 class MyApp extends StatelessWidget {
   final Widget initialScreen;
@@ -20,22 +22,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Fitness Tracker',
+      initialRoute: '/login',
       themeMode: ThemeMode.system,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       routes: {
-        '/onboarding': (context) => const OnboardingScreen(),
-        '/height': (context) => const HeightPage(),
-        '/age': (context) => const AgePage(),
-        '/gender': (context) => const GenderPage(),
-        '/goal': (context) => const GoalPage(),
-        '/weight': (context) => const WeightPage(),
-        '/activity': (context) => const ActivityPage(),
-        '/navigation': (context) => const NavigationMenu(),
         '/login': (context) => const Login(),
+        '/onboarding': (context) => const OnboardingScreen(),
+        '/gender': (context) => const GenderPage(),
+        '/age': (context) => const AgePage(),
+        '/height': (context) => const HeightPage(),
+        '/weight': (context) => const WeightPage(),
+        '/goal': (context) => const GoalPage(),
+        '/activity': (context) => const ActivityPage(),
+        '/home': (context) => const NavigationMenu(),
+        '/signup': (context) => const Signup(),
+        '/forget-password': (context) => const ForgetPassword(),
+        '/bmi': (context) => const BMIScreen(),
+        '/navigation': (context) => const NavigationMenu(),
       },
-      debugShowCheckedModeBanner: false,
-      home: initialScreen,
     );
   }
 }
