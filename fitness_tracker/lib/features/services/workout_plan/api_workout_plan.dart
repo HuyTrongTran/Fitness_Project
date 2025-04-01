@@ -1,19 +1,26 @@
-// api_service.dart
-import 'package:fitness_tracker/utils/apiUrl.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:fitness_tracker/api/apiUrl.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ApiService {
+class WorkoutPlan {
   static const String _apiBaseUrl = ApiConfig.baseUrl;
-  static const String _submitRunSessionEndpoint = '/submitRunSession';
+  static const String _submitWorkoutPlanEndpoint = '/add-to-plan';
+  static const String _getWorkoutPlanEndpoint =
+      '/api/exercise/get-workout-plan';
 
-  // Hàm Future để gửi dữ liệu chạy lên server
-  Future<bool> submitRunSession(int timeInSeconds, double distanceInKm) async {
+  Future<bool> submitWorkoutPlan(
+    String exerciseName,
+    String exerciseSubTitle,
+    String dateToDo,
+    int setToDo,
+    int kcalToDo,
+    int timeToDo,
+  ) async {
     try {
-      final url = Uri.parse('$_apiBaseUrl$_submitRunSessionEndpoint');
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt_token');
+      final url = Uri.parse('$_apiBaseUrl$_submitWorkoutPlanEndpoint');
 
       if (token == null) {
         print('No token found');
@@ -21,10 +28,13 @@ class ApiService {
       }
 
       final body = jsonEncode({
-        'time_in_seconds': timeInSeconds,
-        'distance_in_km': distanceInKm,
+        'exercise_name': exerciseName,
+        'exercise_sub_title': exerciseSubTitle,
+        'date_to_do': dateToDo,
+        'set_to_do': setToDo,
+        'kcal_to_do': kcalToDo,
+        'time_to_do': timeToDo,
       });
-      print('Sending to API: $body');
 
       final response = await http.post(
         url,
@@ -36,14 +46,14 @@ class ApiService {
       );
 
       if (response.statusCode == 201) {
-        print('Run session submitted successfully');
+        print('Workout plan submitted successfully');
         return true;
       } else {
         print('Failed to submit: ${response.statusCode} - ${response.body}');
         return false;
       }
     } catch (e) {
-      print('Error submitting run session: $e');
+      print('Error submitting workout plan: $e');
       return false;
     }
   }

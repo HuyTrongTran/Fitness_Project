@@ -1,6 +1,6 @@
 import 'package:fitness_tracker/common/widgets/custome_shape/custome_snackbar/customSnackbar.dart';
 import 'package:fitness_tracker/screens/authentication/Login/login.dart';
-import 'package:fitness_tracker/utils/apiUrl.dart';
+import 'package:fitness_tracker/api/apiUrl.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';

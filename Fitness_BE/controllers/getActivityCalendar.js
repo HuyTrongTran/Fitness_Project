@@ -1,6 +1,6 @@
 // controllers/getActivityCalendar.js
 const { User, UserModel } = require('../models/userModel');
-const UserActivity = require('../models/userActivity');
+const UserExercise = require('../models/userExerciseModel');
 
 // Debug: Log để kiểm tra User và UserModel
 console.log('User model in getActivityCalendar:', User);
@@ -28,22 +28,22 @@ class GetActivityCalendar {
                 return res.status(404).json({ success: false, message: 'User not found' });
             }
 
-            // Tìm các hoạt động của user cho ngày được chọn
+            // Tìm các bài tập của user cho ngày được chọn
             const startOfDay = new Date(selectedDate);
             startOfDay.setHours(0, 0, 0, 0);
             const endOfDay = new Date(selectedDate);
             endOfDay.setHours(23, 59, 59, 999);
 
-            const activities = await UserActivity.find({
+            const exercises = await UserExercise.find({
                 user_id: user._id,
-                activity_date: {
+                date_to_do: {
                     $gte: startOfDay,
                     $lte: endOfDay,
                 },
             });
 
-            // Nếu không có hoạt động, trả về "Rest Day"
-            if (!activities || activities.length === 0) {
+            // Nếu không có bài tập, trả về "Rest Day"
+            if (!exercises || exercises.length === 0) {
                 return res.status(200).json({
                     success: true,
                     data: {
@@ -56,13 +56,20 @@ class GetActivityCalendar {
                 });
             }
 
-            // Tính toán thông tin hoạt động
+            // Tính toán thông tin bài tập
             const workoutPlan = {
                 date: selectedDate.split('-').reverse().join('/'),
-                type: activities[0].activity_type.charAt(0).toUpperCase() + activities[0].activity_type.slice(1), // Ví dụ: "Run"
-                workoutNumber: activities.length, // Số lượng hoạt động trong ngày
-                totalWorkouts: user.profile.activities.length, // Tổng số hoạt động của user
-                nextExercise: activities[0].activity_type === 'run' ? 'Run' : 'None', // Có thể mở rộng logic cho các loại hoạt động khác
+                type: exercises[0].exercise_name,
+                workoutNumber: exercises.length,
+                totalWorkouts: exercises.length,
+                nextExercise: exercises[0].exercise_name,
+                exercises: exercises.map(exercise => ({
+                    exercise_name: exercise.exercise_name,
+                    exercise_sub_title: exercise.exercise_sub_title,
+                    set_to_do: exercise.set_to_do,
+                    kcal_to_do: exercise.kcal_to_do,
+                    time_to_do: exercise.time_to_do
+                }))
             };
 
             res.status(200).json({

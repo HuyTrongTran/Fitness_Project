@@ -1,35 +1,65 @@
-import 'package:fitness_tracker/screens/runSessionFeature/RunResultPage.dart';
-import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/RunResultPage.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
+import 'package:fitness_tracker/features/services/run_history_service.dart';
+import 'package:flutter/foundation.dart';
 
 class StopTrackingController {
-  Future<void> stopTracking({
-    required BuildContext context,
-    required int elapsedTimeInSeconds,
-    required double distanceInKm,
-    required List<LatLng> routePoints,
-    required Function onStop,
-  }) async {
-    onStop(); // Hủy timer và stream từ class chính
+  static Future<void> stopTracking(
+    BuildContext context,
+    RunSession session,
+  ) async {
+    try {
+      // Hiển thị loading dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
 
-    int steps = (distanceInKm * 1250).toInt();
-    double calories = distanceInKm * 60;
+      // Gửi dữ liệu lên server
+      final success = await RunHistoryService.submitRunSession(session);
 
-    RunSessionManager.addSession(
-      RunSession(
-        date: DateTime.now(),
-        elapsedTimeInSeconds: elapsedTimeInSeconds,
-        distanceInKm: distanceInKm,
-        routePoints: List.from(routePoints),
-        steps: steps,
-        calories: calories,
-      ),
-    );
+      // Đóng loading dialog
+      Navigator.pop(context);
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const RunResultPage()),
-    );
+      if (success) {
+        // Lưu session vào local storage
+        RunSessionManager.addSession(session);
+
+        // Chuyển đến trang kết quả
+        if (context.mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RunResultPage(session: session),
+            ),
+          );
+        }
+      } else {
+        throw Exception('Failed to save run session');
+      }
+    } catch (e) {
+      // Đóng loading dialog nếu có
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
+
+      debugPrint('Error saving run session: $e');
+
+      // Hiển thị thông báo lỗi phù hợp
+      String errorMessage = 'An error occurred while saving run session';
+      if (e is Exception) {
+        errorMessage = e.toString();
+      }
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+        );
+      }
+    }
   }
 }

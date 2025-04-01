@@ -6,6 +6,7 @@ const UserActivityController = require('../controllers/userActivityController');
 const router = express.Router();
 
 router.post('/submitRunSession',AuthController.checkBlacklist, UserActivityController.submitRunSession);
+router.get('/run-history',AuthController.checkBlacklist, UserActivityController.getRunHistory);
 
 
 module.exports = router;

@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 // Enum để xác định loại snackbar
-enum SnackbarType {
-  success,
-  error,
-  processing,
-}
+enum SnackbarType { success, error, processing }
 
 // Hàm hiển thị snackbar tùy chỉnh
-void showCustomSnackbar(String title, String message, {required SnackbarType type}) {
+void showCustomSnackbar(
+  String title,
+  String message, {
+  required SnackbarType type,
+}) {
   // Xác định màu nền và icon dựa trên loại snackbar
   Color backgroundColor;
   IconData icon;
 
   switch (type) {
     case SnackbarType.success:
-      backgroundColor = TColors.primary;
+      backgroundColor = TColors.white;
       icon = Icons.check_circle;
       break;
     case SnackbarType.error:
@@ -37,7 +37,7 @@ void showCustomSnackbar(String title, String message, {required SnackbarType typ
     titleText: Text(
       title,
       style: const TextStyle(
-        color: Colors.white,
+        color: TColors.primary,
         fontFamily: 'Nunito',
         fontWeight: FontWeight.bold,
         fontSize: 16,
@@ -47,7 +47,7 @@ void showCustomSnackbar(String title, String message, {required SnackbarType typ
     messageText: Text(
       message,
       style: const TextStyle(
-        color: Colors.white,
+        color: TColors.primary,
         fontFamily: 'Nunito',
         fontSize: 14,
       ),
@@ -73,11 +73,7 @@ void showCustomSnackbar(String title, String message, {required SnackbarType typ
       ),
     ],
     // Icon
-    icon: Icon(
-      icon,
-      color: Colors.white,
-      size: 24,
-    ),
+    icon: Icon(icon, color: TColors.primary, size: 24),
     // Khoảng cách giữa icon và nội dung
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
   );

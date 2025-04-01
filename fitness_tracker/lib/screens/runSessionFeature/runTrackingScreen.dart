@@ -15,6 +15,8 @@ import 'package:fitness_tracker/features/controllers/runControllers/mapControlle
 import 'package:fitness_tracker/features/controllers/runControllers/mapControllers/calculate_distance_controller.dart';
 import 'package:fitness_tracker/features/controllers/runControllers/trackingControllers/start_timer_controller.dart';
 import 'package:fitness_tracker/features/controllers/runControllers/trackingControllers/stop_tracking_controller.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
+import 'package:fitness_tracker/common/formulas/step_calculate.dart';
 
 class RunTrackingPage extends StatefulWidget {
   const RunTrackingPage({super.key});
@@ -35,14 +37,18 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
   BitmapDescriptor? _smallMarkerIcon;
   BitmapDescriptor? _largeMarkerIcon;
   double _currentZoom = 18.0;
+  double _weight = 0.0;
 
   static const LatLng _initialPosition = LatLng(10.7769, 106.7009);
 
   late final CreateMarkerIconsController _createMarkerIconsController;
-  late final RequestLocationPermissionController _requestLocationPermissionController;
-  late final UpdateCurrentLocationMarkerController _updateCurrentLocationMarkerController;
+  late final RequestLocationPermissionController
+  _requestLocationPermissionController;
+  late final UpdateCurrentLocationMarkerController
+  _updateCurrentLocationMarkerController;
   late final StartTrackingController _startTrackingController;
-  late final CenterMapToCurrentLocationController _centerMapToCurrentLocationController;
+  late final CenterMapToCurrentLocationController
+  _centerMapToCurrentLocationController;
   late final Toggle3DModeController _toggle3DModeController;
   late final ZoomInController _zoomInController;
   late final ZoomOutController _zoomOutController;
@@ -54,17 +60,20 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
   void initState() {
     super.initState();
     _createMarkerIconsController = CreateMarkerIconsController();
-    _requestLocationPermissionController = RequestLocationPermissionController();
-    _updateCurrentLocationMarkerController = UpdateCurrentLocationMarkerController();
+    _requestLocationPermissionController =
+        RequestLocationPermissionController();
+    _updateCurrentLocationMarkerController =
+        UpdateCurrentLocationMarkerController();
     _startTrackingController = StartTrackingController();
-    _centerMapToCurrentLocationController = CenterMapToCurrentLocationController();
+    _centerMapToCurrentLocationController =
+        CenterMapToCurrentLocationController();
     _toggle3DModeController = Toggle3DModeController();
     _zoomInController = ZoomInController();
     _zoomOutController = ZoomOutController();
     _calculateDistanceController = CalculateDistanceController();
     _startTimerController = StartTimerController();
     _stopTrackingController = StopTrackingController();
-
+    _weight = 0.0;
     _createMarkerIconsController.createMarkerIcons(
       onIconsCreated: (small, large) {
         if (mounted) {
@@ -74,16 +83,19 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
           });
         }
       },
-      updateMarkerCallback: (position) => _updateCurrentLocationMarkerController.updateCurrentLocationMarker(
-        mapController: _mapController,
-        position: position,
-        smallMarkerIcon: _smallMarkerIcon,
-        largeMarkerIcon: _largeMarkerIcon,
-        isExpanded: _isExpanded,
-        currentZoom: _currentZoom,
-        is3DMode: _is3DMode,
-        onMarkersUpdated: (markers) => setState(() => _markers = markers),
-      ),
+      updateMarkerCallback:
+          (position) => _updateCurrentLocationMarkerController
+              .updateCurrentLocationMarker(
+                mapController: _mapController,
+                position: position,
+                smallMarkerIcon: _smallMarkerIcon,
+                largeMarkerIcon: _largeMarkerIcon,
+                isExpanded: _isExpanded,
+                currentZoom: _currentZoom,
+                is3DMode: _is3DMode,
+                onMarkersUpdated:
+                    (markers) => setState(() => _markers = markers),
+              ),
       currentPosition: _currentPosition,
     );
 
@@ -101,7 +113,14 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
         },
         onDistanceUpdated: (distance) {
           if (mounted) {
-            setState(() => _distanceInKm = _calculateDistanceController.calculateDistance(_routePoints));
+            setState(
+              () =>
+                  _distanceInKm = _calculateDistanceController
+                      .calculateDistance(
+                        List.from(_routePoints),
+                        _elapsedTimeInSeconds,
+                      ),
+            );
           }
         },
         onPositionUpdated: (position) {
@@ -149,7 +168,8 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     double navbarHeight = _isExpanded ? size.height * 0.5 : size.height * 0.15;
-    double buttonsTop = _isExpanded ? (size.height * 0.5 - 220) : size.height * 0.4;
+    double buttonsTop =
+        _isExpanded ? (size.height * 0.5 - 220) : size.height * 0.4;
 
     return Scaffold(
       body: Stack(
@@ -163,12 +183,13 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
             onMapCreated: (GoogleMapController controller) {
               _mapController = controller;
               if (_currentPosition != null) {
-                _centerMapToCurrentLocationController.centerMapToCurrentLocation(
-                  mapController: _mapController,
-                  currentPosition: _currentPosition,
-                  currentZoom: _currentZoom,
-                  is3DMode: _is3DMode,
-                );
+                _centerMapToCurrentLocationController
+                    .centerMapToCurrentLocation(
+                      mapController: _mapController,
+                      currentPosition: _currentPosition,
+                      currentZoom: _currentZoom,
+                      is3DMode: _is3DMode,
+                    );
               }
             },
             markers: _markers,
@@ -194,99 +215,149 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: () => _toggle3DModeController.toggle3DMode(
-                    is3DMode: _is3DMode,
-                    onModeChanged: (mode) => setState(() => _is3DMode = mode),
-                    centerMapCallback: () => _centerMapToCurrentLocationController.centerMapToCurrentLocation(
-                      mapController: _mapController,
-                      currentPosition: _currentPosition,
-                      currentZoom: _currentZoom,
-                      is3DMode: _is3DMode,
-                    ),
-                  ),
+                  onTap:
+                      () => _toggle3DModeController.toggle3DMode(
+                        is3DMode: _is3DMode,
+                        onModeChanged:
+                            (mode) => setState(() => _is3DMode = mode),
+                        centerMapCallback:
+                            () => _centerMapToCurrentLocationController
+                                .centerMapToCurrentLocation(
+                                  mapController: _mapController,
+                                  currentPosition: _currentPosition,
+                                  currentZoom: _currentZoom,
+                                  is3DMode: _is3DMode,
+                                ),
+                      ),
                   child: Container(
                     width: 49,
                     height: 49,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: _is3DMode ? TColors.primary : Colors.white,
-                      boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 1)],
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 5,
+                          spreadRadius: 1,
+                        ),
+                      ],
                     ),
                     child: Center(
                       child: Text(
                         _is3DMode ? '2D' : '3D',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: _is3DMode ? Colors.white : TColors.primary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          color: _is3DMode ? Colors.white : TColors.primary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: () => _centerMapToCurrentLocationController.centerMapToCurrentLocation(
-                    mapController: _mapController,
-                    currentPosition: _currentPosition,
-                    currentZoom: _currentZoom,
-                    is3DMode: _is3DMode,
-                  ),
+                  onTap:
+                      () => _centerMapToCurrentLocationController
+                          .centerMapToCurrentLocation(
+                            mapController: _mapController,
+                            currentPosition: _currentPosition,
+                            currentZoom: _currentZoom,
+                            is3DMode: _is3DMode,
+                          ),
                   child: Container(
                     width: 48,
                     height: 48,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
-                      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 1)],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 5,
+                          spreadRadius: 1,
+                        ),
+                      ],
                     ),
-                    child: const Icon(Iconsax.direct_up, color: TColors.primary, size: 24),
+                    child: const Icon(
+                      Iconsax.direct_up,
+                      color: TColors.primary,
+                      size: 24,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: () => _zoomInController.zoomIn(
-                    currentZoom: _currentZoom,
-                    onZoomChanged: (zoom) => setState(() => _currentZoom = zoom),
-                    centerMapCallback: () => _centerMapToCurrentLocationController.centerMapToCurrentLocation(
-                      mapController: _mapController,
-                      currentPosition: _currentPosition,
-                      currentZoom: _currentZoom,
-                      is3DMode: _is3DMode,
-                    ),
-                  ),
+                  onTap:
+                      () => _zoomInController.zoomIn(
+                        currentZoom: _currentZoom,
+                        onZoomChanged:
+                            (zoom) => setState(() => _currentZoom = zoom),
+                        centerMapCallback:
+                            () => _centerMapToCurrentLocationController
+                                .centerMapToCurrentLocation(
+                                  mapController: _mapController,
+                                  currentPosition: _currentPosition,
+                                  currentZoom: _currentZoom,
+                                  is3DMode: _is3DMode,
+                                ),
+                      ),
                   child: Container(
                     width: 48,
                     height: 48,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
-                      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 1)],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 5,
+                          spreadRadius: 1,
+                        ),
+                      ],
                     ),
-                    child: const Icon(Icons.add, color: TColors.primary, size: 24),
+                    child: const Icon(
+                      Icons.add,
+                      color: TColors.primary,
+                      size: 24,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: () => _zoomOutController.zoomOut(
-                    currentZoom: _currentZoom,
-                    onZoomChanged: (zoom) => setState(() => _currentZoom = zoom),
-                    centerMapCallback: () => _centerMapToCurrentLocationController.centerMapToCurrentLocation(
-                      mapController: _mapController,
-                      currentPosition: _currentPosition,
-                      currentZoom: _currentZoom,
-                      is3DMode: _is3DMode,
-                    ),
-                  ),
+                  onTap:
+                      () => _zoomOutController.zoomOut(
+                        currentZoom: _currentZoom,
+                        onZoomChanged:
+                            (zoom) => setState(() => _currentZoom = zoom),
+                        centerMapCallback:
+                            () => _centerMapToCurrentLocationController
+                                .centerMapToCurrentLocation(
+                                  mapController: _mapController,
+                                  currentPosition: _currentPosition,
+                                  currentZoom: _currentZoom,
+                                  is3DMode: _is3DMode,
+                                ),
+                      ),
                   child: Container(
                     width: 48,
                     height: 48,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
-                      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 1)],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 5,
+                          spreadRadius: 1,
+                        ),
+                      ],
                     ),
-                    child: const Icon(Icons.remove, color: TColors.primary, size: 24),
+                    child: const Icon(
+                      Icons.remove,
+                      color: TColors.primary,
+                      size: 24,
+                    ),
                   ),
                 ),
               ],
@@ -304,16 +375,19 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
                     setState(() {
                       _isExpanded = notification.extent > 0.2;
                       if (_currentPosition != null) {
-                        _updateCurrentLocationMarkerController.updateCurrentLocationMarker(
-                          mapController: _mapController,
-                          position: _currentPosition!,
-                          smallMarkerIcon: _smallMarkerIcon,
-                          largeMarkerIcon: _largeMarkerIcon,
-                          isExpanded: _isExpanded,
-                          currentZoom: _currentZoom,
-                          is3DMode: _is3DMode,
-                          onMarkersUpdated: (markers) => setState(() => _markers = markers),
-                        );
+                        _updateCurrentLocationMarkerController
+                            .updateCurrentLocationMarker(
+                              mapController: _mapController,
+                              position: _currentPosition!,
+                              smallMarkerIcon: _smallMarkerIcon,
+                              largeMarkerIcon: _largeMarkerIcon,
+                              isExpanded: _isExpanded,
+                              currentZoom: _currentZoom,
+                              is3DMode: _is3DMode,
+                              onMarkersUpdated:
+                                  (markers) =>
+                                      setState(() => _markers = markers),
+                            );
                       }
                     });
                   }
@@ -322,8 +396,17 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
                 child: Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                    boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 5)],
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        spreadRadius: 5,
+                      ),
+                    ],
                   ),
                   child: SingleChildScrollView(
                     controller: scrollController,
@@ -337,42 +420,67 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
                               width: 40,
                               height: 5,
                               margin: const EdgeInsets.only(top: 10),
-                              decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
                           ),
                           if (!_isExpanded) ...[
                             Row(
                               children: [
-                                const Icon(Icons.directions_run, color: TColors.primary, size: 24),
+                                const Icon(
+                                  Icons.directions_run,
+                                  color: TColors.primary,
+                                  size: 24,
+                                ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      const Text("Elapsed time", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                                      const Text(
+                                        "Elapsed time",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      ),
                                       Text(
                                         _formatTime(_elapsedTimeInSeconds),
-                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      const Text("Distance", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                                      const Text(
+                                        "Distance",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      ),
                                       Text(
                                         "${_distanceInKm.toStringAsFixed(1)}km",
-                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -383,41 +491,67 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
                           if (_isExpanded) ...[
                             const Text(
                               "Your run session",
-                              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             const SizedBox(height: 16),
                             Row(
                               children: [
-                                const Icon(Icons.directions_run, color: TColors.primary, size: 24),
+                                const Icon(
+                                  Icons.directions_run,
+                                  color: TColors.primary,
+                                  size: 24,
+                                ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      const Text("Elapsed time", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                                      const Text(
+                                        "Elapsed time",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      ),
                                       Text(
                                         _formatTime(_elapsedTimeInSeconds),
-                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      const Text("Distance", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                                      const Text(
+                                        "Distance",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      ),
                                       Text(
                                         "${_distanceInKm.toStringAsFixed(1)}km",
-                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -428,36 +562,90 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () => _stopTrackingController.stopTracking(
-                                  context: context,
-                                  elapsedTimeInSeconds: _elapsedTimeInSeconds,
-                                  distanceInKm: _distanceInKm,
-                                  routePoints: _routePoints,
-                                  onStop: () {
-                                    _startTimerController.dispose();
-                                    _startTrackingController.dispose();
-                                  },
-                                ),
+                                onPressed: () async {
+                                  // Log thông tin trước khi gửi
+                                  debugPrint(
+                                    '=== Start sending run session data ===',
+                                  );
+                                  debugPrint(
+                                    'Number of points on the map: ${_routePoints.length}',
+                                  );
+                                  debugPrint(
+                                    'Time: $_elapsedTimeInSeconds seconds',
+                                  );
+                                  debugPrint('Distance: $_distanceInKm km');
+
+                                  if (_routePoints.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'No location data to save',
+                                        ),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  // Tính toán steps và calories sử dụng StepCalculator
+                                  int steps = StepCalculator.calculateSteps(
+                                    _distanceInKm,
+                                  );
+                                  double calories =
+                                      await StepCalculator.calculateCalories(
+                                        _distanceInKm,
+                                        List.from(_routePoints),
+                                        _elapsedTimeInSeconds,
+                                      );
+
+                                  StopTrackingController.stopTracking(
+                                    context,
+                                    RunSession(
+                                      date: DateTime.now(),
+                                      elapsedTimeInSeconds:
+                                          _elapsedTimeInSeconds,
+                                      distanceInKm: _distanceInKm,
+                                      routePoints: List.from(_routePoints),
+                                      steps: steps,
+                                      calories: calories,
+                                    ),
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: TColors.primary,
-                                  padding: const EdgeInsets.symmetric(vertical: 15),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 15,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                 ),
                                 child: const Text(
                                   "Stop",
-                                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
                             const SizedBox(height: 16),
                             const Text(
                               "Last session",
-                              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             const SizedBox(height: 8),
                             const Text(
                               "Last time results: 7.12 km",
-                              style: TextStyle(color: Colors.grey, fontSize: 14),
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
                             ),
                           ],
                         ],

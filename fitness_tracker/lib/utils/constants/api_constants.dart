@@ -1,3 +1,3 @@
 class ApiConstants {
-  static const String tSecretAPIKey = '';
+  static const String baseUrl = 'http://localhost:8000';
 }

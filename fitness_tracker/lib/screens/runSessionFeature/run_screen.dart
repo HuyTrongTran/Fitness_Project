@@ -2,6 +2,8 @@ import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runTrackingScreen.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/run_stats_controller.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/run_chart_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -13,58 +15,38 @@ class RunPage extends StatefulWidget {
 }
 
 class _RunPageState extends State<RunPage> {
-  RunSession? _bestSession; // Phiên chạy có khoảng cách lớn nhất
-  double _todayCalories = 0.0; // Tổng kcal của ngày hôm nay
-  List<double> _weeklyCalories = [
-    50, // Mon
-    30, // Tue
-    80, // Wed
-    20, // Thu
-    60, // Fri
-    40, // Sat
-    70, // Sun
-  ]; // Dữ liệu demo cho 7 ngày trong tuần
-  int _currentDayIndex = 0; // Vị trí của ngày hiện tại trong tuần
+  RunSession? _bestSession;
+  double _todayCalories = 0.0;
+  List<double> _weeklyCalories = List.filled(7, 0.0);
+  int _currentDayIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _calculateStats();
+    _loadStats();
+    _loadWeeklyCalories();
   }
 
-  // Tính toán các số liệu: khoảng cách lớn nhất, kcal hôm nay
-  void _calculateStats() {
-    // 1. Tìm phiên chạy có khoảng cách lớn nhất
-    if (RunSessionManager.runSessions.isNotEmpty) {
-      _bestSession = RunSessionManager.runSessions.reduce(
-        (a, b) => a.distanceInKm > b.distanceInKm ? a : b,
-      );
+  Future<void> _loadWeeklyCalories() async {
+    final weeklyCalories = await RunChartController.getWeeklyCalories();
+    if (mounted) {
+      setState(() {
+        _weeklyCalories = weeklyCalories;
+        _currentDayIndex = RunStatsController.getCurrentDayIndex();
+      });
     }
+  }
 
-    // 2. Tính tổng kcal của ngày hôm nay và xác định thứ hiện tại
-    DateTime today = DateTime.now();
-    // weekday: 1 (Mon) đến 7 (Sun), ánh xạ sang index: 0 (Mon) đến 6 (Sun)
-    _currentDayIndex =
-        (today.weekday - 1) % 7; // 0 (Mon), 1 (Tue), ..., 6 (Sun)
-    print(
-      "Current day: ${today.weekday}, Index: $_currentDayIndex",
-    ); // Debug: 2 (Tue) -> index 1
+  Future<void> _loadStats() async {
+    final bestSession = await RunStatsController.getBestSession();
+    final todayCalories = await RunStatsController.calculateTodayCalories();
 
-    _todayCalories = RunSessionManager.runSessions
-        .where(
-          (session) =>
-              session.date.day == today.day &&
-              session.date.month == today.month &&
-              session.date.year == today.year,
-        )
-        .fold(0.0, (sum, session) => sum + session.calories);
-
-    // Nếu không có dữ liệu thực tế, dùng dữ liệu demo cho ngày hiện tại
-    if (_todayCalories == 0.0) {
-      _todayCalories = _weeklyCalories[_currentDayIndex];
+    if (mounted) {
+      setState(() {
+        _bestSession = bestSession;
+        _todayCalories = todayCalories;
+      });
     }
-
-    setState(() {});
   }
 
   @override
@@ -73,9 +55,7 @@ class _RunPageState extends State<RunPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           "Move your body",
@@ -107,8 +87,8 @@ class _RunPageState extends State<RunPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Your record",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    "Your highest record",
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w500,
                       color: TColors.black,
                     ),
@@ -173,7 +153,7 @@ class _RunPageState extends State<RunPage> {
                             ),
                           ),
                           Text(
-                            "${_bestSession != null ? _bestSession!.calories.toStringAsFixed(0) : 0}",
+                            "${_bestSession != null ? _bestSession!.calories.toStringAsFixed(2) : 0}",
                             style: Theme.of(context).textTheme.headlineSmall
                                 ?.copyWith(color: TColors.primary),
                           ),
@@ -194,7 +174,7 @@ class _RunPageState extends State<RunPage> {
               ),
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
-            // Tổng kcal hôm nay
+            // Today's calories
             Center(
               child: Column(
                 children: [
@@ -217,102 +197,21 @@ class _RunPageState extends State<RunPage> {
               ),
             ),
             const SizedBox(height: 16),
-            // Biểu đồ (hiển thị 7 ngày trong tuần, bắt đầu từ Mon)
+
+            // Weekly chart
             SizedBox(
               height: 150,
               child: LineChart(
-                LineChartData(
-                  gridData: const FlGridData(
-                    drawHorizontalLine: false,
-                    drawVerticalLine: false,
-                  ),
-                  titlesData: FlTitlesData(
-                    leftTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        interval: 1, // Đảm bảo mỗi ngày hiển thị 1 lần
-                        getTitlesWidget: (value, meta) {
-                          const days = [
-                            'Mon',
-                            'Tue',
-                            'Wed',
-                            'Thu',
-                            'Fri',
-                            'Sat',
-                            'Sun',
-                          ];
-                          int index = value.toInt();
-                          if (index < 0 || index >= days.length)
-                            return const SizedBox.shrink();
-                          return Text(
-                            days[index],
-                            style: Theme.of(
-                              context,
-                            ).textTheme.labelLarge?.copyWith(
-                              color:
-                                  index == _currentDayIndex
-                                      ? TColors
-                                          .primary // Ngày hiện tại có màu primary
-                                      : Colors.grey,
-                              fontFamily: 'Nunito',
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        },
-                        reservedSize: 30,
-                      ),
-                    ),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: List.generate(
-                        7,
-                        (index) =>
-                            FlSpot(index.toDouble(), _weeklyCalories[index]),
-                      ),
-                      isCurved: true, // Đường cong mượt mà
-                      color: TColors.primary,
-                      barWidth: 2,
-                      dotData: FlDotData(
-                        show: true,
-                        getDotPainter: (spot, percent, bar, index) {
-                          // Chỉ hiển thị chấm cho ngày hiện tại
-                          if (index == _currentDayIndex) {
-                            return FlDotCirclePainter(
-                              radius: 4,
-                              color: Colors.white,
-                              strokeWidth: 2,
-                              strokeColor: TColors.primary,
-                            );
-                          }
-                          return FlDotCirclePainter(
-                            radius: 0,
-                          ); // Ẩn chấm cho các ngày khác
-                        },
-                      ),
-                    ),
-                  ],
-                  minY: 0,
-                  maxY:
-                      _weeklyCalories.isNotEmpty
-                          ? (_weeklyCalories.reduce((a, b) => a > b ? a : b) *
-                              1.2)
-                          : 100,
+                RunChartController.createWeeklyChart(
+                  weeklyCalories: _weeklyCalories,
+                  currentDayIndex: _currentDayIndex,
+                  context: context,
                 ),
               ),
             ),
+
             const SizedBox(height: TSizes.spaceBtwSections),
-            // Nút "Start"
+            // Start button
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -329,10 +228,9 @@ class _RunPageState extends State<RunPage> {
                 children: [
                   Text(
                     "Let's start new run session",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      // fontWeight: FontWeight.w800,
-                      color: Colors.black,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.headlineSmall?.copyWith(color: Colors.black),
                   ),
                   const SizedBox(height: 8),
                   Text(

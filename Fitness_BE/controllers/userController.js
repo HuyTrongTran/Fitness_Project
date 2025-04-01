@@ -17,29 +17,31 @@ class UserProfile {
             if (!req.user || !req.user.email) {
                 return res.status(401).json({
                     success: false,
-                    message: 'Không thể xác thực người dùng. Vui lòng kiểm tra token.',
+                    message: 'User authentication failed. Please check your token.',
                 });
             }
 
             console.log('Get Profile:', req.user.email);
             const user = await UserModel.findByEmail(req.user.email);
             if (!user) {
-                console.log('Không tìm thấy người dùng với email:', req.user.email);
-                return res.status(404).json({ success: false, message: 'Không tìm thấy người dùng' });
+                console.log('User not found with email:', req.user.email);
+                return res.status(404).json({ success: false, message: 'User not found' });
             }
 
-            console.log('Tìm thấy người dùng:', user.email);
+            console.log('User found:', user.email);
             res.status(200).json({
                 success: true,
                 data: {
-                    profile: user.profile || {},
+                    profile: user.profile || {} ,
+                    username: user.userName,
+                    email: user.email,
                 },
             });
         } catch (error) {
-            console.error('Lỗi trong getProfile:', error);
+            console.error('Failed to getProfile:', error);
             res.status(500).json({
                 success: false,
-                message: error.message || 'Lỗi server nội bộ',
+                message: error.message || 'Internal server error',
             });
         }
     }

@@ -14,7 +14,8 @@ class CalendarPopup extends StatefulWidget {
 
 class _CalendarPopupState extends State<CalendarPopup> {
   DateTime _focusedDay = DateTime.now();
-  final ValueNotifier<DateTime?> _selectedDayNotifier = ValueNotifier<DateTime?>(null);
+  final ValueNotifier<DateTime?> _selectedDayNotifier =
+      ValueNotifier<DateTime?>(null);
 
   @override
   void initState() {

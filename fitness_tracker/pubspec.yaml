@@ -28,6 +28,7 @@ dependencies:
   get: ^4.6.5
   get_storage: ^2.1.1
   firebase_core: ^3.12.1
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -46,9 +47,11 @@ flutter:
     - assets/categories/
     - assets/slider_images/
     - assets/backgrounds/run_background/
+    - assets/backgrounds/calendar_background/
     - assets/fonts/
     - assets/icons/logos/splash_logo/
     - assets/icons/app_icons/
+    - assets/icons/app_icons/activity_icons/
 
   fonts:
     - family: Nunito
@@ -71,3 +74,16 @@ flutter_native_splash:
     icon_background_color_dark: "#000000"
   android_gravity: center
   ios_content_mode: center
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/logos/app_logo.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icons/logos/app_logo.png"
+  remove_alpha_ios: true
+  image_path_ios: "assets/icons/logos/app_logo.png"
+  image_path_android: "assets/icons/logos/app_logo.png"
+  adaptive_icon_padding: true
+  adaptive_icon_padding_android: 0.1

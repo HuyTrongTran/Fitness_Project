@@ -2,7 +2,6 @@ class Images {
   static const String darkAppLogo = 'assets/icons/logos/Logo-white.png';
   static const String lightAppLogo = 'assets/icons/logos/Logo-black.png';
 
-
   //Background onboarding
   static const String background = 'assets/images/background.png';
 
@@ -33,4 +32,23 @@ class Images {
 
   // Profile Images
   static const String profile = "assets/images/profile.jpg";
+
+  // Activity Images
+  static const String bicep = "assets/icons/app_icons/activity_icons/bicep.png";
+  static const String body_back =
+      "assets/icons/app_icons/activity_icons/body_back.png";
+  static const String body_butt =
+      "assets/icons/app_icons/activity_icons/body_butt.png";
+  static const String stand_leg_core =
+      "assets/icons/app_icons/activity_icons/leg_core.png";
+  static const String sit_leg_core =
+      "assets/icons/app_icons/activity_icons/legs_core.png";
+  static const String pectoral_machine =
+      "assets/icons/app_icons/activity_icons/pectoral_machine.png";
+  static const String weight_bench =
+      "assets/icons/app_icons/activity_icons/weight_bench.png";
+  static const String weight_loss =
+      "assets/icons/app_icons/activity_icons/weight_loss.png";
+  static const String woman_up_front =
+      "assets/icons/app_icons/activity_icons/woman_up_front.png";
 }

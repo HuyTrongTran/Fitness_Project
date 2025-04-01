@@ -1,3 +1,4 @@
+import 'package:fitness_tracker/screens/activitiesScreen/activitiesScreen.dart';
 import 'package:fitness_tracker/screens/home/home.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/run_screen.dart';
 import 'package:fitness_tracker/screens/settings/settings.dart';
@@ -24,9 +25,10 @@ class NavigationMenu extends StatelessWidget {
               color: dark ? Colors.white : Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: dark
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.black.withOpacity(0.1),
+                  color:
+                      dark
+                          ? Colors.black.withOpacity(0.3)
+                          : Colors.black.withOpacity(0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -53,8 +55,8 @@ class NavigationMenu extends StatelessWidget {
                       ),
                       Expanded(
                         child: _buildNavItem(
-                          icon: Iconsax.chart,
-                          label: 'Progress',
+                          icon: Iconsax.play,
+                          label: 'Activity',
                           isSelected: controller.selectedIndex.value == 1,
                           onTap: () => controller.selectedIndex.value = 1,
                           isDark: dark,
@@ -94,9 +96,10 @@ class NavigationMenu extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: dark
-                              ? Colors.black.withOpacity(0.3)
-                              : Colors.black.withOpacity(0.1),
+                          color:
+                              dark
+                                  ? Colors.black.withOpacity(0.3)
+                                  : Colors.black.withOpacity(0.1),
                           blurRadius: 10,
                           spreadRadius: 1,
                         ),
@@ -174,9 +177,12 @@ class NavigationMenu extends StatelessWidget {
                   Text(
                     label,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: isDark ? Colors.black : Colors.black, // Đổi màu chữ cho phù hợp
-                          fontSize: 12, // Giảm kích thước chữ
-                        ),
+                      color:
+                          isDark
+                              ? Colors.black
+                              : Colors.black, // Đổi màu chữ cho phù hợp
+                      fontSize: 12, // Giảm kích thước chữ
+                    ),
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis, // Tránh tràn chữ
                   ),
@@ -202,10 +208,7 @@ class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
   final screens = [
     const Home(),
-    Container(
-      color: Colors.white,
-      child: const Center(child: Text('Progress')),
-    ),
+    Container(color: Colors.white, child: const Center(child: Activities())),
     Container(color: Colors.white, child: const Center(child: Text('Social'))),
     Container(color: Colors.white, child: const Center(child: Settings())),
   ];

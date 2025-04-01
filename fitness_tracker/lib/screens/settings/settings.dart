@@ -1,11 +1,9 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
-import 'package:fitness_tracker/common/widgets/custome_shape/containers/circular_container.dart';
-import 'package:fitness_tracker/common/widgets/custome_shape/containers/circular_image.dart';
 import 'package:fitness_tracker/common/widgets/custome_shape/containers/primary_header_container.dart';
 import 'package:fitness_tracker/common/widgets/texts/section_heading.dart';
 import 'package:fitness_tracker/screens/settings/widgets/setting_menu_title.dart';
 import 'package:fitness_tracker/screens/settings/widgets/user_profile_title.dart';
-import 'package:fitness_tracker/utils/apiUrl.dart';
+import 'package:fitness_tracker/api/apiUrl.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/screens/authentication/Login/login.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
@@ -48,6 +46,8 @@ class Settings extends StatelessWidget {
     await prefs.remove('user_email');
     Get.offAll(() => const Login());
   }
+
+
 
   @override
   Widget build(BuildContext context) {

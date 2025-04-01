@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
+        child: Column(  
           children: [
             // Primary Header Container with Search and Categories
             PrimaryHeaderContainer(
@@ -26,7 +26,6 @@ class _HomeState extends State<Home> {
                 children: [
                   HomeAppBar(
                     onDaySelected: (selectedDay) {
-                      // Không cần cập nhật _selectedDate nữa vì Home không dùng nó
                     },
                   ),
                   const SizedBox(height: TSizes.spaceBtwItems),

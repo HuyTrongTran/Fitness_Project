@@ -1,3 +1,4 @@
+import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/device/device_utility.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class TAppBar extends StatelessWidget implements PreferredSizeWidget {
             showBackButton
                 ? IconButton(
                   onPressed: () => Get.back(),
-                  icon: Icon(Iconsax.arrow_left),
+                  icon: Icon(Iconsax.arrow_left, color: TColors.white,),
                 )
                 : leadingIcon != null
                 ? IconButton(

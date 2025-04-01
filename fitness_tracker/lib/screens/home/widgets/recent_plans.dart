@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
-import 'package:iconsax/iconsax.dart';
 
 class RecentPlans extends StatelessWidget {
   const RecentPlans({super.key});
