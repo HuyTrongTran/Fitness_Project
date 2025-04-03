@@ -1,53 +1,26 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
+import 'package:fitness_tracker/common/widgets/custome_shape/containers/circular_image.dart';
 import 'package:fitness_tracker/common/widgets/custome_shape/containers/primary_header_container.dart';
 import 'package:fitness_tracker/common/widgets/texts/section_heading.dart';
 import 'package:fitness_tracker/screens/settings/widgets/setting_menu_title.dart';
 import 'package:fitness_tracker/screens/settings/widgets/user_profile_title.dart';
-import 'package:fitness_tracker/api/apiUrl.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
-import 'package:fitness_tracker/screens/authentication/Login/login.dart';
+import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
+import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+import 'package:fitness_tracker/features/services/getProfile.dart';
+import 'package:fitness_tracker/userProfile/profile_data.dart';
+import 'package:fitness_tracker/features/services/logout/logout.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
 
-  static Future<void> _logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('jwt_token');
-
-    if (token != null) {
-      try {
-        const String apiUrl = '${ApiConfig.baseUrl}/logout';
-        final response = await http.post(
-          Uri.parse(apiUrl),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-        );
-
-        if (response.statusCode == 200) {
-          print('Logout successful on server');
-        } else {
-          print('Logout failed on server: ${response.body}');
-        }
-      } catch (e) {
-        print('Error during logout: $e');
-      }
-    }
-
-    // Xóa token và email ở client
-    await prefs.remove('jwt_token');
-    await prefs.remove('user_email');
-    Get.offAll(() => const Login());
+  Future<ProfileData?> fetchProfileData() async {
+    final response = await ApiService.fetchProfileData();
+    return response;
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,17 +32,63 @@ class Settings extends StatelessWidget {
               child: Column(
                 children: [
                   TAppBar(
+                    color: TColors.white,
                     title: Text(
                       "Account",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium!
-                          .apply(color: TColors.white),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineMedium!.apply(color: TColors.white),
                     ),
                   ),
-                  const UserProfileTitle(
-                    name: "John Doe",
-                    email: "john.doe@example.com",
+                  UserProfileTitle(
+                    profileImage: FutureBuilder<ProfileData?>(
+                      future: fetchProfileData(),
+                      builder: (context, snapshot) {
+                        return CircularImage(
+                          image: snapshot.data?.profileImage ?? Images.profile,
+                          width: 50,
+                          height: 50,
+                          padding: 0,
+                        );
+                      },
+                    ),
+                    name: FutureBuilder<ProfileData?>(
+                      future: ApiService.fetchProfileData(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Text(
+                            'No profile data',
+                            style: Theme.of(context).textTheme.titleMedium!
+                                .apply(color: TColors.white),
+                          );
+                        }
+                        return Text(
+                          snapshot.data?.username ?? TTexts.homeAppbarTitle,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleMedium!.apply(color: TColors.white),
+                        );
+                      },
+                    ),
+                    email: FutureBuilder<ProfileData?>(
+                      future: ApiService.fetchProfileData(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Text(
+                            'No profile data',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium!.apply(color: TColors.white),
+                          );
+                        }
+                        return Text(
+                          snapshot.data?.email ?? TTexts.homeAppbarSubTitle,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium!.apply(color: TColors.white),
+                        );
+                      },
+                    ),
                   ),
                   const SizedBox(height: TSizes.spaceBtwSections),
                 ],
@@ -97,20 +116,8 @@ class Settings extends StatelessWidget {
                     icon: Iconsax.logout,
                     title: "Logout",
                     subTitle: "Logout from your account",
-                    onTap: () {
-                      Get.defaultDialog(
-                        title: 'Đăng xuất',
-                        middleText: 'Bạn có chắc muốn đăng xuất?',
-                        textConfirm: 'Có',
-                        textCancel: 'Không',
-                        confirmTextColor: Colors.white,
-                        onConfirm: () async {
-                          await _logout();
-                        },
-                        onCancel: () {
-                          Get.back();
-                        },
-                      );
+                    onTap: () async {
+                      await LogoutService.logout();
                     },
                   ),
                 ],

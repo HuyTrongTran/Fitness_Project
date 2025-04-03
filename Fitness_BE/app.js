@@ -8,6 +8,7 @@ const AuthController = require('./controllers/authController'); // Import AuthCo
 const config = require('./config/config');
 const activityRoutes = require('./routes/activityRoutes');
 const exerciseRoutes = require('./routes/exerciseRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -21,11 +22,13 @@ mongoose.connect(config.MONGODB_URI, {
 
 // Middleware
 app.use(bodyParser.json());
+app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/api', authRoutes);
 app.use('/api', activityRoutes);
 app.use('/api', exerciseRoutes);
+app.use('/api', userRoutes);
 
 // Route bảo vệ sử dụng checkBlacklist
 app.get('/api/protected', AuthController.checkBlacklist, (req, res) => {

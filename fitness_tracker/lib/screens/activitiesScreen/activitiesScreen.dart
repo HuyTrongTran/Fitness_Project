@@ -43,6 +43,7 @@ class _ActivitiesState extends State<Activities> {
                 child: Column(
                   children: [
                     TAppBar(
+                      color: TColors.white,
                       title: Text(
                         "Start Workout",
                         style: Theme.of(

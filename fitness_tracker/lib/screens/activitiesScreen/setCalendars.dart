@@ -58,6 +58,8 @@ class _SetCalendarsState extends State<SetCalendars> {
                 child: Column(
                   children: [
                     TAppBar(
+                      centerTitle: true,
+                      color: TColors.white,
                       title: Text(
                         "Set Your Calendar",
                         textAlign: TextAlign.center,

@@ -8,8 +8,8 @@ class ProfileData {
   final String? activityLevel;
   final int? age;
   final double? bmi;
-  final String? avatar;
-
+  // final String? avatar;
+  final String? profileImage;
   ProfileData({
     this.height,
     this.username,
@@ -20,7 +20,8 @@ class ProfileData {
     this.activityLevel,
     this.age,
     this.bmi,
-    this.avatar,
+    // this.avatar,  
+    this.profileImage,
   });
 
   factory ProfileData.fromJson(Map<String, dynamic> json) {
@@ -36,8 +37,10 @@ class ProfileData {
       age: profile['age'] as int?,
       bmi: (profile['bmi'] as num?)?.toDouble(),
       username: json['username'] as String?, // Lấy username từ root level
-      email: json['email'] as String?, // Lấy email từ root level
-      avatar: json['avatar'] as String?,
+      email: json['email'] as String?,
+      profileImage: json['profileImage'] as String?,
+      // // Lấy email từ root level
+      // avatar: json['avatar'] as String?,
     );
   }
 }

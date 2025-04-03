@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
     userName: { type: String, required: true, unique: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
+    profileImage: { type: String, required: false },
     profile: {
         gender: { type: String, enum: ['male', 'female'], required: false },
         height: { type: Number, required: false },
@@ -65,6 +66,8 @@ class UserModel {
 
     static async updateProfile(email, profileData) {
         const updateFields = {};
+        
+        // Xử lý các trường trong profile
         if (profileData.gender) updateFields['profile.gender'] = profileData.gender;
         if (profileData.height) updateFields['profile.height'] = profileData.height;
         if (profileData.weight) updateFields['profile.weight'] = profileData.weight;
@@ -73,6 +76,11 @@ class UserModel {
         if (profileData.activityLevel) updateFields['profile.activityLevel'] = profileData.activityLevel;
         if (profileData.bmi) updateFields['profile.bmi'] = profileData.bmi;
         if (profileData.activities) updateFields['profile.activities'] = profileData.activities;
+
+        // Xử lý các trường ngoài profile
+        if (profileData.userName) updateFields['userName'] = profileData.userName;
+        if (profileData.profileImage) updateFields['profileImage'] = profileData.profileImage;
+        if (profileData.email) updateFields['email'] = profileData.email;
 
         return await User.findOneAndUpdate(
             { email },

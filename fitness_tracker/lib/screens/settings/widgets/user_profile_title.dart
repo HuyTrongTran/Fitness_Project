@@ -1,38 +1,32 @@
-import 'package:fitness_tracker/common/widgets/custome_shape/containers/circular_image.dart';
+import 'package:fitness_tracker/screens/settings/changeProfile.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
-import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/instance_manager.dart';
 import 'package:iconsax/iconsax.dart';
 
 class UserProfileTitle extends StatelessWidget {
-  const UserProfileTitle({super.key, required this.name, required this.email});
+  const UserProfileTitle({
+    super.key,
+    required this.name,
+    required this.email,
+    required this.profileImage,
+  });
 
-  final String name;
-  final String email;
+  final Widget name;
+  final Widget email;
+  final Widget profileImage;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: const CircularImage(
-        image: Images.profile,
-        width: 50,
-        height: 50,
-        padding: 0,
-      ),
-      title: Text(
-        name,
-        style: Theme.of(
-          context,
-        ).textTheme.titleMedium!.apply(color: TColors.white),
-      ),
-      subtitle: Text(
-        email,
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium!.apply(color: TColors.white),
-      ),
+      leading: profileImage,
+      title: name,
+      subtitle: email,
       trailing: IconButton(
-        onPressed: () {},
+        onPressed: () async {
+          Get.to(() => const ChangeProfileScreen());
+        },
         icon: const Icon(Iconsax.edit, color: TColors.white),
       ),
     );

@@ -17,6 +17,7 @@ import 'package:fitness_tracker/features/controllers/runControllers/trackingCont
 import 'package:fitness_tracker/features/controllers/runControllers/trackingControllers/stop_tracking_controller.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
 import 'package:fitness_tracker/common/formulas/step_calculate.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/RunResultPage.dart';
 
 class RunTrackingPage extends StatefulWidget {
   const RunTrackingPage({super.key});
@@ -598,17 +599,46 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
                                         _elapsedTimeInSeconds,
                                       );
 
+                                  // Tạo session object
+                                  final session = RunSession(
+                                    date: DateTime.now(),
+                                    elapsedTimeInSeconds: _elapsedTimeInSeconds,
+                                    distanceInKm: _distanceInKm,
+                                    routePoints: List.from(_routePoints),
+                                    steps: steps,
+                                    calories: calories,
+                                  );
+
+                                  // Nếu thời gian hoặc khoảng cách là 0, chỉ dừng phiên chạy mà không lưu
+                                  if (_elapsedTimeInSeconds == 0 ||
+                                      _distanceInKm == 0) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Session stopped but not saved (time or distance is 0)',
+                                        ),
+                                        backgroundColor: Colors.orange,
+                                      ),
+                                    );
+                                    // Chuyển đến trang kết quả mà không lưu
+                                    if (context.mounted) {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => RunResultPage(
+                                                session: session,
+                                              ),
+                                        ),
+                                      );
+                                    }
+                                    return;
+                                  }
+
+                                  // Nếu có dữ liệu hợp lệ, lưu vào database
                                   StopTrackingController.stopTracking(
                                     context,
-                                    RunSession(
-                                      date: DateTime.now(),
-                                      elapsedTimeInSeconds:
-                                          _elapsedTimeInSeconds,
-                                      distanceInKm: _distanceInKm,
-                                      routePoints: List.from(_routePoints),
-                                      steps: steps,
-                                      calories: calories,
-                                    ),
+                                    session,
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(

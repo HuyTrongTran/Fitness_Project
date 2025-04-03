@@ -14,12 +14,16 @@ class TAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.leadingIcon,
     this.onLeadingPressed,
     this.showBackButton = false,
+    required this.color,
+    this.centerTitle = false,
   });
   final Widget? title;
   final bool showBackButton;
   final IconData? leadingIcon;
   final List<Widget>? actions;
   final VoidCallback? onLeadingPressed;
+  final Color? color;
+  final bool centerTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +31,12 @@ class TAppBar extends StatelessWidget implements PreferredSizeWidget {
       padding: const EdgeInsets.symmetric(horizontal: TSizes.md),
       child: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: centerTitle,
         leading:
             showBackButton
                 ? IconButton(
                   onPressed: () => Get.back(),
-                  icon: Icon(Iconsax.arrow_left, color: TColors.white,),
+                  icon: Icon(Iconsax.arrow_left, color: color),
                 )
                 : leadingIcon != null
                 ? IconButton(

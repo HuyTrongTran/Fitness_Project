@@ -14,15 +14,10 @@ class ApiService {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt_token');
 
-      print('Token: $token'); // Debug token
-
       if (token == null) {
-        print('No token found'); // Debug no token
         Get.snackbar('Error', 'No token found. Please log in again.');
         return null;
       }
-
-      print('Calling API: $baseUrl/getProfile'); // Debug API URL
       final response = await http.get(
         Uri.parse('$baseUrl/getProfile'),
         headers: {
@@ -47,6 +42,7 @@ class ApiService {
             ...data['profile'] ?? {},
             'username': data['username'],
             'email': data['email'],
+            'profileImage': data['profileImage'],
           };
 
           return ProfileData.fromJson(profileMap);

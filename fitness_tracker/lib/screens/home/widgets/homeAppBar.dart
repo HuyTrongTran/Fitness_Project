@@ -13,10 +13,10 @@ class HomeAppBar extends StatelessWidget {
 
   const HomeAppBar({super.key, required this.onDaySelected});
 
-
   @override
   Widget build(BuildContext context) {
     return TAppBar(
+      color: TColors.white,
       title: Row(
         children: [
           FutureBuilder<ProfileData?>(
@@ -46,8 +46,8 @@ class HomeAppBar extends StatelessWidget {
                   shape: BoxShape.circle,
                   image: DecorationImage(
                     image:
-                        snapshot.data?.avatar != null
-                            ? NetworkImage(snapshot.data!.avatar!)
+                        snapshot.data?.profileImage != null
+                            ? NetworkImage(snapshot.data!.profileImage!)
                             : AssetImage(Images.profile) as ImageProvider,
                     fit: BoxFit.cover,
                   ),
@@ -66,14 +66,14 @@ class HomeAppBar extends StatelessWidget {
                       'No profile data',
                       style: Theme.of(
                         context,
-                      ).textTheme.labelLarge!.apply(color: Colors.white),
+                      ).textTheme.headlineSmall!.apply(color: Colors.white),
                     );
                   }
                   return Text(
-                    snapshot.data?.email ?? TTexts.homeAppbarTitle,
+                    snapshot.data?.username ?? TTexts.homeAppbarSubTitle,
                     style: Theme.of(
                       context,
-                    ).textTheme.labelLarge!.apply(color: Colors.white),
+                    ).textTheme.headlineSmall!.apply(color: Colors.white),
                   );
                 },
               ),
@@ -85,14 +85,14 @@ class HomeAppBar extends StatelessWidget {
                       'No profile data',
                       style: Theme.of(
                         context,
-                      ).textTheme.headlineSmall!.apply(color: Colors.white),
+                      ).textTheme.labelLarge!.apply(color: Colors.white),
                     );
                   }
                   return Text(
-                    snapshot.data?.username ?? TTexts.homeAppbarSubTitle,
+                    snapshot.data?.email ?? TTexts.homeAppbarTitle,
                     style: Theme.of(
                       context,
-                    ).textTheme.headlineSmall!.apply(color: Colors.white),
+                    ).textTheme.labelLarge!.apply(color: Colors.white),
                   );
                 },
               ),

@@ -130,18 +130,18 @@ class AuthController {
         try {
             const token = req.headers.authorization?.split(' ')[1];
             if (!token) {
-                return res.status(400).json({ success: false, message: 'Không có token được cung cấp' });
+                return res.status(400).json({ success: false, message: 'No token provided' });
             }
 
             const blacklistPath = './blacklist.txt';
             await fs.appendFile(blacklistPath, `${token}\n`);
 
-            res.status(200).json({ success: true, message: 'Đăng xuất thành công' });
+            res.status(200).json({ success: true, message: 'Logout successful' });
         } catch (error) {
-            console.error('Lỗi trong /logout:', error);
+            console.error('Error in /logout:', error);
             res.status(500).json({
                 success: false,
-                message: error.message || 'Lỗi server nội bộ',
+                message: error.message || 'Internal server error',
             });
         }
     }
@@ -150,7 +150,7 @@ class AuthController {
         try {
             const token = req.headers.authorization?.split(' ')[1];
             if (!token) {
-                return res.status(400).json({ success: false, message: 'Không có token được cung cấp' });
+                return res.status(400).json({ success: false, message: 'No token provided' });
             }
 
             const blacklistPath = './blacklist.txt';
@@ -158,17 +158,17 @@ class AuthController {
             const blacklistedTokens = blacklist.split('\n').filter(t => t.trim() !== '');
 
             if (blacklistedTokens.includes(token)) {
-                return res.status(401).json({ success: false, message: 'Token đã bị đưa vào danh sách đen' });
+                return res.status(401).json({ success: false, message: 'Token has been added to the blacklist' });
             }
 
             const decoded = jwt.verify(token, config.JWT_SECRET);
             req.user = decoded;
             next();
         } catch (error) {
-            console.error('Lỗi trong checkBlacklist:', error);
+            console.error('Error in checkBlacklist:', error);
             res.status(401).json({
                 success: false,
-                message: 'Token không hợp lệ',
+                message: 'Invalid token',
             });
         }
     }
@@ -177,63 +177,27 @@ class AuthController {
         try {
             const token = req.headers.authorization?.split(' ')[1];
             if (!token) {
-                return res.status(400).json({ success: false, message: 'Không có token được cung cấp' });
+                return res.status(400).json({ success: false, message: 'No token provided' });
             }
 
             const decoded = jwt.verify(token, config.JWT_SECRET);
             const user = await UserModel.updateOnboardingStatus(decoded.email);
 
             if (!user) {
-                return res.status(404).json({ success: false, message: 'Không tìm thấy người dùng' });
+                return res.status(404).json({ success: false, message: 'User not found' });
             }
 
-            res.status(200).json({ success: true, message: 'Hoàn tất onboarding' });
+            res.status(200).json({ success: true, message: 'Completed onboarding' });
         } catch (error) {
-            console.error('Lỗi trong completeOnboarding:', error);
+            console.error('Error in completeOnboarding:', error);
             res.status(500).json({
                 success: false,
-                message: error.message || 'Lỗi server nội bộ',
+                message: error.message || 'Internal server error',
             });
         }
     }
 
-    static async updateProfile(req, res, next) {
-        try {
-            const { gender, height, weight, age, goal, activityLevel, bmi } = req.body;
-
-            // Kiểm tra ít nhất một trường phải được cung cấp
-            if (!gender && !height && !weight && !age && !goal && !activityLevel && !bmi) {
-                return res.status(400).json({ success: false, message: 'Cần cung cấp ít nhất một trường thông tin profile' });
-            }
-
-            // Tạo object chỉ chứa các trường được cung cấp
-            const profileData = {};
-            if (gender) profileData.gender = gender;
-            if (height) profileData.height = height;
-            if (weight) profileData.weight = weight;
-            if (age) profileData.age = age;
-            if (goal) profileData.goal = goal;
-            if (activityLevel) profileData.activityLevel = activityLevel;
-            if (bmi) profileData.bmi = bmi;
-
-            const user = await UserModel.updateProfile(req.user.email, profileData);
-            if (!user) {
-                return res.status(404).json({ success: false, message: 'Không tìm thấy người dùng' });
-            }
-
-            res.status(200).json({
-                success: true,
-                data: { profile: user.profile },
-                message: 'Cập nhật profile thành công',
-            });
-        } catch (error) {
-            console.error('Lỗi trong updateProfile:', error);
-            res.status(500).json({
-                success: false,
-                message: error.message || 'Lỗi server nội bộ',
-            });
-        }
-    }
+    
 }
 
 module.exports = AuthController;
