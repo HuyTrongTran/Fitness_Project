@@ -1,7 +1,7 @@
 // models/userModel.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const config = require('../../fitness_be/config/config');
+const config = require('../config/config');
 
 const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true, trim: true },

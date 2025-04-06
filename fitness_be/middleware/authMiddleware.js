@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const config = require('../../fitness_be/config/config');
+const config = require('../config/config');
 
 class AuthMiddleware {
     static async checkBlacklist(req, res, next) {

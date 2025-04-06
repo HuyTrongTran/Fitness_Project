@@ -1,8 +1,9 @@
 // controllers/authController.js
 const jwt = require('jsonwebtoken');
-const { User, UserModel } = require('../models/userModel'); // Sửa import để lấy cả User và UserModel
+const bcrypt = require('bcrypt');
+const User = require('../models/userModel');
+const config = require('../config/config');
 const fs = require('fs').promises;
-const config = require('../../fitness_be/config/config');
 
 // Debug: Log để kiểm tra User và UserModel
 console.log('User model in authController:', User);
