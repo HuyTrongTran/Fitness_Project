@@ -99,9 +99,8 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
           },
         );
 
-        print('Response status code: ${response.statusCode}'); // Debug log
-        print('Response body: ${response.body}'); // Debug log
-
+        print('Response status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
         if (response.statusCode == 200) {
           final responseData = jsonDecode(response.body);
           if (responseData['success'] == true) {
@@ -204,10 +203,12 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                                         widget.selectedDate.toString().split(
                                           ' ',
                                         )[0],
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(color: textColor),
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium?.copyWith(
+                                      color: textColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   Text(
                                     _workoutPlan['type'] ?? 'Rest Day',
@@ -380,10 +381,12 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                                     children: [
                                       Text(
                                         'Next exercise',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(color: TColors.grey),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium?.copyWith(
+                                          color: nextExerciseTextColor,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                       if (_workoutPlan['exercises'] != null &&
                                           (_workoutPlan['exercises'] as List)

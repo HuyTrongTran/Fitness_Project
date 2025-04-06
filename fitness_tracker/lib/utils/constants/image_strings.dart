@@ -51,4 +51,11 @@ class Images {
       "assets/icons/app_icons/activity_icons/weight_loss.png";
   static const String woman_up_front =
       "assets/icons/app_icons/activity_icons/woman_up_front.png";
+
+  // Suggest food images
+  static const String chicken = "assets/categories/looseWeight/chicken.png";
+  static const String pumpkin = "assets/categories/looseWeight/pumpkin.png";
+  static const String fish = "assets/categories/looseWeight/fish.png";
+  static const String egg_broccoli =
+      "assets/categories/looseWeight/egg_broccoli.png";
 }

@@ -89,11 +89,11 @@ class _ActivityPageState extends State<ActivityPage> {
       "Pro",
     ];
     Map<String, String> activityMapping = {
-      "Rookie": "sedentary",
-      "Beginner": "light",
-      "Intermediate": "moderate",
-      "Advanced": "active",
-      "Pro": "very_active",
+      "Rookie": "Rookie",
+      "Beginner": "Beginner",
+      "Intermediate": "Intermediate",
+      "Advanced": "Advanced",
+      "Pro": "Pro",
     };
 
     var size = MediaQuery.of(context).size;

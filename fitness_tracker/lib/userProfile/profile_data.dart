@@ -8,8 +8,8 @@ class ProfileData {
   final String? activityLevel;
   final int? age;
   final double? bmi;
-  // final String? avatar;
   final String? profileImage;
+
   ProfileData({
     this.height,
     this.username,
@@ -20,27 +20,28 @@ class ProfileData {
     this.activityLevel,
     this.age,
     this.bmi,
-    // this.avatar,  
     this.profileImage,
   });
 
   factory ProfileData.fromJson(Map<String, dynamic> json) {
-    // Lấy profile data từ response
-    final profile = json['profile'] as Map<String, dynamic>? ?? {};
+    print('Parsing JSON: $json'); // Debug input JSON
 
-    return ProfileData(
-      height: (profile['height'] as num?)?.toDouble(),
-      weight: (profile['weight'] as num?)?.toDouble(),
-      gender: profile['gender'] as String?,
-      goal: profile['goal'] as String?,
-      activityLevel: profile['activityLevel'] as String?,
-      age: profile['age'] as int?,
-      bmi: (profile['bmi'] as num?)?.toDouble(),
-      username: json['username'] as String?, // Lấy username từ root level
+    final profileData = ProfileData(
+      height: (json['height'] as num?)?.toDouble(),
+      weight: (json['weight'] as num?)?.toDouble(),
+      gender: json['gender'] as String?,
+      goal: json['goal'] as String?,
+      activityLevel: json['activityLevel'] as String?,
+      age: json['age'] as int?,
+      bmi: (json['bmi'] as num?)?.toDouble(),
+      username: json['username'] as String?,
       email: json['email'] as String?,
       profileImage: json['profileImage'] as String?,
-      // // Lấy email từ root level
-      // avatar: json['avatar'] as String?,
     );
+
+    print(
+      'Parsed profile data: height=${profileData.height}, weight=${profileData.weight}, goal=${profileData.goal}, activityLevel=${profileData.activityLevel}, username=${profileData.username}, email=${profileData.email}',
+    ); // Debug parsed data
+    return profileData;
   }
 }

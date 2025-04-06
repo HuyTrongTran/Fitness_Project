@@ -1,8 +1,14 @@
+import 'package:fitness_tracker/screens/home/widgets/stats_item.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/helpers/helpers_function.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
+import 'package:fitness_tracker/features/services/home_service/getTodayActivity.dart';
+import 'package:fitness_tracker/features/services/home_service/prefer_target.dart';
+import 'package:fitness_tracker/userProfile/profile_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class CustomPopupShape extends ShapeBorder {
   final double arrowWidth = 20.0;
@@ -50,7 +56,9 @@ class CustomPopupShape extends ShapeBorder {
 }
 
 class WorkoutStats extends StatefulWidget {
-  const WorkoutStats({super.key});
+  final ProfileData? profileData;
+
+  const WorkoutStats({super.key, this.profileData});
 
   @override
   State<WorkoutStats> createState() => _WorkoutStatsState();
@@ -112,58 +120,141 @@ class _WorkoutStatsState extends State<WorkoutStats> {
         {'grey': 0.7, 'color': 0.5},
       ],
     },
-    // {
-    //   'name': 'Basketball',
-    //   'isImage': true,
-    //   'icon': 'assets/images/basketball.png',
-    //   'calories': '325',
-    //   'chartData': [
-    //     {'grey': 0.6, 'color': 0.4},
-    //     {'grey': 1.0, 'color': 0.8},
-    //     {'grey': 0.8, 'color': 0.6},
-    //     {'grey': 0.7, 'color': 0.5},
-    //     {'grey': 0.9, 'color': 0.7},
-    //     {'grey': 0.6, 'color': 0.4},
-    //     {'grey': 0.8, 'color': 0.6},
-    //   ],
-    // },
   ];
 
-  // Thêm cấu trúc dữ liệu cho stats với target values
-  final List<Map<String, dynamic>> _statsData = [
-    {
-      'value': '2.5',
-      'unit': 'km',
-      'label': 'Distance',
-      'icon': Icons.directions_run,
-      'target': 5.0, // Target: 5km
-      'current': 2.5, // Current: 2.5km
-    },
-    {
-      'value': '9832',
-      'unit': '',
-      'label': 'Steps',
-      'icon': Icons.directions_walk,
-      'target': 10000, // Target: 10000 steps
-      'current': 9832, // Current: 9832 steps
-    },
-    {
-      'value': '1248',
-      'unit': '',
-      'label': 'Points',
-      'icon': Icons.star,
-      'target': 2000, // Target: 2000 points
-      'current': 1248, // Current: 1248 points
-    },
-    {
-      'value': '432',
-      'unit': '',
-      'label': 'Calories',
-      'icon': Icons.local_fire_department,
-      'target': 800, // Target: 800 calories
-      'current': 432, // Current: 432 calories
-    },
-  ];
+  // Dữ liệu thống kê sẽ được cập nhật từ API
+  List<Map<String, dynamic>> _statsData = [];
+
+  // Biến để lưu trữ dữ liệu hoạt động
+  TodayActivityData? _todayActivityData;
+  ActivityTarget? _activityTarget;
+  bool _isLoading = true;
+  String _errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadActivityData();
+  }
+
+  Future<void> _loadActivityData() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = '';
+    });
+
+    try {
+      // Lấy dữ liệu hoạt động từ API
+      final activityData = await GetTodayActivityService.getTodayActivity();
+
+      // Lấy mục tiêu dựa trên profile
+      ActivityTarget targetData;
+      if (widget.profileData != null) {
+        targetData = ActivityTarget.getRecommendedTarget(widget.profileData!);
+      } else {
+        // Nếu không có profile, tạo một profile mặc định
+        final defaultProfile = ProfileData(
+          weight: 60.0,
+          height: 170.0,
+          age: 30,
+          gender: 'male',
+          activityLevel: 'moderate',
+          goal: 'maintain',
+        );
+        targetData = ActivityTarget.getRecommendedTarget(defaultProfile);
+      }
+
+      // Tính điểm dựa trên hoạt động thực tế
+      final points =
+          (activityData.distanceInKm * 10) +
+          (activityData.steps / 100) +
+          (activityData.calories / 10);
+
+      // Cập nhật dữ liệu thống kê
+      _statsData = [
+        {
+          'value': activityData.distanceInKm.toStringAsFixed(1),
+          'unit': 'km',
+          'label': 'Distance',
+          'icon': Icons.directions_run,
+          'target': targetData.targetDistance,
+          'current': activityData.distanceInKm,
+        },
+        {
+          'value': activityData.steps.toString(),
+          'unit': '',
+          'label': 'Steps',
+          'icon': Icons.directions_walk,
+          'target': targetData.targetSteps.toDouble(),
+          'current': activityData.steps.toDouble(),
+        },
+        {
+          'value': activityData.calories.toString(),
+          'unit': '',
+          'label': 'Calories',
+          'icon': Icons.local_fire_department,
+          'target': targetData.targetCalories.toDouble(),
+          'current': activityData.calories.toDouble(),
+        },
+        {
+          'value': points.round().toString(),
+          'unit': '',
+          'label': 'Points',
+          'icon': Icons.star,
+          'target': targetData.bonusPoints.toDouble(),
+          'current': points,
+        },
+      ];
+
+      setState(() {
+        _todayActivityData = activityData;
+        _activityTarget = targetData;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Unable to load data: $e';
+        _isLoading = false;
+      });
+
+      // Sử dụng dữ liệu mặc định nếu có lỗi
+      _statsData = [
+        {
+          'value': '0.0',
+          'unit': 'km',
+          'label': 'Distance',
+          'icon': Icons.directions_run,
+          'target': 5.0,
+          'current': 0.0,
+        },
+        {
+          'value': '0',
+          'unit': '',
+          'label': 'Steps',
+          'icon': Icons.directions_walk,
+          'target': 10000.0,
+          'current': 0.0,
+        },
+
+        {
+          'value': '0',
+          'unit': '',
+          'label': 'Calories',
+          'icon': Icons.local_fire_department,
+          'target': 800.0,
+          'current': 0.0,
+        },
+        {
+          'value': '0',
+          'unit': '',
+          'label': 'Points',
+          'icon': Icons.star,
+          'target': 2000.0,
+          'current': 0.0,
+        },
+      ];
+    }
+  }
 
   void _toggleTab(int index) {
     setState(() {
@@ -275,21 +366,45 @@ class _WorkoutStatsState extends State<WorkoutStats> {
             physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                children:
-                    _statsData
-                        .map(
-                          (stat) => _buildStatItem(
-                            context,
-                            stat['value'] + (stat['unit'] ?? ''),
-                            stat['label'],
-                            stat['icon'],
-                            stat['current'].toDouble(),
-                            stat['target'].toDouble(),
+              child:
+                  _isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : _errorMessage.isNotEmpty
+                      ? Column(
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                            size: 48,
                           ),
-                        )
-                        .toList(),
-              ),
+                          const SizedBox(height: 8),
+                          Text(
+                            _errorMessage,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: _loadActivityData,
+                            child: const Text('Try again'),
+                          ),
+                        ],
+                      )
+                      : Row(
+                        children: [
+                          const SizedBox(width: 16),
+                          ..._statsData.map(
+                            (stat) => Stat_Item(
+                              context: context,
+                              value: stat['value'] + (stat['unit'] ?? ''),
+                              label: stat['label'],
+                              icon: stat['icon'],
+                              current: stat['current'].toDouble(),
+                              target: stat['target'].toDouble(),
+                            ),
+                          ),
+                        ],
+                      ),
             ),
           ),
           const SizedBox(height: TSizes.spaceBtwSections),
@@ -299,16 +414,17 @@ class _WorkoutStatsState extends State<WorkoutStats> {
             child: Column(
               children: [
                 Text(
-                  '${activeExercise['calories']} Kcal',
+                  '${_todayActivityData?.calories ?? 0} Kcal',
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: dark ? TColors.white : const Color(0xFF1D1517),
                   ),
                 ),
                 Text(
-                  activeExercise['name'],
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  'Today',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF7B6F72),
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
@@ -362,8 +478,12 @@ class _WorkoutStatsState extends State<WorkoutStats> {
                           const SizedBox(height: 8),
                           Text(
                             _weekDays[index],
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: const Color(0xFF7B6F72)),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(
+                              color: const Color(0xFF7B6F72),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -378,103 +498,31 @@ class _WorkoutStatsState extends State<WorkoutStats> {
           // Exercise Types
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Row(
-              children: List.generate(
-                _exerciseData.length,
-                (index) => Padding(
-                  padding: EdgeInsets.only(
-                    right:
-                        index != _exerciseData.length - 1
-                            ? TSizes.spaceBtwItems
-                            : 0,
-                  ),
-                  child: GestureDetector(
-                    onTap: () => _toggleTab(index),
-                    child: _buildExerciseType(
-                      context,
-                      _exerciseData[index]['icon'],
-                      _exerciseData[index]['name'],
-                      _exerciseData[index]['calories'],
-                      _activeTabIndex == index,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: TSizes.spaceBtwSections),
+              child: Row(
+                children: List.generate(
+                  _exerciseData.length,
+                  (index) => Padding(
+                    padding: EdgeInsets.only(
+                      right:
+                          index != _exerciseData.length - 1
+                              ? TSizes.spaceBtwItems
+                              : 0,
+                    ),
+                    child: GestureDetector(
+                      onTap: () => _toggleTab(index),
+                      child: _buildExerciseType(
+                        context,
+                        _exerciseData[index]['icon'],
+                        _exerciseData[index]['name'],
+                        _exerciseData[index]['calories'],
+                        _activeTabIndex == index,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatItem(
-    BuildContext context,
-    String value,
-    String label,
-    IconData icon,
-    double current,
-    double target,
-  ) {
-    // Tính toán phần trăm progress
-    final double progress = (current / target).clamp(0.0, 1.0);
-    final dark = HelpersFunction.isDarkMode(context);
-
-    return Container(
-      width: 85,
-      margin: const EdgeInsets.only(right: 15),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              SizedBox(
-                width: 85,
-                height: 85,
-                child: CircularProgressIndicator(
-                  value: progress,
-                  strokeWidth: 8,
-                  backgroundColor: Colors.grey.withOpacity(0.1),
-                  color:
-                      dark
-                          ? TColors.primary.withOpacity(0.5)
-                          : TColors.primary.withOpacity(0.5),
-                ),
-              ),
-              Container(
-                width: 65,
-                height: 65,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  icon,
-                  color: dark ? TColors.primary : TColors.black,
-                  size: 28,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: dark ? TColors.white : TColors.black,
-            ),
-          ),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: dark ? TColors.white : TColors.black,
             ),
           ),
         ],
@@ -537,7 +585,7 @@ class _WorkoutStatsState extends State<WorkoutStats> {
     String calories,
     bool isActive,
   ) {
-    final textColor = isActive ? Colors.white : Colors.black;
+    final textColor = isActive ? Colors.white : TColors.black;
     final backgroundColor = isActive ? TColors.primary : Colors.white;
 
     return Container(
@@ -548,11 +596,19 @@ class _WorkoutStatsState extends State<WorkoutStats> {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: TColors.primary.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+            spreadRadius: 0,
+          ),
+        ],
         border:
             !isActive
                 ? Border(
                   top: BorderSide(
-                    color: Colors.black.withOpacity(0.1),
+                    color: TColors.primary.withOpacity(0.6),
                     width: 3,
                   ),
                 )
@@ -562,8 +618,8 @@ class _WorkoutStatsState extends State<WorkoutStats> {
         children: [
           if (icon is Image)
             SizedBox(
-              width: 40,
-              height: 40,
+              width: 32,
+              height: 32,
               child: ColorFiltered(
                 colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
                 child: icon,

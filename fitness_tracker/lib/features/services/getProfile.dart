@@ -35,17 +35,25 @@ class ApiService {
 
         if (responseData['success'] == true) {
           final data = responseData['data'];
-          print('Profile data: $data'); // Debug profile data
+          print('Raw profile data: $data'); // Debug raw data
 
           // Tạo một Map mới kết hợp profile và các trường khác
           final Map<String, dynamic> profileMap = {
             ...data['profile'] ?? {},
-            'username': data['username'],
+            'username':
+                data['userName'] ?? data['username'], // Ưu tiên userName
             'email': data['email'],
             'profileImage': data['profileImage'],
           };
 
-          return ProfileData.fromJson(profileMap);
+          print(
+            'Profile map before parsing: $profileMap',
+          ); // Debug before parsing
+          final profileData = ProfileData.fromJson(profileMap);
+          print(
+            'Profile data after parsing: ${profileData.username}, ${profileData.email}, ${profileData.profileImage}',
+          ); // Debug after parsing
+          return profileData;
         } else {
           print('API error: ${responseData['message']}'); // Debug API error
           Get.snackbar(

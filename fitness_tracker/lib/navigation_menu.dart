@@ -177,11 +177,9 @@ class NavigationMenu extends StatelessWidget {
                   Text(
                     label,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color:
-                          isDark
-                              ? Colors.black
-                              : Colors.black, // Đổi màu chữ cho phù hợp
-                      fontSize: 12, // Giảm kích thước chữ
+                      color: isDark ? Colors.black : Colors.black,
+                      fontWeight: FontWeight.bold,
+                      
                     ),
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis, // Tránh tràn chữ

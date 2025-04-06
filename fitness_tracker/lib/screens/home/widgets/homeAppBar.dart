@@ -7,6 +7,7 @@ import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'calendar_popup.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeAppBar extends StatelessWidget {
   final Function(DateTime) onDaySelected;
@@ -31,10 +32,8 @@ class HomeAppBar extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  child: const Icon(
-                    Icons.person,
-                    color: TColors.primary,
-                    size: 24,
+                  child: const ClipOval(
+                    child: Icon(Icons.person, color: TColors.primary, size: 24),
                   ),
                 );
               }
@@ -42,15 +41,31 @@ class HomeAppBar extends StatelessWidget {
                 width: 40,
                 height: 40,
                 margin: const EdgeInsets.only(right: 8),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image:
-                        snapshot.data?.profileImage != null
-                            ? NetworkImage(snapshot.data!.profileImage!)
-                            : AssetImage(Images.profile) as ImageProvider,
-                    fit: BoxFit.cover,
-                  ),
+                  color: Colors.white,
+                ),
+                child: ClipOval(
+                  child:
+                      snapshot.data?.profileImage != null
+                          ? Image.network(
+                            snapshot.data!.profileImage!,
+                            width: 40,
+                            height: 40,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(
+                                Icons.person,
+                                color: TColors.primary,
+                                size: 24,
+                              );
+                            },
+                          )
+                          : const Icon(
+                            Icons.person,
+                            color: TColors.primary,
+                            size: 24,
+                          ),
                 ),
               );
             },
@@ -83,16 +98,18 @@ class HomeAppBar extends StatelessWidget {
                   if (!snapshot.hasData) {
                     return Text(
                       'No profile data',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.labelLarge!.apply(color: Colors.white),
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     );
                   }
                   return Text(
                     snapshot.data?.email ?? TTexts.homeAppbarTitle,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.labelLarge!.apply(color: Colors.white),
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
                   );
                 },
               ),

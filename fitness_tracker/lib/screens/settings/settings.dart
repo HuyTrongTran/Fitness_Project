@@ -2,6 +2,7 @@ import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/common/widgets/custome_shape/containers/circular_image.dart';
 import 'package:fitness_tracker/common/widgets/custome_shape/containers/primary_header_container.dart';
 import 'package:fitness_tracker/common/widgets/texts/section_heading.dart';
+import 'package:fitness_tracker/screens/settings/profile.dart';
 import 'package:fitness_tracker/screens/settings/widgets/setting_menu_title.dart';
 import 'package:fitness_tracker/screens/settings/widgets/user_profile_title.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
@@ -9,6 +10,7 @@ import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:fitness_tracker/features/services/getProfile.dart';
 import 'package:fitness_tracker/userProfile/profile_data.dart';
@@ -34,7 +36,7 @@ class Settings extends StatelessWidget {
                   TAppBar(
                     color: TColors.white,
                     title: Text(
-                      "Account",
+                      "Settings",
                       style: Theme.of(
                         context,
                       ).textTheme.headlineMedium!.apply(color: TColors.white),
@@ -42,13 +44,61 @@ class Settings extends StatelessWidget {
                   ),
                   UserProfileTitle(
                     profileImage: FutureBuilder<ProfileData?>(
-                      future: fetchProfileData(),
+                      future: ApiService.fetchProfileData(),
                       builder: (context, snapshot) {
-                        return CircularImage(
-                          image: snapshot.data?.profileImage ?? Images.profile,
+                        if (!snapshot.hasData) {
+                          return Container(
+                            width: 40,
+                            height: 40,
+                            // margin: const EdgeInsets.only(right: 8),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: const ClipOval(
+                              child: Icon(
+                                Icons.person,
+                                color: TColors.primary,
+                                size: 24,
+                              ),
+                            ),
+                          );
+                        }
+                        return Container(
                           width: 50,
                           height: 50,
-                          padding: 0,
+                          // margin: const EdgeInsets.only(right: 8),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: ClipOval(
+                            child:
+                                snapshot.data?.profileImage != null
+                                    ? Image.network(
+                                      snapshot.data!.profileImage!,
+                                      width: 40,
+                                      height: 40,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (
+                                        context,
+                                        error,
+                                        stackTrace,
+                                      ) {
+                                        print('Error loading image: $error');
+                                        return const Icon(
+                                          Icons.person,
+                                          color: TColors.primary,
+                                          size: 24,
+                                        );
+                                      },
+                                    )
+                                    : const Icon(
+                                      Icons.person,
+                                      color: TColors.primary,
+                                      size: 24,
+                                    ),
+                          ),
                         );
                       },
                     ),
@@ -100,6 +150,19 @@ class Settings extends StatelessWidget {
                 children: [
                   SectionHeading(title: 'Account Settings', onPressed: () {}),
                   const SizedBox(height: TSizes.spaceBtwItems),
+                  SettingMenuTitle(
+                    icon: Iconsax.user,
+                    title: "Body Index",
+                    subTitle: "Set your profile details",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileScreen(),
+                        ),
+                      );
+                    },
+                  ),
                   SettingMenuTitle(
                     icon: Iconsax.notification,
                     title: "Notifications",

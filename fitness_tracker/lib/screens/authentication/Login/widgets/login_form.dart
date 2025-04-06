@@ -1,6 +1,7 @@
 import 'package:fitness_tracker/navigation_menu.dart';
 import 'package:fitness_tracker/screens/onboardingFeature/OnBoardingScreen/onboardingScreen.dart';
 import 'package:fitness_tracker/api/apiUrl.dart';
+import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
@@ -175,6 +176,9 @@ class _LoginFormState extends State<LoginForm> {
                 prefixIcon: const Icon(Iconsax.direct_right),
                 labelText: TTexts.email,
                 hintText: TTexts.hintEmail,
+                hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: TColors.grey,
+                ),
                 errorStyle: const TextStyle(color: Colors.red),
                 labelStyle: TextStyle(
                   color: _showLoginError ? Colors.red : Colors.grey[600],
@@ -227,7 +231,10 @@ class _LoginFormState extends State<LoginForm> {
                 prefixIcon: const Icon(Iconsax.password_check),
                 labelText: TTexts.password,
                 hintText: TTexts.hintPassword,
-                errorStyle: const TextStyle(color: Colors.red),
+                errorStyle: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
                 labelStyle: TextStyle(
                   color: _showLoginError ? Colors.red : Colors.grey[600],
                 ),

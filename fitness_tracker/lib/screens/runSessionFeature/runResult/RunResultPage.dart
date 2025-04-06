@@ -1,3 +1,4 @@
+import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runViewMap.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runTrackingScreen.dart';
@@ -104,18 +105,11 @@ class _RunResultPageState extends State<RunResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text("Your session"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadRunHistory,
-          ),
-        ],
+      appBar: const TAppBar(
+        centerTitle: true,
+        showBackButton: true,
+        color: TColors.black,
+        title: Text("Your session"),
       ),
       body:
           _isLoading
