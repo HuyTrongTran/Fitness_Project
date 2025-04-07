@@ -6,7 +6,6 @@ import 'package:fitness_tracker/screens/settings/profile.dart';
 import 'package:fitness_tracker/screens/settings/widgets/setting_menu_title.dart';
 import 'package:fitness_tracker/screens/settings/widgets/user_profile_title.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
-import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';

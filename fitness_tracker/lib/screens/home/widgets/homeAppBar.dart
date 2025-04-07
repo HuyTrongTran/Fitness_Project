@@ -3,11 +3,9 @@ import 'package:fitness_tracker/common/widgets/calendar/calendar_widget.dart';
 import 'package:fitness_tracker/features/services/getProfile.dart';
 import 'package:fitness_tracker/userProfile/profile_data.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
-import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'calendar_popup.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeAppBar extends StatelessWidget {
   final Function(DateTime) onDaySelected;

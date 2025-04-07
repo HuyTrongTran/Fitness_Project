@@ -7,8 +7,6 @@ import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/features/services/home_service/getTodayActivity.dart';
 import 'package:fitness_tracker/features/services/home_service/prefer_target.dart';
 import 'package:fitness_tracker/userProfile/profile_data.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class CustomPopupShape extends ShapeBorder {
   final double arrowWidth = 20.0;

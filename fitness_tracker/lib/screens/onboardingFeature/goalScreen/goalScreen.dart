@@ -28,8 +28,8 @@ class _GoalPageState extends State<GoalPage> {
     List<String> items = ["Lose Weight", "Gain Weight", "Stay Fit"];
     Map<String, String> goalMapping = {
       "Lose Weight": "weight_loss",
-      "Gain Weight": "muscle_gain",
-      "Stay Fit": "maintenance",
+      "Gain Weight": "weight_gain",
+      "Stay Fit": "stay_fit",
     };
 
     Future<void> _updateGoal(String goal) async {

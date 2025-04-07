@@ -22,33 +22,6 @@ class SuggestFoodController {
     }
   }
 
-  // Lấy một suggest food theo ID
-  static async getSuggestFood(req, res) {
-    try {
-      const suggestFood = await SuggestFoodModel.findById(req.params.id);
-      
-      if (!suggestFood) {
-        return res.status(404).json({
-          success: false,
-          message: 'No suggest food found with that ID'
-        });
-      }
-
-      res.status(200).json({
-        success: true,
-        data: {
-          suggestFood
-        }
-      });
-    } catch (error) {
-      console.error('Error in getSuggestFood:', error);
-      res.status(500).json({
-        success: false,
-        message: error.message || 'Internal server error'
-      });
-    }
-  }
-
   // Tạo một suggest food mới
   static async createSuggestFood(req, res) {
     try {
@@ -135,30 +108,6 @@ class SuggestFoodController {
     }
   }
 
-  // Xóa một suggest food
-  static async deleteSuggestFood(req, res) {
-    try {
-      const suggestFood = await SuggestFoodModel.deleteSuggestFood(req.params.id);
-      
-      if (!suggestFood) {
-        return res.status(404).json({
-          success: false,
-          message: 'No suggest food found with that ID'
-        });
-      }
-
-      res.status(200).json({
-        success: true,
-        message: 'Suggest food deleted successfully'
-      });
-    } catch (error) {
-      console.error('Error in deleteSuggestFood:', error);
-      res.status(500).json({
-        success: false,
-        message: error.message || 'Internal server error'
-      });
-    }
-  }
 
   // Lấy suggest foods theo loại hỗ trợ
   static async getSuggestFoodsBySupport(req, res) {

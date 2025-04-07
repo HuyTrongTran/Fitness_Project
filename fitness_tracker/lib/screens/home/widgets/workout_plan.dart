@@ -52,11 +52,9 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
   Future<void> _fetchWorkoutPlan() async {
     final String formattedDate =
         widget.selectedDate.toIso8601String().split('T')[0];
-    print('Fetching workout plan for date: $formattedDate'); // Debug log
 
     // Kiểm tra cache
     if (_cache.containsKey(formattedDate)) {
-      print('Using cached data for date: $formattedDate'); // Debug log
       setState(() {
         _workoutPlan = _cache[formattedDate]!;
         _isLoading = false;

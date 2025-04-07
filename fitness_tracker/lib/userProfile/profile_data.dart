@@ -24,7 +24,6 @@ class ProfileData {
   });
 
   factory ProfileData.fromJson(Map<String, dynamic> json) {
-    print('Parsing JSON: $json'); // Debug input JSON
 
     final profileData = ProfileData(
       height: (json['height'] as num?)?.toDouble(),
@@ -38,10 +37,6 @@ class ProfileData {
       email: json['email'] as String?,
       profileImage: json['profileImage'] as String?,
     );
-
-    print(
-      'Parsed profile data: height=${profileData.height}, weight=${profileData.weight}, goal=${profileData.goal}, activityLevel=${profileData.activityLevel}, username=${profileData.username}, email=${profileData.email}',
-    ); // Debug parsed data
     return profileData;
   }
 }

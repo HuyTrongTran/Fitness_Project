@@ -51,8 +51,13 @@ class ApiService {
           ); // Debug before parsing
           final profileData = ProfileData.fromJson(profileMap);
           print(
-            'Profile data after parsing: ${profileData.username}, ${profileData.email}, ${profileData.profileImage}',
+            'Profile data after parsing: ${profileData.username}, ${profileData.email}, ${profileData.profileImage}, ${profileData.goal}',
           ); // Debug after parsing
+
+          // Lưu dữ liệu profile vào SharedPreferences
+          await prefs.setString('userProfile', jsonEncode(profileMap));
+          print('Profile data saved to SharedPreferences');
+
           return profileData;
         } else {
           print('API error: ${responseData['message']}'); // Debug API error

@@ -4,31 +4,32 @@ import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:fitness_tracker/features/services/home_service/recent_plan/get_recent_plan.dart';
 
 class DetailSuggest extends StatelessWidget {
-  const DetailSuggest({super.key});
+  final SuggestFood suggestFood;
+
+  const DetailSuggest({super.key, required this.suggestFood});
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final imageSize = screenWidth * 0.4; // 40% chiều rộng màn hình
+    final imageSize = screenWidth * 0.4;
 
     return Scaffold(
       body: Stack(
         children: [
-          // Main Content
           CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              // Header
               SliverToBoxAdapter(
                 child: PrimaryHeaderContainer(
                   child: Column(
                     children: [
                       TAppBar(
                         title: Text(
-                          "Grilled chicken with vegetables",
+                          suggestFood.title,
                           style: Theme.of(
                             context,
                           ).textTheme.titleLarge!.apply(color: TColors.white),
@@ -43,7 +44,6 @@ class DetailSuggest extends StatelessWidget {
                 ),
               ),
 
-              // Content
               SliverToBoxAdapter(
                 child: Column(
                   children: [
@@ -53,36 +53,29 @@ class DetailSuggest extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          // Description
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: TSizes.defaultSpace,
                             ),
                             child: Text(
-                              "A light salad with lean chicken breast and fresh greens, drizzled with a touch of olive oil for flavor.",
+                              suggestFood.description,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
                           const SizedBox(height: TSizes.spaceBtwInputfields),
 
-                          // Steps
                           ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 4,
+                            itemCount: suggestFood.steps.length,
                             itemBuilder: (context, index) {
-                              final steps = [
-                                "Peel and chop 200g pumpkin into small pieces.",
-                                "Boil pumpkin in 300ml water for 15 minutes until soft.",
-                                "Blend until smooth (use a blender or mash by hand), season with a pinch of salt and pepper.",
-                                "Reheat for 2 minutes, serve hot.",
-                              ];
+                              final step = suggestFood.steps[index];
                               return _buildStep(
                                 context,
-                                number: "${index + 1}",
-                                text: steps[index],
-                                isLast: index == steps.length - 1,
+                                number: "${step.stepNumber}",
+                                text: step.instruction,
+                                isLast: index == suggestFood.steps.length - 1,
                               );
                             },
                           ),
@@ -95,7 +88,6 @@ class DetailSuggest extends StatelessWidget {
             ],
           ),
 
-          // Centered Image
           Positioned(
             top: MediaQuery.of(context).size.height * 0.25 - (imageSize / 2),
             left: (screenWidth - imageSize) / 2,
@@ -114,7 +106,13 @@ class DetailSuggest extends StatelessWidget {
                 ],
               ),
               child: ClipOval(
-                child: Image.asset(Images.chicken, fit: BoxFit.cover),
+                child: Image.network(
+                  suggestFood.image,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(Images.chicken, fit: BoxFit.cover);
+                  },
+                ),
               ),
             ),
           ),
@@ -129,7 +127,6 @@ class DetailSuggest extends StatelessWidget {
     required String text,
     required bool isLast,
   }) {
-    // Tính toán chiều dài line dựa vào độ dài của text
     double getLineHeight() {
       if (text.length < 50) return 30;
       if (text.length < 80) return 40;
@@ -139,7 +136,6 @@ class DetailSuggest extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Step Number with Circles
         SizedBox(
           width: 40,
           child: Column(
@@ -184,13 +180,10 @@ class DetailSuggest extends StatelessWidget {
         ),
         const SizedBox(width: TSizes.spaceBtwItems),
 
-        // Step Text
         Expanded(
           child: Container(
-            height: 40, // Chiều cao bằng với step number
-            alignment:
-                Alignment
-                    .centerLeft, // Căn giữa theo chiều dọc, căn trái theo chiều ngang
+            height: 40,
+            alignment: Alignment.centerLeft,
             child: Text(text, style: Theme.of(context).textTheme.bodyLarge),
           ),
         ),

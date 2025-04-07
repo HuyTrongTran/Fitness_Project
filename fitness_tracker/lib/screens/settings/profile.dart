@@ -1,10 +1,7 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/features/services/getProfile.dart';
 import 'package:fitness_tracker/screens/onboardingFeature/ageScreen/ageScreen.dart';
-import 'package:fitness_tracker/screens/onboardingFeature/heightScreen/heightScreen.dart';
 import 'package:fitness_tracker/userProfile/profile_data.dart';
-import 'package:fitness_tracker/utils/constants/sizes.dart';
-import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:iconsax/iconsax.dart';

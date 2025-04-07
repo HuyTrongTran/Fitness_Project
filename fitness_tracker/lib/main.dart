@@ -6,9 +6,11 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fitness_tracker/features/services/home_service/recent_plan/get_recent_plan.dart';
 
 Future<void> main() async {
-  final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  final WidgetsBinding widgetsBinding =
+      WidgetsFlutterBinding.ensureInitialized();
 
   await GetStorage.init();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -24,6 +26,9 @@ Future<void> main() async {
   } else {
     initialScreen = const Login();
   }
+
+  // Khởi tạo các service
+  RecentPlanService.init();
 
   await Future.delayed(const Duration(seconds: 2));
   FlutterNativeSplash.remove();
