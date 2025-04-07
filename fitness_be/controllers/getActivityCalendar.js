@@ -1,9 +1,8 @@
 // controllers/getActivityCalendar.js
-const { User, UserModel } = require('../models/userModel');
+const { UserModel } = require('../models/userModel');
 const UserExercise = require('../models/userExerciseModel');
 
-// Debug: Log để kiểm tra User và UserModel
-console.log('User model in getActivityCalendar:', User);
+// Debug: Log để kiểm tra UserModel
 console.log('UserModel in getActivityCalendar:', UserModel);
 
 class GetActivityCalendar {
@@ -25,6 +24,7 @@ class GetActivityCalendar {
             // Tìm user theo email
             const user = await UserModel.findByEmail(email);
             if (!user) {
+                console.log('User not found with email:', email);
                 return res.status(404).json({ success: false, message: 'User not found' });
             }
 
@@ -78,10 +78,7 @@ class GetActivityCalendar {
             });
         } catch (error) {
             console.error('Error when get activity data:', error);
-            res.status(500).json({
-                success: false,
-                message: error.message || 'Internal server error!',
-            });
+            next(error);
         }
     }
 }

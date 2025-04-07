@@ -1,15 +1,14 @@
 // controllers/userActivityController.js
-const { User, UserModel } = require('../models/userModel');
+const { UserModel } = require('../models/userModel');
 const UserActivity = require('../models/userActivity');
 
-// Debug: Log để kiểm tra User và UserModel
-console.log('User model:', User);
+// Debug: Log để kiểm tra UserModel
 console.log('UserModel:', UserModel);
 
 const submitRunSession = async (req, res, next) => {
     try {
-        // Kiểm tra xem User có được import đúng không
-        if (!User) {
+        // Kiểm tra xem UserModel có được import đúng không
+        if (!UserModel) {
             throw new Error('User model is undefined. Check the import from userModel.js');
         }
 
@@ -50,7 +49,7 @@ const submitRunSession = async (req, res, next) => {
         const savedActivity = await newActivity.save();
 
         // Cập nhật mảng profile.activities của user
-        await UserModel.updateProfile(user.email, {
+        await User.updateProfile(user.email, {
             activities: [...(user.profile.activities || []), savedActivity._id],
         });
 
@@ -60,6 +59,7 @@ const submitRunSession = async (req, res, next) => {
             data: savedActivity,
         });
     } catch (error) {
+        console.error('Error in submitRunSession:', error);
         console.error('Error submitting run session:', error);
         res.status(500).json({ error: 'Internal server error', details: error.message });
     }

@@ -1,13 +1,12 @@
 // controllers/authController.js
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require('../models/userModel');
+const { UserModel } = require('../models/userModel');
 const config = require('../config/config');
 const fs = require('fs').promises;
 
-// Debug: Log để kiểm tra User và UserModel
-console.log('User model in authController:', User);
-console.log('UserModel in authController:', UserModel);
+// Debug: Log để kiểm tra UserModel
+// console.log('UserModel in authController:', UserModel);
 
 class AuthController {
     static async login(req, res, next) {
@@ -18,23 +17,19 @@ class AuthController {
             }
 
             const { email, password } = req.body;
-            if (!email || !password) {
-                return res.status(400).json({ success: false, message: 'Email và mật khẩu là bắt buộc' });
-            }
-
             console.log('Đăng nhập với email:', email);
             const user = await UserModel.findByEmail(email);
             if (!user) {
                 console.log('Không tìm thấy người dùng với email:', email);
-                return res.status(401).json({ success: false, message: 'Thông tin đăng nhập không hợp lệ' });
+                return res.status(401).json({ success: false, message: 'Email hoặc mật khẩu không đúng' });
             }
 
             console.log('Tìm thấy người dùng:', user.email);
             const isValid = await UserModel.verifyPassword(password, user.password);
             console.log('Kết quả xác minh mật khẩu:', isValid);
             if (!isValid) {
-                console.log('Mật khẩu không khớp với email:', email);
-                return res.status(401).json({ success: false, message: 'Thông tin đăng nhập không hợp lệ' });
+                console.log('Mật khẩu không đúng');
+                return res.status(401).json({ success: false, message: 'Email hoặc mật khẩu không đúng' });
             }
 
             console.log('Mật khẩu đã được xác minh, đang tạo token...');
@@ -57,11 +52,8 @@ class AuthController {
                 },
             });
         } catch (error) {
-            console.error('Lỗi trong /login:', error);
-            res.status(500).json({
-                success: false,
-                message: error.message || 'Internal server error',
-            });
+            console.error('Lỗi đăng nhập:', error);
+            next(error);
         }
     }
 
@@ -73,31 +65,29 @@ class AuthController {
             }
 
             const { firstName, lastName, userName, email, password } = req.body;
-            if (!firstName || !lastName || !userName || !email || !password) {
-                return res.status(400).json({ success: false, message: 'All fields are required' });
-            }
+            console.log('Đăng ký với email:', email);
 
-            console.log('Registering with email:', email);
+            // Kiểm tra email đã tồn tại chưa
             const existingEmail = await UserModel.findByEmail(email);
             if (existingEmail) {
-                console.log('Email already exists:', email);
-                return res.status(400).json({ success: false, message: 'Email already exists' });
+                console.log('Email đã tồn tại:', email);
+                return res.status(400).json({ success: false, message: 'Email đã được sử dụng' });
             }
 
+            // Kiểm tra userName đã tồn tại chưa
             const existingUserName = await UserModel.findByUserName(userName);
             if (existingUserName) {
-                console.log('Username already exists:', userName);
-                return res.status(400).json({ success: false, message: 'Username already exists' });
+                console.log('UserName đã tồn tại:', userName);
+                return res.status(400).json({ success: false, message: 'Tên người dùng đã được sử dụng' });
             }
 
+            // Tạo người dùng mới
             const user = await UserModel.createUser({
                 firstName,
                 lastName,
                 userName,
                 email,
-                password,
-                profile: {},
-                hasCompletedOnboarding: false,
+                password
             });
 
             console.log('User created:', user.email);
@@ -119,11 +109,8 @@ class AuthController {
                 },
             });
         } catch (error) {
-            console.error('Error in /register:', error);
-            res.status(500).json({
-                success: false,
-                message: error.message || 'Internal server error',
-            });
+            console.error('Lỗi đăng ký:', error);
+            next(error);
         }
     }
 
@@ -178,10 +165,10 @@ class AuthController {
         try {
             const token = req.headers.authorization?.split(' ')[1];
             if (!token) {
-                return res.status(400).json({ success: false, message: 'No token provided' });
+                return res.status(401).json({ success: false, message: 'Không tìm thấy token xác thực' });
             }
 
-            const decoded = jwt.verify(token, config.JWT_SECRET);
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const user = await UserModel.updateOnboardingStatus(decoded.email);
 
             if (!user) {
@@ -190,15 +177,10 @@ class AuthController {
 
             res.status(200).json({ success: true, message: 'Completed onboarding' });
         } catch (error) {
-            console.error('Error in completeOnboarding:', error);
-            res.status(500).json({
-                success: false,
-                message: error.message || 'Internal server error',
-            });
+            console.error('Lỗi hoàn thành onboarding:', error);
+            next(error);
         }
     }
-
-    
 }
 
 module.exports = AuthController;

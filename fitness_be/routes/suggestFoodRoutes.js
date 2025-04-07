@@ -1,36 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const AuthController = require('../controllers/authController');
 const SuggestFoodController = require('../controllers/suggestFoodController');
-const { protect, restrictTo } = require('../middleware/authMiddleware');
 const upload = require('../utils/multerConfig');
 
-router
-    .route('/')
-    .get(SuggestFoodController.getAllSuggestFoods)
-    .post(
-        protect,
-        restrictTo('admin'),
-        upload.single('image'),
-        SuggestFoodController.createSuggestFood
-    );
+// Tạo suggest food mới
+router.post('/create-suggest-food', AuthController.checkBlacklist, upload.single('image'), SuggestFoodController.createSuggestFood);
 
-router
-    .route('/:id')
-    .get(SuggestFoodController.getSuggestFood)
-    .patch(
-        protect,
-        restrictTo('admin'),
-        upload.single('image'),
-        SuggestFoodController.updateSuggestFood
-    )
-    .delete(
-        protect,
-        restrictTo('admin'),
-        SuggestFoodController.deleteSuggestFood
-    );
+// Lấy suggest foods theo loại hỗ trợ
+router.get('/get-suggest-foods-by-support/:support_for', AuthController.checkBlacklist, SuggestFoodController.getSuggestFoodsBySupport);
 
-router
-    .route('/support/:support_for')
-    .get(SuggestFoodController.getSuggestFoodsBySupport);
-
-module.exports = router; 
+module.exports = router;

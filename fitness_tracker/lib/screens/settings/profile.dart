@@ -1,5 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
-
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/features/services/getProfile.dart';
 import 'package:fitness_tracker/screens/onboardingFeature/ageScreen/ageScreen.dart';
