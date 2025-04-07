@@ -33,7 +33,7 @@ app.use('/api', userRoutes);
 app.use('/api', authRoutes);
 app.use('/api', activityRoutes);
 app.use('/api', exerciseRoutes);
-app.use('/api/suggest-foods', suggestFoodRoutes);
+app.use('/api', suggestFoodRoutes);
 
 // Route bảo vệ sử dụng checkBlacklist
 app.get('/api/protected', AuthController.checkBlacklist, (req, res) => {

@@ -67,7 +67,7 @@ class SuggestFoodController {
       try {
         const suggestFood = await SuggestFoodModel.createSuggestFood({
           support_for,
-          image_url: imageUrl,
+          image: imageUrl,
           title,
           description,
           steps: steps ? JSON.parse(steps) : []

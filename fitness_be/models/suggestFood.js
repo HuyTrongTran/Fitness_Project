@@ -18,7 +18,6 @@ const suggestFoodSchema = new mongoose.Schema({
     support_for: { 
         type: String, 
         required: [true, 'Support for field is required'],
-        enum: ['lose_weight', 'gain_muscle', 'maintain_health'],
         trim: true 
     },
     steps: [{ 
@@ -32,19 +31,6 @@ const suggestFoodSchema = new mongoose.Schema({
             trim: true
         }
     }],
-    created_at: {
-        type: Date,
-        default: Date.now
-    },
-    updated_at: {
-        type: Date,
-        default: Date.now
-    }
-}, {
-    timestamps: { 
-        createdAt: 'created_at',
-        updatedAt: 'updated_at'
-    }
 });
 
 // Middleware để tự động cập nhật updated_at
