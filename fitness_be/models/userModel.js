@@ -88,6 +88,13 @@ class UserModel {
             { new: true }
         );
     }
+    static async updateUserInfo(email, userData) {
+        return await User.findOneAndUpdate(
+            { email },
+            { $set: userData },
+            { new: true }
+        );
+    }
 }
 
 module.exports = { User, UserModel };

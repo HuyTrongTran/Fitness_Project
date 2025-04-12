@@ -23,9 +23,9 @@ class TTexts {
   static const String newPassword = "New Password";
   static const String confirmPassword = "Confirm Password";
   static const String rememberMe = "Remember Me";
-  static const String signIn = "Sign In";
+  static const String signIn = "Sign in";
   static const String signUp = "Create your account";
-  static const String createAccount = "Create Account";
+  static const String createAccount = "Create account";
   static const String orSignInWith = "Or Sign In with";
   static const String orSignUpWith = "Or Sign Up with";
   static const String privacyPolicy = "Privacy Policy";
@@ -37,9 +37,9 @@ class TTexts {
 
   // Login Screen Text
   static const String loginTitle = "Welcome Back";
-  static const String loginSubTitle = "Make it work";
+  static const String loginSubTitle = "Change your life by your style";
   static const String signUpTitle = "Let's build your lifestyle";
-  static const String forgetPasswordTitle = "Forget Password?";
+  static const String forgetPasswordTitle = "Forget password?";
   static const String forgetPasswordSubTitle =
       "Enter your email to reset your password";
   static const String changePasswordTitle = "Password Resent Email Sent";

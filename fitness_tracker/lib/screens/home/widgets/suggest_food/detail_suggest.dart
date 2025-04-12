@@ -14,7 +14,6 @@ class DetailSuggest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
     final imageSize = screenWidth * 0.4;
 
     return Scaffold(
@@ -32,7 +31,10 @@ class DetailSuggest extends StatelessWidget {
                           suggestFood.title,
                           style: Theme.of(
                             context,
-                          ).textTheme.titleLarge!.apply(color: TColors.white),
+                          ).textTheme.titleLarge!.copyWith(
+                                color: TColors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                         showBackButton: true,
                         centerTitle: true,

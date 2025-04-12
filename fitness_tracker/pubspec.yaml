@@ -32,6 +32,9 @@ dependencies:
   cached_network_image: ^3.3.1
   google_fonts: ^6.1.0
 
+  # Image Picker
+  image_picker: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -103,7 +106,5 @@ flutter_launcher_icons:
   adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: "assets/icons/logos/app_logo.png"
   remove_alpha_ios: true
-  image_path_ios: "assets/icons/logos/app_logo.png"
-  image_path_android: "assets/icons/logos/app_logo.png"
   adaptive_icon_padding: true
-  adaptive_icon_padding_android: 0.1
+  adaptive_icon_padding_android: 1 

@@ -2,13 +2,21 @@ import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/features/services/getProfile.dart';
 import 'package:fitness_tracker/screens/onboardingFeature/ageScreen/ageScreen.dart';
 import 'package:fitness_tracker/userProfile/profile_data.dart';
+import 'package:fitness_tracker/models/user_onboarding_data.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -125,13 +133,50 @@ class ProfileScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AgePage(),
-                        ),
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      final userDataJson = prefs.getString(
+                        'user_onboarding_data',
                       );
+                      UserOnboardingData userData;
+
+                      if (userDataJson != null) {
+                        final Map<String, dynamic> jsonData = json.decode(
+                          userDataJson,
+                        );
+                        userData = UserOnboardingData(
+                          age: jsonData['age'] ?? 20,
+                          gender: jsonData['gender'] ?? '',
+                          height: jsonData['height'] ?? 0,
+                          weight: jsonData['weight'] ?? 0,
+                          goal: jsonData['goal'] ?? '',
+                          activityLevel: jsonData['activityLevel'] ?? '',
+                        );
+                      } else {
+                        userData = UserOnboardingData(
+                          age: 20,
+                          gender: '',
+                          height: 0,
+                          weight: 0,
+                          goal: '',
+                          activityLevel: '',
+                        );
+                      }
+
+                      if (mounted) {
+                        Navigator.pushNamed(
+                          context,
+                          '/age',
+                          arguments: UserOnboardingData(
+                            age: userData.age,
+                            gender: userData.gender,
+                            height: userData.height,
+                            weight: userData.weight,
+                            goal: userData.goal,
+                            activityLevel: userData.activityLevel,
+                          ),
+                        );
+                      }
                     },
                     child: const Text('Update profile'),
                   ),

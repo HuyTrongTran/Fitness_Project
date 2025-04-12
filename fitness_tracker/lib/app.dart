@@ -10,6 +10,7 @@ import 'package:fitness_tracker/screens/authentication/signup/signup.dart';
 import 'package:fitness_tracker/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fitness_tracker/models/user_onboarding_data.dart';
 import 'screens/onboardingFeature/ageScreen/ageScreen.dart';
 import 'screens/onboardingFeature/heightScreen/heightScreen.dart';
 import 'screens/onboardingFeature/weightPage/weightPage.dart';
@@ -32,7 +33,22 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const Login(),
         '/onboarding': (context) => const OnboardingScreen(),
         '/gender': (context) => const GenderPage(),
-        '/age': (context) => const AgePage(),
+        '/age': (context) {
+          final args =
+              ModalRoute.of(context)?.settings.arguments as UserOnboardingData?;
+          return AgePage(
+            userData:
+                args ??
+                UserOnboardingData(
+                  age: 20,
+                  gender: '',
+                  height: 0,
+                  weight: 0,
+                  goal: '',
+                  activityLevel: '',
+                ),
+          );
+        },
         '/height': (context) => const HeightPage(),
         '/weight': (context) => const WeightPage(),
         '/goal': (context) => const GoalPage(),

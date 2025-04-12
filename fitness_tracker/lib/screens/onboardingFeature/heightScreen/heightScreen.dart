@@ -116,6 +116,7 @@ class _HeightPageState extends State<HeightPage> {
                   SizedBox(
                     height: size.height * 0.5,
                     child: Listwheelviewscroller(
+                      initialItem: 160,
                       items: items,
                       onSelectedItemChanged: (index) {
                         setState(() {

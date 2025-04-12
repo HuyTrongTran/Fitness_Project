@@ -176,9 +176,9 @@ class _LoginFormState extends State<LoginForm> {
                 prefixIcon: const Icon(Iconsax.direct_right),
                 labelText: TTexts.email,
                 hintText: TTexts.hintEmail,
-                hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: TColors.grey,
-                ),
+                hintStyle: Theme.of(
+                  context,
+                ).textTheme.bodyMedium!.copyWith(color: TColors.grey),
                 errorStyle: const TextStyle(color: Colors.red),
                 labelStyle: TextStyle(
                   color: _showLoginError ? Colors.red : Colors.grey[600],
@@ -310,7 +310,13 @@ class _LoginFormState extends State<LoginForm> {
                   onPressed: () {
                     Navigator.pushNamed(context, '/forget-password');
                   },
-                  child: const Text(TTexts.forgetPasswordTitle),
+                  child: Text(
+                    TTexts.forgetPasswordTitle,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: TColors.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
               ],
             ),

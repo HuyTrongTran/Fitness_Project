@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:fitness_tracker/features/services/home_service/recent_plan/get_recent_plan.dart';
-import 'package:fitness_tracker/features/services/getProfile.dart';
 import 'package:fitness_tracker/screens/activitiesScreen/activitiesScreen.dart';
 import 'package:fitness_tracker/screens/home/widgets/suggest_food/detail_suggest.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
@@ -154,32 +153,32 @@ class _RecentPlansState extends State<RecentPlans> {
             children: [
               Text(
                 'What you eat today?',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Activities()),
-                  );
-                },
-                child: Text(
-                  'See All',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyLarge?.copyWith(color: TColors.primary),
-                ),
-              ),
+              // TextButton(
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => const Activities()),
+              //     );
+              //   },
+              //   child: Text(
+              //     'See All',
+              //     style: Theme.of(
+              //       context,
+              //     ).textTheme.bodyLarge?.copyWith(color: TColors.primary),
+              //   ),
+              // ),
             ],
           ),
-          const SizedBox(height: TSizes.spaceBtwItems / 2),
+          const SizedBox(height: TSizes.spaceBtwItems),
           Text(
-            formattedDate,
+            'Here is some suggest for your goal',
             style: Theme.of(
               context,
-            ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
+            ).textTheme.bodySmall?.copyWith(color: Colors.grey),
           ),
           const SizedBox(height: TSizes.spaceBtwItems),
           _isLoading

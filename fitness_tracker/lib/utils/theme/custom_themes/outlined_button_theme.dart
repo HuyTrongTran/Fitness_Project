@@ -10,9 +10,9 @@ class TOutlinedButtonTheme {
       foregroundColor: TColors.primary,
       side: BorderSide(color: TColors.primary),
       textStyle: const TextStyle(
-        fontSize: 16,
+        fontSize: 14,
         color: Colors.black,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.bold,
       ),
       padding: const EdgeInsets.symmetric(vertical: 18),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -25,9 +25,9 @@ class TOutlinedButtonTheme {
       foregroundColor: TColors.primary,
       side: BorderSide(color: TColors.primary),
       textStyle: const TextStyle(
-        fontSize: 16,
+        fontSize: 14,
         color: Colors.white,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.bold,
       ),
       padding: const EdgeInsets.symmetric(vertical: 18),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

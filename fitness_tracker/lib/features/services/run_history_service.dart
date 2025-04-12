@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:fitness_tracker/api/apiUrl.dart';
 import 'package:http/http.dart' as http;
-import 'package:fitness_tracker/utils/constants/api_url.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +32,7 @@ class RunHistoryService {
       // Gọi API
       final response = await http.get(
         Uri.parse(
-          '${ApiConstants.baseUrl}${ApiConstants.runHistory}',
+          '${ApiConfig.baseUrl}/run-history',
         ).replace(queryParameters: queryParams),
         headers: {
           'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ class RunHistoryService {
 
       // Log request details
       debugPrint('\nRequest details:');
-      debugPrint('URL: ${ApiConstants.baseUrl}${ApiConstants.submitRun}');
+      debugPrint('URL: ${ApiConfig.baseUrl}/submitRunSession');
       debugPrint('Headers:');
       debugPrint('- Content-Type: application/json');
       debugPrint('- Authorization: Bearer ${token.substring(0, 10)}...');
@@ -125,7 +125,7 @@ class RunHistoryService {
       debugPrint(json.encode(requestBody));
 
       final response = await http.post(
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.submitRun}'),
+        Uri.parse('${ApiConfig.baseUrl}/submitRunSession'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

@@ -11,7 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AgePage extends StatefulWidget {
-  const AgePage({super.key});
+  final UserOnboardingData userData;
+  const AgePage({super.key, required this.userData});
 
   @override
   State<AgePage> createState() => _AgePageState();
@@ -67,8 +68,6 @@ class _AgePageState extends State<AgePage> {
 
   @override
   Widget build(BuildContext context) {
-    final UserOnboardingData data =
-        ModalRoute.of(context)!.settings.arguments as UserOnboardingData;
     List<String> items = [];
     for (int i = 1; i <= 100; i++) {
       items.add(i.toString());
@@ -117,6 +116,10 @@ class _AgePageState extends State<AgePage> {
                     height: size.height * 0.5,
                     child: Listwheelviewscroller(
                       items: items,
+                      initialItem:
+                          (widget.userData.age ?? 0) > 0
+                              ? (widget.userData.age! - 1)
+                              : 24,
                       onSelectedItemChanged: (index) {
                         setState(() {
                           selectedAge = int.parse(items[index]);
@@ -127,10 +130,14 @@ class _AgePageState extends State<AgePage> {
                   DetailPageButton(
                     text: "Next",
                     onTap: () async {
-                      data.age = selectedAge;
+                      widget.userData.age = selectedAge;
                       print("Selected height: $selectedAge");
                       await _updateAge(selectedAge);
-                      Navigator.pushNamed(context, '/height', arguments: data);
+                      Navigator.pushNamed(
+                        context,
+                        '/height',
+                        arguments: widget.userData,
+                      );
                     },
                     showBackButton: true,
                     onBackTap: () => Navigator.pop(context),

@@ -216,6 +216,32 @@ class UserProfile {
       }
     }
   }
+  static async updateUserInfo(req, res, next) {
+    try {
+      const { userName } = req.body;
+      const user = await UserModel.updateUserInfo(req.user.email, {
+        userName,
+      });
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found"
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        data: {
+          userName: user.userName,
+        },
+      });
+    } catch (error) {
+      console.error("Error in updateUserInfo:", error);
+      res.status(500).json({
+        success: false,
+        message: error.message || "Internal server error",
+      });
+    }
+  }
 }
 
 module.exports = UserProfile;

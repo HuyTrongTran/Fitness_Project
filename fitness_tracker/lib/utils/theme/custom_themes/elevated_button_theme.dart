@@ -13,11 +13,7 @@ class TElevatedButtonTheme {
       disabledBackgroundColor: Colors.grey.withOpacity(0.12),
       side: const BorderSide(color: TColors.primary),
       padding: const EdgeInsets.symmetric(vertical: 16.0),
-      textStyle: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        fontFamily: 'Nunito',
-      ),
+      textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
   );
@@ -31,11 +27,7 @@ class TElevatedButtonTheme {
       disabledBackgroundColor: Colors.grey.withOpacity(0.12),
       side: const BorderSide(color: TColors.primary),
       padding: const EdgeInsets.symmetric(vertical: 16.0),
-      textStyle: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        fontFamily: 'Nunito',
-      ),
+      textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
   );

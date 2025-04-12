@@ -1,15 +1,13 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
-import 'package:fitness_tracker/common/widgets/custome_shape/containers/circular_image.dart';
 import 'package:fitness_tracker/common/widgets/custome_shape/containers/primary_header_container.dart';
 import 'package:fitness_tracker/common/widgets/texts/section_heading.dart';
-import 'package:fitness_tracker/screens/settings/profile.dart';
+import 'package:fitness_tracker/screens/settings/bodyIndex.dart';
 import 'package:fitness_tracker/screens/settings/widgets/setting_menu_title.dart';
 import 'package:fitness_tracker/screens/settings/widgets/user_profile_title.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:fitness_tracker/features/services/getProfile.dart';
 import 'package:fitness_tracker/userProfile/profile_data.dart';
