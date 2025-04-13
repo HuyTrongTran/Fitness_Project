@@ -43,6 +43,7 @@ class UserProfile {
           username: user.userName,
           email: user.email,
           profileImage: user.profileImage,
+          activities: user.profile.activities || [],
         },
       });
     } catch (error) {

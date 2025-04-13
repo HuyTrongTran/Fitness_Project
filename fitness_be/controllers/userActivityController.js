@@ -1,14 +1,15 @@
 // controllers/userActivityController.js
-const { UserModel } = require('../models/userModel');
+const { User, UserModel } = require('../models/userModel');
 const UserActivity = require('../models/userActivity');
 
-// Debug: Log để kiểm tra UserModel
+// Debug: Log để kiểm tra User và UserModel
+console.log('User model:', User);
 console.log('UserModel:', UserModel);
 
 const submitRunSession = async (req, res, next) => {
     try {
-        // Kiểm tra xem UserModel có được import đúng không
-        if (!UserModel) {
+        // Kiểm tra xem User có được import đúng không
+        if (!User) {
             throw new Error('User model is undefined. Check the import from userModel.js');
         }
 
@@ -49,7 +50,7 @@ const submitRunSession = async (req, res, next) => {
         const savedActivity = await newActivity.save();
 
         // Cập nhật mảng profile.activities của user
-        await User.updateProfile(user.email, {
+        await UserModel.updateProfile(user.email, {
             activities: [...(user.profile.activities || []), savedActivity._id],
         });
 
@@ -59,7 +60,6 @@ const submitRunSession = async (req, res, next) => {
             data: savedActivity,
         });
     } catch (error) {
-        console.error('Error in submitRunSession:', error);
         console.error('Error submitting run session:', error);
         res.status(500).json({ error: 'Internal server error', details: error.message });
     }
@@ -68,35 +68,25 @@ const submitRunSession = async (req, res, next) => {
 const getRunHistory = async (req, res) => {
     try {
         const user_id = req.user.id;
-        
-        // Lấy ngày hiện tại và đặt thời gian bắt đầu và kết thúc
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Đặt thời gian bắt đầu ngày (00:00:00)
-        
-        const endOfDay = new Date(today);
-        endOfDay.setHours(23, 59, 59, 999); // Đặt thời gian kết thúc ngày (23:59:59)
+        const { startDate, endDate } = req.query;
 
-        // Tạo điều kiện tìm kiếm cho ngày hiện tại
-        const query = {
+        // Tạo điều kiện tìm kiếm
+        let query = {
             user_id,
-            activity_type: 'run',
-            activity_date: {
-                $gte: today,
-                $lte: endOfDay
-            }
+            activity_type: 'run'
         };
 
-        // Lấy danh sách hoạt động chạy bộ của ngày hiện tại
+        // Nếu có startDate và endDate thì thêm vào query
+        if (startDate && endDate) {
+            query.activity_date = {
+                $gte: new Date(startDate),
+                $lte: new Date(endDate)
+            };
+        }
+
+        // Lấy danh sách hoạt động chạy bộ
         const activities = await UserActivity.find(query)
             .sort({ activity_date: -1 }); // Sắp xếp theo ngày mới nhất
-
-        // Tính tổng các chỉ số
-        const totals = activities.reduce((acc, activity) => {
-            acc.distance += activity.distance_in_km || 0;
-            acc.steps += activity.steps || 0;
-            acc.calories += activity.calories || 0;
-            return acc;
-        }, { distance: 0, steps: 0, calories: 0 });
 
         // Format lại dữ liệu trước khi trả về
         const formattedActivities = activities.map(activity => ({
@@ -111,12 +101,7 @@ const getRunHistory = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            data: formattedActivities,
-            totals: {
-                distance_in_km: totals.distance,
-                steps: totals.steps,
-                calories: totals.calories
-            }
+            data: formattedActivities
         });
 
     } catch (error) {
@@ -125,4 +110,48 @@ const getRunHistory = async (req, res) => {
     }
 };
 
-module.exports = { submitRunSession, getRunHistory };
+const getTodayActivity = async (req, res) => {
+    try {
+        const user_id = req.user.id;
+        console.log('User ID:', user_id);
+        
+        // Lấy ngày hôm nay ở múi giờ UTC+7
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        console.log('Today date:', today);
+        
+        // Tìm tất cả các hoạt động của ngày hôm nay
+        const activities = await UserActivity.find({
+            user_id: user_id,
+            activity_date: {
+                $gte: today,
+                $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000)
+            }
+        });
+        console.log('Found activities:', activities);
+
+        // Tính tổng các giá trị
+        const totals = activities.reduce((acc, activity) => {
+            return {
+                distance_in_km: acc.distance_in_km + (activity.distance_in_km || 0),
+                calories: acc.calories + (activity.calories || 0),
+                steps: acc.steps + (activity.steps || 0)
+            };
+        }, { distance_in_km: 0, calories: 0, steps: 0 });
+        console.log('Calculated totals:', totals);
+
+        res.json({
+            success: true,
+            data: activities,
+            totals: totals
+        });
+    } catch (error) {
+        console.error('Error in getTodayActivity:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error in getTodayActivity'
+        });
+    }
+}
+
+module.exports = { submitRunSession, getRunHistory, getTodayActivity };

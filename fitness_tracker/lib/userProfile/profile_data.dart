@@ -9,7 +9,7 @@ class ProfileData {
   final int? age;
   final double? bmi;
   final String? profileImage;
-
+  // final List<String>? activities;
   ProfileData({
     this.height,
     this.username,
@@ -21,10 +21,10 @@ class ProfileData {
     this.age,
     this.bmi,
     this.profileImage,
+    // this.activities,
   });
 
   factory ProfileData.fromJson(Map<String, dynamic> json) {
-
     final profileData = ProfileData(
       height: (json['height'] as num?)?.toDouble(),
       weight: (json['weight'] as num?)?.toDouble(),
@@ -36,6 +36,7 @@ class ProfileData {
       username: json['username'] as String?,
       email: json['email'] as String?,
       profileImage: json['profileImage'] as String?,
+      // activities: json['activities'] as List<String>?,
     );
     return profileData;
   }

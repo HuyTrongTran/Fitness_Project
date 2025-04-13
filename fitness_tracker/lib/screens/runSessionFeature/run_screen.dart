@@ -4,6 +4,7 @@ import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/run_stats_controller.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/run_chart_controller.dart';
+import 'package:fitness_tracker/features/services/run_history_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -16,22 +17,55 @@ class RunPage extends StatefulWidget {
 
 class _RunPageState extends State<RunPage> {
   RunSession? _bestSession;
-  double _todayCalories = 0.0;
-  List<double> _weeklyCalories = List.filled(7, 0.0);
+  double _todayDistance = 0.0;
+  List<double> _weeklyDistance = List.filled(7, 0.0);
   int _currentDayIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _loadStats();
-    _loadWeeklyCalories();
+    _loadRunHistory();
   }
 
-  Future<void> _loadWeeklyCalories() async {
-    final weeklyCalories = await RunChartController.getWeeklyCalories();
+  Future<void> _loadRunHistory() async {
+    try {
+      final now = DateTime.now();
+      final weekStart = now.subtract(Duration(days: now.weekday - 1));
+      final weekEnd = weekStart.add(const Duration(days: 6));
+
+      print('Loading run history from ${weekStart} to ${weekEnd}');
+
+      final sessions = await RunHistoryService.getRunHistory(
+        startDate: weekStart,
+        endDate: weekEnd,
+      );
+
+      print('Loaded ${sessions.length} sessions');
+
+      // Clear existing sessions
+      RunSessionManager.clearSessions();
+
+      // Add new sessions
+      for (var session in sessions) {
+        RunSessionManager.addSession(session);
+        print(
+          'Added session: date=${session.date}, distance=${session.distanceInKm}',
+        );
+      }
+
+      // Load weekly distance after updating sessions
+      _loadWeeklyDistance();
+    } catch (e) {
+      print('Error loading run history: $e');
+    }
+  }
+
+  Future<void> _loadWeeklyDistance() async {
+    final weeklyDistance = await RunChartController.getWeeklyDistance();
     if (mounted) {
       setState(() {
-        _weeklyCalories = weeklyCalories;
+        _weeklyDistance = weeklyDistance;
         _currentDayIndex = RunStatsController.getCurrentDayIndex();
       });
     }
@@ -39,12 +73,12 @@ class _RunPageState extends State<RunPage> {
 
   Future<void> _loadStats() async {
     final bestSession = await RunStatsController.getBestSession();
-    final todayCalories = await RunStatsController.calculateTodayCalories();
+    final todayDistance = await RunStatsController.calculateTodayDistance();
 
     if (mounted) {
       setState(() {
         _bestSession = bestSession;
-        _todayCalories = todayCalories;
+        _todayDistance = todayDistance;
       });
     }
   }
@@ -179,7 +213,7 @@ class _RunPageState extends State<RunPage> {
               child: Column(
                 children: [
                   Text(
-                    _todayCalories.toStringAsFixed(0),
+                    _todayDistance.toStringAsFixed(1),
                     style: Theme.of(context).textTheme.displayLarge?.copyWith(
                       color: Colors.black,
                       fontFamily: 'Nunito',
@@ -187,7 +221,7 @@ class _RunPageState extends State<RunPage> {
                     ),
                   ),
                   Text(
-                    "Kcal",
+                    "Km",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey,
                       fontFamily: 'Nunito',
@@ -203,7 +237,7 @@ class _RunPageState extends State<RunPage> {
               height: 150,
               child: LineChart(
                 RunChartController.createWeeklyChart(
-                  weeklyCalories: _weeklyCalories,
+                  weeklyDistance: _weeklyDistance,
                   currentDayIndex: _currentDayIndex,
                   context: context,
                 ),

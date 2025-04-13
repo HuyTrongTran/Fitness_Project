@@ -117,7 +117,7 @@ class RunHistoryService {
 
       // Log request details
       debugPrint('\nRequest details:');
-      debugPrint('URL: ${ApiConfig.baseUrl}/submitRunSession');
+      debugPrint('URL: ${ApiConfig.baseUrl}/run-history');
       debugPrint('Headers:');
       debugPrint('- Content-Type: application/json');
       debugPrint('- Authorization: Bearer ${token.substring(0, 10)}...');

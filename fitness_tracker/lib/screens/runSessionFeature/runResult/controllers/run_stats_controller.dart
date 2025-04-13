@@ -49,6 +49,32 @@ class RunStatsController {
       return 0;
     }
   }
+  static Future<double> calculateTodayDistance() async {
+    try {
+      final today = DateTime.now();
+      final todayString =
+          today.toIso8601String().split('T')[0]; // Format: YYYY-MM-DD
+
+      final sessions = await RunHistoryService.getRunHistory();
+
+      // Lọc các session có activity_date trùng với ngày hôm nay
+      final todaySessions = sessions.where((session) {
+        final sessionDate = session.date.toIso8601String().split('T')[0];
+        return sessionDate == todayString;
+      });
+
+      // Tính tổng calories của các session hôm nay
+      final todayDistance = todaySessions.fold<double>(
+        0,
+        (sum, session) => sum + session.distanceInKm,
+      );
+      debugPrint("Today distance: $todayDistance");
+      return todayDistance;
+    } catch (e) {
+      print('Error calculating today distance: $e');
+      return 0;
+    }
+  }
 
   // Lấy index của ngày hiện tại trong tuần (0 = Thứ 2, 6 = Chủ nhật)
   static int getCurrentDayIndex() {

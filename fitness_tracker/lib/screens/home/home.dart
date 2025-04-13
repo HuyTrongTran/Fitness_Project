@@ -18,16 +18,13 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(  
+        child: Column(
           children: [
             // Primary Header Container with Search and Categories
             PrimaryHeaderContainer(
               child: Column(
                 children: [
-                  HomeAppBar(
-                    onDaySelected: (selectedDay) {
-                    },
-                  ),
+                  HomeAppBar(onDaySelected: (selectedDay) {}),
                   const SizedBox(height: TSizes.spaceBtwItems),
                   WorkoutPlan(
                     selectedDate: DateTime.now(), // Luôn hiển thị ngày hiện tại

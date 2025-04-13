@@ -129,21 +129,30 @@ class GetTodayActivityService {
   /// Lấy dữ liệu hoạt động của ngày hôm nay từ API
   static Future<TodayActivityData> getTodayActivity() async {
     try {
+      print('Bắt đầu gọi API getTodayActivity');
+
       // Lấy token từ SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt_token');
+      print(
+        'Token từ SharedPreferences: ${token != null ? 'Có token' : 'Không có token'}',
+      );
 
       if (token == null) {
         print('Token is null, cannot fetch activity data');
         throw Exception('Invalid token');
       }
 
-      print('Using token: ${token.substring(0, 10)}...');
-      print('API URL: ${ApiConfig.baseUrl}/run-history');
+      final apiUrl = '${ApiConfig.baseUrl}/run-history';
+      print('API URL: $apiUrl');
+      print(
+        'Headers: ${{'Authorization': 'Bearer $token', 'Content-Type': 'application/json'}}',
+      );
 
       // Gọi API để lấy dữ liệu hoạt động của ngày hôm nay
+      print('Đang gọi API...');
       final response = await http.get(
-        Uri.parse('${ApiConfig.baseUrl}/run-history'),
+        Uri.parse(apiUrl),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -158,6 +167,7 @@ class GetTodayActivityService {
         print('Decoded response: $data');
 
         if (data['success'] == true) {
+          print('API call thành công, đang parse dữ liệu...');
           return TodayActivityData.fromJson(data);
         } else {
           print('API returned success: false');

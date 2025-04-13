@@ -1,7 +1,6 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runViewMap.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
-import 'package:fitness_tracker/screens/runSessionFeature/runTrackingScreen.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -267,7 +266,18 @@ class _RunResultPageState extends State<RunResultPage> {
                                                           ),
                                                       points:
                                                           _selectedSession!
-                                                              .routePoints,
+                                                              .routePoints
+                                                              .map(
+                                                                (
+                                                                  point,
+                                                                ) => LatLng(
+                                                                  point
+                                                                      .latitude,
+                                                                  point
+                                                                      .longitude,
+                                                                ),
+                                                              )
+                                                              .toList(),
                                                       color: Colors.red,
                                                       width: 5,
                                                     ),

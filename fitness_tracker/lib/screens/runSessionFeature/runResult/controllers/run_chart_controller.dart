@@ -2,40 +2,111 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/features/services/run_history_service.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
 
 class RunChartController {
-  static Future<List<double>> getWeeklyCalories() async {
+  static Future<double> getTodayDistance() async {
     try {
-      final sessions = await RunHistoryService.getRunHistory();
-      final now = DateTime.now();
-      final weekStart = now.subtract(Duration(days: now.weekday - 1));
+      final now = DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+      );
 
-      // Khởi tạo mảng calories cho 7 ngày
-      List<double> weeklyCalories = List.filled(7, 0.0);
+      final sessions = await RunHistoryService.getRunHistory(
+        startDate: now,
+        endDate: now.add(const Duration(days: 1)),
+      );
 
-      // Lọc và tính calories cho từng ngày trong tuần
+      double todayDistance = 0.0;
       for (var session in sessions) {
-        final sessionDate = session.date;
-        final dayIndex = sessionDate.weekday - 1; // 0 = Thứ 2, 6 = Chủ nhật
-
-        if (sessionDate.isAfter(weekStart) &&
-            sessionDate.isBefore(weekStart.add(const Duration(days: 7)))) {
-          weeklyCalories[dayIndex] += session.calories;
+        final sessionDate = DateTime(
+          session.date.year,
+          session.date.month,
+          session.date.day,
+        );
+        if (sessionDate.isAtSameMomentAs(now)) {
+          todayDistance += session.distanceInKm;
         }
       }
 
-      return weeklyCalories;
+      return todayDistance;
     } catch (e) {
-      print('Error getting weekly calories: $e');
-      return List.filled(7, 0.0); // Trả về mảng 0 nếu có lỗi
+      print('Error getting today distance: $e');
+      return 0.0;
+    }
+  }
+
+  static Future<List<double>> getWeeklyDistance() async {
+    try {
+      final now = DateTime.now();
+      print('Current time: $now');
+
+      final weekStart = now.subtract(Duration(days: now.weekday - 1));
+      final weekEnd = weekStart.add(const Duration(days: 6));
+
+      print('Week start: ${weekStart.toString()}');
+      print('Week end: ${weekEnd.toString()}');
+
+      final sessions = RunSessionManager.runSessions;
+      print('Local sessions count: ${sessions.length}');
+
+      if (sessions.isEmpty) {
+        print('No sessions found in local storage');
+        return List.filled(7, 0.0);
+      }
+
+      print('All local sessions:');
+      for (var session in sessions) {
+        print(
+          'Session: date=${session.date}, distance=${session.distanceInKm}',
+        );
+      }
+
+      List<double> weeklyDistance = List.filled(7, 0.0);
+
+      for (var session in sessions) {
+        final sessionDate = session.date;
+        final dayIndex = sessionDate.weekday - 1;
+
+        final sessionDateOnly = DateTime(
+          sessionDate.year,
+          sessionDate.month,
+          sessionDate.day,
+        );
+
+        if (sessionDateOnly.isAfter(
+              weekStart.subtract(const Duration(days: 1)),
+            ) &&
+            sessionDateOnly.isBefore(weekEnd.add(const Duration(days: 1)))) {
+          weeklyDistance[dayIndex] += session.distanceInKm;
+         
+        } else {
+         
+        }
+      }
+
+      
+      return weeklyDistance;
+    } catch (e) {
+      
+      return List.filled(7, 0.0);
     }
   }
 
   static LineChartData createWeeklyChart({
-    required List<double> weeklyCalories,
+    required List<double> weeklyDistance,
     required int currentDayIndex,
     required BuildContext context,
   }) {
+    print('Creating chart with data: $weeklyDistance');
+
+    final maxY =
+        weeklyDistance.isNotEmpty
+            ? (weeklyDistance.reduce((a, b) => a > b ? a : b) * 1.2)
+            : 10.0;
+
+
     return LineChartData(
       gridData: const FlGridData(
         drawHorizontalLine: false,
@@ -74,22 +145,20 @@ class RunChartController {
       lineBarsData: [
         LineChartBarData(
           spots: List.generate(7, (index) {
-            // Nếu không có dữ liệu cho ngày này, trả về điểm 0
-            if (weeklyCalories[index] == 0) {
+            if (weeklyDistance[index] == 0) {
               return FlSpot(index.toDouble(), 0);
             }
-            return FlSpot(index.toDouble(), weeklyCalories[index]);
+            return FlSpot(index.toDouble(), weeklyDistance[index]);
           }),
           isCurved: true,
-          curveSmoothness: 0.35, // Giảm độ cong
-          preventCurveOverShooting: true, // Ngăn đường cong bị out
+          curveSmoothness: 0.35,
+          preventCurveOverShooting: true,
           color: TColors.primary,
           barWidth: 2,
           dotData: FlDotData(
             show: true,
             getDotPainter: (spot, percent, bar, index) {
-              // Chỉ hiển thị dot cho các ngày có dữ liệu
-              if (weeklyCalories[index] == 0) {
+              if (weeklyDistance[index] == 0) {
                 return FlDotCirclePainter(radius: 0);
               }
 
@@ -107,10 +176,7 @@ class RunChartController {
         ),
       ],
       minY: 0,
-      maxY:
-          weeklyCalories.isNotEmpty
-              ? (weeklyCalories.reduce((a, b) => a > b ? a : b) * 1.2)
-              : 100,
+      maxY: maxY,
     );
   }
 }
