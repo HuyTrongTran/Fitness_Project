@@ -1,7 +1,7 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/common/widgets/calendar/calendar_widget.dart';
-import 'package:fitness_tracker/features/services/getProfile.dart';
-import 'package:fitness_tracker/userProfile/profile_data.dart';
+import 'package:fitness_tracker/features/services/user_profile_services/getProfile.dart';
+import 'package:fitness_tracker/screens/userProfile/profile_data.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';

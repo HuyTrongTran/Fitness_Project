@@ -4,9 +4,9 @@ import 'package:fitness_tracker/utils/helpers/helpers_function.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
-import 'package:fitness_tracker/features/services/home_service/getTodayActivity.dart';
-import 'package:fitness_tracker/features/services/home_service/prefer_target.dart';
-import 'package:fitness_tracker/userProfile/profile_data.dart';
+import 'package:fitness_tracker/features/services/home_services/getTodayActivity.dart';
+import 'package:fitness_tracker/features/services/home_services/prefer_target.dart';
+import 'package:fitness_tracker/screens/userProfile/profile_data.dart';
 
 class CustomPopupShape extends ShapeBorder {
   final double arrowWidth = 20.0;
@@ -167,7 +167,6 @@ class _WorkoutStatsState extends State<WorkoutStats> {
           (activityData.distanceInKm * 10) +
           (activityData.steps / 100) +
           (activityData.calories / 10);
-
       // Cập nhật dữ liệu thống kê
       _statsData = [
         {
@@ -233,7 +232,6 @@ class _WorkoutStatsState extends State<WorkoutStats> {
           'target': 10000.0,
           'current': 0.0,
         },
-
         {
           'value': '0',
           'unit': '',
@@ -359,170 +357,186 @@ class _WorkoutStatsState extends State<WorkoutStats> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Stats Row
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child:
-                  _isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : _errorMessage.isNotEmpty
-                      ? Column(
-                        children: [
-                          const Icon(
-                            Icons.error_outline,
-                            color: Colors.red,
-                            size: 48,
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Daily Activity",
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child:
+                      _isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : _errorMessage.isNotEmpty
+                          ? Column(
+                            children: [
+                              const Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                                size: 48,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                _errorMessage,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: _loadActivityData,
+                                child: const Text('Try again'),
+                              ),
+                            ],
+                          )
+                          : Row(
+                            children: [
+                              const SizedBox(width: 16),
+                              ..._statsData.map(
+                                (stat) => Stat_Item(
+                                  context: context,
+                                  value: stat['value'] + (stat['unit'] ?? ''),
+                                  label: stat['label'],
+                                  icon: stat['icon'],
+                                  current: stat['current'].toDouble(),
+                                  target: stat['target'].toDouble(),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            _errorMessage,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: _loadActivityData,
-                            child: const Text('Try again'),
-                          ),
-                        ],
-                      )
-                      : Row(
-                        children: [
-                          const SizedBox(width: 16),
-                          ..._statsData.map(
-                            (stat) => Stat_Item(
-                              context: context,
-                              value: stat['value'] + (stat['unit'] ?? ''),
-                              label: stat['label'],
-                              icon: stat['icon'],
-                              current: stat['current'].toDouble(),
-                              target: stat['target'].toDouble(),
-                            ),
-                          ),
-                        ],
-                      ),
-            ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: TSizes.spaceBtwSections),
 
           // Total Kilocalories
-          Center(
-            child: Column(
-              children: [
-                Text(
-                  '${_todayActivityData?.calories ?? 0} Kcal',
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: dark ? TColors.white : const Color(0xFF1D1517),
-                  ),
-                ),
-                Text(
-                  'Today',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF7B6F72),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: TSizes.spaceBtwSections),
+          // Center(
+          //   child: Column(
+          //     children: [
+          //       Text(
+          //         '${_todayActivityData?.calories ?? 0} Kcal',
+          //         style: Theme.of(context).textTheme.displaySmall?.copyWith(
+          //           fontWeight: FontWeight.w600,
+          //           color: dark ? TColors.white : const Color(0xFF1D1517),
+          //         ),
+          //       ),
+          //       Text(
+          //         'Today',
+          //         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          //           color: const Color(0xFF7B6F72),
+          //           fontWeight: FontWeight.bold,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // const SizedBox(height: TSizes.spaceBtwSections),
 
           // Activity Chart
-          SizedBox(
-            height: 240, // Tăng chiều cao để chứa cả ngày
-            child: Column(
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: List.generate(
-                      activeExercise['chartData'].length,
-                      (index) => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GestureDetector(
-                            onTapDown: (TapDownDetails details) {
-                              final RenderBox box =
-                                  context.findRenderObject() as RenderBox;
-                              final Offset localPosition = box.localToGlobal(
-                                Offset.zero,
-                              );
-                              final double columnCenterX =
-                                  localPosition.dx + 14 / 2;
+          // SizedBox(
+          //   height: 240, // Tăng chiều cao để chứa cả ngày
+          //   child: Column(
+          //     children: [
+          //       Expanded(
+          //         child: Row(
+          //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //           crossAxisAlignment: CrossAxisAlignment.end,
+          //           children: List.generate(
+          //             activeExercise['chartData'].length,
+          //             (index) => Column(
+          //               mainAxisSize: MainAxisSize.min,
+          //               children: [
+          //                 GestureDetector(
+          //                   onTapDown: (TapDownDetails details) {
+          //                     final RenderBox box =
+          //                         context.findRenderObject() as RenderBox;
+          //                     final Offset localPosition = box.localToGlobal(
+          //                       Offset.zero,
+          //                     );
+          //                     final double columnCenterX =
+          //                         localPosition.dx + 14 / 2;
 
-                              _showPopupMenu(
-                                context,
-                                index,
-                                Offset(columnCenterX, localPosition.dy),
-                                activeExercise['chartData'][index]['grey']
-                                    .toDouble(),
-                                context,
-                              );
-                            },
-                            child: _buildChartBar(
-                              context,
-                              index,
-                              activeExercise['chartData'][index]['grey']
-                                  .toDouble(),
-                              activeExercise['chartData'][index]['color']
-                                  .toDouble(),
-                              index % 2 == 0,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            _weekDays[index],
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodySmall?.copyWith(
-                              color: const Color(0xFF7B6F72),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: TSizes.spaceBtwSections),
+          //                     _showPopupMenu(
+          //                       context,
+          //                       index,
+          //                       Offset(columnCenterX, localPosition.dy),
+          //                       activeExercise['chartData'][index]['grey']
+          //                           .toDouble(),
+          //                       context,
+          //                     );
+          //                   },
+          //                   child: _buildChartBar(
+          //                     context,
+          //                     index,
+          //                     activeExercise['chartData'][index]['grey']
+          //                         .toDouble(),
+          //                     activeExercise['chartData'][index]['color']
+          //                         .toDouble(),
+          //                     index % 2 == 0,
+          //                   ),
+          //                 ),
+          //                 const SizedBox(height: 8),
+          //                 Text(
+          //                   _weekDays[index],
+          //                   style: Theme.of(
+          //                     context,
+          //                   ).textTheme.bodySmall?.copyWith(
+          //                     color: const Color(0xFF7B6F72),
+          //                     fontWeight: FontWeight.bold,
+          //                   ),
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // const SizedBox(height: TSizes.spaceBtwSections),
 
           // Exercise Types
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: TSizes.spaceBtwSections),
-              child: Row(
-                children: List.generate(
-                  _exerciseData.length,
-                  (index) => Padding(
-                    padding: EdgeInsets.only(
-                      right:
-                          index != _exerciseData.length - 1
-                              ? TSizes.spaceBtwItems
-                              : 0,
-                    ),
-                    child: GestureDetector(
-                      onTap: () => _toggleTab(index),
-                      child: _buildExerciseType(
-                        context,
-                        _exerciseData[index]['icon'],
-                        _exerciseData[index]['name'],
-                        _exerciseData[index]['calories'],
-                        _activeTabIndex == index,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // SingleChildScrollView(
+          //   scrollDirection: Axis.horizontal,
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(bottom: TSizes.spaceBtwSections),
+          //     child: Row(
+          //       children: List.generate(
+          //         _exerciseData.length,
+          //         (index) => Padding(
+          //           padding: EdgeInsets.only(
+          //             right:
+          //                 index != _exerciseData.length - 1
+          //                     ? TSizes.spaceBtwItems
+          //                     : 0,
+          //           ),
+          //           child: GestureDetector(
+          //             onTap: () => _toggleTab(index),
+          //             child: _buildExerciseType(
+          //               context,
+          //               _exerciseData[index]['icon'],
+          //               _exerciseData[index]['name'],
+          //               _exerciseData[index]['calories'],
+          //               _activeTabIndex == index,
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

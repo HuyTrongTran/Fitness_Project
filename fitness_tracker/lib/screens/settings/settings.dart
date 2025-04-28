@@ -1,6 +1,7 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/common/widgets/custome_shape/containers/primary_header_container.dart';
 import 'package:fitness_tracker/common/widgets/texts/section_heading.dart';
+import 'package:fitness_tracker/screens/authentication/changePassword/change_password.dart';
 import 'package:fitness_tracker/screens/settings/bodyIndex.dart';
 import 'package:fitness_tracker/screens/settings/widgets/setting_menu_title.dart';
 import 'package:fitness_tracker/screens/settings/widgets/user_profile_title.dart';
@@ -9,9 +10,9 @@ import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:fitness_tracker/features/services/getProfile.dart';
-import 'package:fitness_tracker/userProfile/profile_data.dart';
-import 'package:fitness_tracker/features/services/logout/logout.dart';
+import 'package:fitness_tracker/features/services/user_profile_services/getProfile.dart';
+import 'package:fitness_tracker/screens/userProfile/profile_data.dart';
+import 'package:fitness_tracker/features/services/authentication_services/logout.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -170,7 +171,14 @@ class Settings extends StatelessWidget {
                     icon: Iconsax.key,
                     title: "Change Password",
                     subTitle: "Change your password",
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ChangePassword(),
+                        ),
+                      );
+                    },
                   ),
                   SettingMenuTitle(
                     icon: Iconsax.logout,

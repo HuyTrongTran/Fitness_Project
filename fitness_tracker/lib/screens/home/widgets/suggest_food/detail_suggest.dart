@@ -4,7 +4,7 @@ import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
-import 'package:fitness_tracker/features/services/home_service/recent_plan/get_recent_plan.dart';
+import 'package:fitness_tracker/features/services/home_services/recent_plan/get_recent_plan.dart';
 
 class DetailSuggest extends StatelessWidget {
   final SuggestFood suggestFood;

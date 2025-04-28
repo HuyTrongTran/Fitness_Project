@@ -17,22 +17,17 @@ class AuthController {
             }
 
             const { email, password } = req.body;
-            console.log('Đăng nhập với email:', email);
+                console.log('Đăng nhập với email:', email);
             const user = await UserModel.findByEmail(email);
             if (!user) {
-                console.log('Không tìm thấy người dùng với email:', email);
-                return res.status(401).json({ success: false, message: 'Email hoặc mật khẩu không đúng' });
+                return res.status(401).json({ success: false, message: 'Invalid password or email' });
             }
 
-            console.log('Tìm thấy người dùng:', user.email);
             const isValid = await UserModel.verifyPassword(password, user.password);
-            console.log('Kết quả xác minh mật khẩu:', isValid);
             if (!isValid) {
-                console.log('Mật khẩu không đúng');
-                return res.status(401).json({ success: false, message: 'Email hoặc mật khẩu không đúng' });
+                return res.status(401).json({ success: false, message: 'Invalid password or email' });
             }
 
-            console.log('Mật khẩu đã được xác minh, đang tạo token...');
             const token = jwt.sign(
                 { email: user.email, id: user._id },
                 config.JWT_SECRET,
@@ -52,7 +47,7 @@ class AuthController {
                 },
             });
         } catch (error) {
-            console.error('Lỗi đăng nhập:', error);
+            console.error('Login error:', error);
             next(error);
         }
     }
@@ -70,15 +65,13 @@ class AuthController {
             // Kiểm tra email đã tồn tại chưa
             const existingEmail = await UserModel.findByEmail(email);
             if (existingEmail) {
-                console.log('Email đã tồn tại:', email);
-                return res.status(400).json({ success: false, message: 'Email đã được sử dụng' });
+                return res.status(400).json({ success: false, message: 'Email already exists' });
             }
 
             // Kiểm tra userName đã tồn tại chưa
             const existingUserName = await UserModel.findByUserName(userName);
             if (existingUserName) {
-                console.log('UserName đã tồn tại:', userName);
-                return res.status(400).json({ success: false, message: 'Tên người dùng đã được sử dụng' });
+                return res.status(400).json({ success: false, message: 'Username already exists' });
             }
 
             // Tạo người dùng mới
@@ -109,7 +102,7 @@ class AuthController {
                 },
             });
         } catch (error) {
-            console.error('Lỗi đăng ký:', error);
+            console.error('Registration error:', error);
             next(error);
         }
     }
@@ -165,7 +158,7 @@ class AuthController {
         try {
             const token = req.headers.authorization?.split(' ')[1];
             if (!token) {
-                return res.status(401).json({ success: false, message: 'Không tìm thấy token xác thực' });
+                return res.status(401).json({ success: false, message: 'No token provided' });
             }
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -177,7 +170,7 @@ class AuthController {
 
             res.status(200).json({ success: true, message: 'Completed onboarding' });
         } catch (error) {
-            console.error('Lỗi hoàn thành onboarding:', error);
+            console.error('Error in completeOnboarding:', error);
             next(error);
         }
     }

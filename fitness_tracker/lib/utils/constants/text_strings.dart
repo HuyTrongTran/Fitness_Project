@@ -43,7 +43,8 @@ class TTexts {
   static const String forgetPasswordSubTitle =
       "Enter your email to reset your password";
   static const String changePasswordTitle = "Password Resent Email Sent";
-  static const String changePasswordSubTitle = "Your account security is our priority. We have sent a Secure link to Change your password. Check your email address.";
+  static const String changePasswordSubTitle =
+      "Your account security is our priority. We have sent a Secure link to Change your password. Check your email address.";
   static const String confirmEmail = "Verify your email address";
   static const String confirmEmailSubtitle =
       "Congratulations! Your account has been successfully created. Verify your email address to build your fitness journey.";
@@ -64,10 +65,16 @@ class TTexts {
   static const String hintPhoneNumber = "Enter your phone number";
   static const String iAgreeTo = "I agree to";
   static const String iContinue = "Continue";
-  
+
   // Forget Password Screen Text
   static const String submit = "Submit";
 
   // Home Screen Text
   static const String search = "Typing here...";
+
+  // Settings Screen Text
+  static const String changePassword = "Change Password";
+  static const String changePasswordSubtitle = "Change your password";
+  static const String oldPassword = "Old Password";
+  static const String confirmNewPassword = "Confirm New Password";
 }

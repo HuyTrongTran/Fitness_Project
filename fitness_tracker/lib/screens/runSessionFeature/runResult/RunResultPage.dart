@@ -5,7 +5,7 @@ import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:fitness_tracker/features/services/run_history_service.dart';
+import 'package:fitness_tracker/features/services/run_services/run_history_service.dart';
 
 class RunResultPage extends StatefulWidget {
   final RunSession session;

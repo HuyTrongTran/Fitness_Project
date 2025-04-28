@@ -113,12 +113,11 @@ const getRunHistory = async (req, res) => {
 const getTodayActivity = async (req, res) => {
     try {
         const user_id = req.user.id;
-        console.log('User ID:', user_id);
-        
-        // Lấy ngày hôm nay ở múi giờ UTC+7
+       // Lấy ngày hôm nay ở múi giờ UTC+7
+
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        console.log('Today date:', today);
+
         
         // Tìm tất cả các hoạt động của ngày hôm nay
         const activities = await UserActivity.find({
@@ -128,8 +127,7 @@ const getTodayActivity = async (req, res) => {
                 $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000)
             }
         });
-        console.log('Found activities:', activities);
-
+        
         // Tính tổng các giá trị
         const totals = activities.reduce((acc, activity) => {
             return {
@@ -138,7 +136,6 @@ const getTodayActivity = async (req, res) => {
                 steps: acc.steps + (activity.steps || 0)
             };
         }, { distance_in_km: 0, calories: 0, steps: 0 });
-        console.log('Calculated totals:', totals);
 
         res.json({
             success: true,

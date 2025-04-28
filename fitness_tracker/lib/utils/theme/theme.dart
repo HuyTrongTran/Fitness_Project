@@ -7,6 +7,7 @@ import 'package:fitness_tracker/utils/theme/custom_themes/outlined_button_theme.
 import 'package:fitness_tracker/utils/theme/custom_themes/text_button_theme.dart';
 import 'package:fitness_tracker/utils/theme/custom_themes/text_field_theme.dart';
 import 'package:fitness_tracker/utils/theme/custom_themes/text_theme.dart';
+import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -27,6 +28,11 @@ class AppTheme {
     outlinedButtonTheme: TOutlinedButtonTheme.lightOutlinedButtonTheme,
     textButtonTheme: TTextButtonTheme.lightTextButtonTheme,
     inputDecorationTheme: TTextFormFieldTheme.lightInputDecorationTheme,
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: TColors.primary,
+      selectionColor: TColors.primary.withOpacity(0.1),
+      selectionHandleColor: TColors.primary.withOpacity(0.1),
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -44,5 +50,10 @@ class AppTheme {
     checkboxTheme: TCheckboxTheme.darkCheckboxTheme,
     bottomSheetTheme: TBottomSheetTheme.darkBottomSheetTheme,
     inputDecorationTheme: TTextFormFieldTheme.darkInputDecorationTheme,
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: TColors.primary,
+      selectionColor: TColors.primary.withOpacity(0.1),
+      selectionHandleColor: TColors.primary.withOpacity(0.1),
+    ),
   );
 }

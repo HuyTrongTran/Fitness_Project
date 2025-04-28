@@ -1,4 +1,5 @@
 import 'package:fitness_tracker/screens/activitiesScreen/activitiesScreen.dart';
+import 'package:fitness_tracker/screens/fitnessAssistance/fitness_assistance.dart';
 import 'package:fitness_tracker/screens/home/home.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/run_screen.dart';
 import 'package:fitness_tracker/screens/settings/settings.dart';
@@ -66,8 +67,8 @@ class NavigationMenu extends StatelessWidget {
                       const SizedBox(width: 60), // Khoảng trống cho nút Run
                       Expanded(
                         child: _buildNavItem(
-                          icon: Iconsax.profile_2user,
-                          label: 'Social',
+                          icon: Icons.smart_toy_outlined,
+                          label: 'FitBot',
                           isSelected: controller.selectedIndex.value == 2,
                           onTap: () => controller.selectedIndex.value = 2,
                           isDark: dark,
@@ -179,7 +180,6 @@ class NavigationMenu extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: isDark ? Colors.black : Colors.black,
                       fontWeight: FontWeight.bold,
-                      
                     ),
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis, // Tránh tràn chữ
@@ -207,7 +207,10 @@ class NavigationController extends GetxController {
   final screens = [
     const Home(),
     Container(color: Colors.white, child: const Center(child: Activities())),
-    Container(color: Colors.white, child: const Center(child: Text('Social'))),
+    Container(
+      color: Colors.white,
+      child: const Center(child: FitnessAssistance()),
+    ),
     Container(color: Colors.white, child: const Center(child: Settings())),
   ];
 }

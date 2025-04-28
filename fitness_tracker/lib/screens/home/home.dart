@@ -1,10 +1,13 @@
 import 'package:fitness_tracker/common/widgets/custome_shape/containers/primary_header_container.dart';
+import 'package:fitness_tracker/screens/home/widgets/dailyProgress/daily_progress.dart';
 import 'package:fitness_tracker/screens/home/widgets/homeAppBar.dart';
 import 'package:fitness_tracker/screens/home/widgets/workout_plan.dart';
-import 'package:fitness_tracker/screens/home/widgets/workout_stats.dart';
-import 'package:fitness_tracker/screens/home/widgets/recent_plans.dart';
+import 'package:fitness_tracker/screens/home/widgets/suggest_food.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:fitness_tracker/features/services/home_services/getTodayActivity.dart';
+import 'package:fitness_tracker/features/services/home_services/prefer_target.dart';
+import 'package:fitness_tracker/screens/userProfile/profile_data.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,31 +17,118 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  TodayActivityData? _todayActivityData;
+  ActivityTarget? _activityTarget;
+  bool _isLoading = true;
+  String _errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadActivityData();
+  }
+
+  Future<void> _loadActivityData() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = '';
+    });
+
+    try {
+      // Lấy dữ liệu hoạt động từ API
+      final activityData = await GetTodayActivityService.getTodayActivity();
+
+      // Tạo một profile mặc định
+      final defaultProfile = ProfileData(
+        weight: 60.0,
+        height: 170.0,
+        age: 30,
+        gender: 'male',
+        activityLevel: 'moderate',
+        goal: 'maintain',
+      );
+      final targetData = ActivityTarget.getRecommendedTarget(defaultProfile);
+
+      setState(() {
+        _todayActivityData = activityData;
+        _activityTarget = targetData;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Unable to load data: $e';
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Primary Header Container with Search and Categories
             PrimaryHeaderContainer(
               child: Column(
                 children: [
                   HomeAppBar(onDaySelected: (selectedDay) {}),
                   const SizedBox(height: TSizes.spaceBtwItems),
-                  WorkoutPlan(
-                    selectedDate: DateTime.now(), // Luôn hiển thị ngày hiện tại
-                    isInPopup: false,
-                  ),
+                  WorkoutPlan(selectedDate: DateTime.now(), isInPopup: false),
                   const SizedBox(height: TSizes.spaceBtwItems),
                 ],
               ),
             ),
 
-            // Workout Stats Section
-            const WorkoutStats(),
+            if (_isLoading)
+              Container(
+                margin: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5F9FF),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                height: 180,
+                width: double.infinity,
+              )
+            else if (_errorMessage.isNotEmpty)
+              Center(
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 48,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _loadActivityData,
+                      child: const Text('Thử lại'),
+                    ),
+                  ],
+                ),
+              )
+            else
+              DailyProgress(
+                distance: _todayActivityData?.distanceInKm ?? 0,
+                distanceGoal: _activityTarget?.targetDistance ?? 5,
+                steps: _todayActivityData?.steps ?? 0,
+                stepsGoal: _activityTarget?.targetSteps ?? 10000,
+                calories: _todayActivityData?.calories ?? 0,
+                caloriesGoal: _activityTarget?.targetCalories ?? 2000,
+              ),
 
-            // Recent Plans Section
             const RecentPlans(),
           ],
         ),

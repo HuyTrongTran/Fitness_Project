@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:fitness_tracker/models/user_onboarding_data.dart';
 import 'package:fitness_tracker/navigation_menu.dart';
-import 'package:fitness_tracker/features/services/getProfile.dart';
+import 'package:fitness_tracker/features/services/user_profile_services/getProfile.dart';
 import 'package:fitness_tracker/api/apiUrl.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';

@@ -4,6 +4,8 @@ const path = require('path');
 const { UserModel } = require("../models/userModel");
 const config = require("../config/config");
 const { bucket } = require("../config/firebase");
+const bcrypt = require('bcrypt');
+const { BlacklistToken } = require("../models/blacklistToken");
 
 // Debug: Log để kiểm tra UserModel
 console.log("UserModel in UserProfile:", UserModel);
@@ -243,6 +245,64 @@ class UserProfile {
       });
     }
   }
+
+  static async updatePassword(req, res, next) {
+    try {
+      const { oldPassword, newPassword } = req.body;
+      const userEmail = req.user.email;
+      const token = req.headers.authorization?.split(' ')[1]; // Lấy token từ header
+
+      // Tìm user và kiểm tra mật khẩu cũ
+      const user = await UserModel.findByEmail(userEmail);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found'
+        });
+      }
+
+      // Kiểm tra mật khẩu cũ
+      const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+      if (!isPasswordValid) {
+        return res.status(400).json({
+          success: false,
+          message: 'Old password is incorrect'
+        });
+      }
+
+      // Mã hóa mật khẩu mới
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      // Cập nhật mật khẩu mới
+      const updatedUser = await UserModel.updateUserInfo(userEmail, { password: hashedPassword });
+      if (!updatedUser) {
+        return res.status(500).json({
+          success: false,
+          message: 'Failed to update password'
+        });
+      }
+
+      // Kiểm tra token đã tồn tại trong blacklist chưa
+      if (token) {
+        const existingToken = await BlacklistToken.findOne({ token });
+        if (!existingToken) {
+          await BlacklistToken.create({ token });
+        }
+      }
+
+      res.json({
+        success: true,
+        message: 'Password updated successfully. Please login again.'
+      });
+    } catch (error) {
+      console.error('Error in updatePassword:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error updating password'
+      });
+    }
+  }
 }
 
 module.exports = UserProfile;
+

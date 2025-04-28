@@ -1,6 +1,7 @@
 import 'package:fitness_tracker/common/widgets/custome_shape/custome_snackbar/customSnackbar.dart';
 import 'package:fitness_tracker/screens/authentication/Login/login.dart';
 import 'package:fitness_tracker/api/apiUrl.dart';
+import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
@@ -23,21 +24,25 @@ class _SignUpFormState extends State<SignUpForm> {
   final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   bool _isLoading = false;
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
   bool _isTermsAccepted = false;
 
   Future<void> _signUp() async {
     if (!_formKey.currentState!.validate() || !_isTermsAccepted) {
       if (!_isTermsAccepted) {
-        showCustomSnackbar('Processing', 'Request timed out', type: SnackbarType.processing);
+        showCustomSnackbar(
+          'Processing',
+          'Please accept the terms and conditions',
+          type: SnackbarType.processing,
+        );
       }
-      print('Form validation failed or terms not accepted');
+
       return;
     }
-
-    print('Form validation passed, calling API...');
 
     setState(() {
       _isLoading = true;
@@ -46,7 +51,6 @@ class _SignUpFormState extends State<SignUpForm> {
     const String apiUrl = '${ApiConfig.baseUrl}/register';
 
     try {
-      print('Sending request to $apiUrl');
       final response = await http
           .post(
             Uri.parse(apiUrl),
@@ -62,14 +66,14 @@ class _SignUpFormState extends State<SignUpForm> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              showCustomSnackbar('Error', 'Request timed out', type: SnackbarType.error);
-              throw Exception('Request timed out');
+              showCustomSnackbar(
+                'Error',
+                'Please enter all fields',
+                type: SnackbarType.error,
+              );
+              throw Exception('Please enter all fields');
             },
           );
-
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
       final responseData = jsonDecode(response.body);
 
       if (response.statusCode == 201 && responseData['success'] == true) {
@@ -213,6 +217,35 @@ class _SignUpFormState extends State<SignUpForm> {
             },
           ),
           const SizedBox(height: TSizes.spaceBtwSections),
+          TextFormField(
+            controller: _confirmPasswordController,
+            obscureText: !_isConfirmPasswordVisible,
+            decoration: InputDecoration(
+              labelText: TTexts.confirmPassword,
+              prefixIcon: const Icon(Iconsax.password_check),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _isConfirmPasswordVisible ? Iconsax.eye : Iconsax.eye_slash,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                  });
+                },
+              ),
+              contentPadding: const EdgeInsets.all(TSizes.md),
+            ),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Please enter your confirm password';
+              }
+              if (value != _passwordController.text) {
+                return 'Passwords do not match';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: TSizes.spaceBtwSections),
           Row(
             children: [
               Checkbox(
@@ -229,11 +262,28 @@ class _SignUpFormState extends State<SignUpForm> {
           const SizedBox(height: TSizes.spaceBtwItems),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                backgroundColor:
+                    _isLoading ? Colors.transparent : TColors.primary,
+                foregroundColor: _isLoading ? TColors.primary : Colors.white,
+                side: const BorderSide(color: TColors.primary),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(TSizes.borderRadiusLg),
+                ),
+              ),
               onPressed: _isLoading ? null : _signUp,
               child:
                   _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
+                      ? const SizedBox(
+                        width: TSizes.lg,
+                        height: TSizes.lg,
+                        child: CircularProgressIndicator(
+                          color: TColors.primary,
+                          strokeWidth: 2,
+                        ),
+                      )
                       : const Text(TTexts.signUp),
             ),
           ),

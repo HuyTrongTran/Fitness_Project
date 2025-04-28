@@ -64,7 +64,7 @@ class _LoginFormState extends State<LoginForm> {
   Future<void> _login() async {
     setState(() {
       _isLoading = true;
-      _showLoginError = false; // Reset lỗi trước khi gọi API
+      _showLoginError = false;
     });
 
     if (!_formKey.currentState!.validate()) {
@@ -77,14 +77,9 @@ class _LoginFormState extends State<LoginForm> {
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
 
-    // Log mật khẩu trước khi gửi (chỉ để debug, không nên để trong production)
-    print('Password before sending: $password');
-
     const String apiUrl = '${ApiConfig.baseUrl}/login';
-    print(apiUrl);
 
     try {
-      print('Sending login request to $apiUrl with email: $email');
       final response = await http
           .post(
             Uri.parse(apiUrl),
@@ -101,14 +96,10 @@ class _LoginFormState extends State<LoginForm> {
             },
           );
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
       final responseData = jsonDecode(response.body);
 
       // Kiểm tra điều kiện đăng nhập thành công
       if (response.statusCode == 200 && responseData['success'] == true) {
-        print('Login successful');
         final token = responseData['data']['token'];
         final firstName = responseData['data']['firstName'];
         final lastName = responseData['data']['lastName'];
@@ -127,16 +118,11 @@ class _LoginFormState extends State<LoginForm> {
 
         // Điều hướng dựa trên hasCompletedOnboarding
         if (hasCompletedOnboarding) {
-          print('User has completed onboarding, navigating to NavigationMenu');
           Get.offAll(() => const NavigationMenu());
         } else {
-          print(
-            'User has not completed onboarding, navigating to OnboardingScreen',
-          );
           Get.offAll(() => const OnboardingScreen());
         }
       } else {
-        print('Login failed: ${responseData['message']}');
         setState(() {
           _showLoginError = true;
           _formKey.currentState!.validate();
@@ -231,10 +217,7 @@ class _LoginFormState extends State<LoginForm> {
                 prefixIcon: const Icon(Iconsax.password_check),
                 labelText: TTexts.password,
                 hintText: TTexts.hintPassword,
-                errorStyle: const TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
+                errorStyle: const TextStyle(color: Colors.red),
                 labelStyle: TextStyle(
                   color: _showLoginError ? Colors.red : Colors.grey[600],
                 ),
@@ -323,11 +306,28 @@ class _LoginFormState extends State<LoginForm> {
             const SizedBox(height: TSizes.spaceBtwSections),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor:
+                      _isLoading ? Colors.transparent : TColors.primary,
+                  foregroundColor: _isLoading ? TColors.primary : Colors.white,
+                  side: const BorderSide(color: TColors.primary),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(TSizes.borderRadiusLg),
+                  ),
+                ),
                 onPressed: _isLoading ? null : _login,
                 child:
                     _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? const SizedBox(
+                          width: TSizes.lg,
+                          height: TSizes.lg,
+                          child: CircularProgressIndicator(
+                            color: TColors.primary,
+                            strokeWidth: 2,
+                          ),
+                        )
                         : const Text(TTexts.signIn),
               ),
             ),

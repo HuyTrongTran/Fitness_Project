@@ -6,14 +6,17 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fitness_tracker/features/services/home_service/recent_plan/get_recent_plan.dart';
+import 'package:fitness_tracker/features/services/home_services/recent_plan/get_recent_plan.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
-  final WidgetsBinding widgetsBinding =
-      WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Load .env file từ thư mục assets
+  await dotenv.load(fileName: "assets/.env");
 
   await GetStorage.init();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  FlutterNativeSplash.preserve(widgetsBinding: WidgetsBinding.instance);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final prefs = await SharedPreferences.getInstance();
@@ -21,13 +24,11 @@ Future<void> main() async {
 
   Widget initialScreen;
   if (token != null && token.isNotEmpty) {
-    // Kiểm tra trạng thái onboarding sẽ được xử lý trong LoginForm
     initialScreen = const Login();
   } else {
     initialScreen = const Login();
   }
 
-  // Khởi tạo các service
   RecentPlanService.init();
 
   await Future.delayed(const Duration(seconds: 2));

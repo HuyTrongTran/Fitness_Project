@@ -41,4 +41,5 @@ router.get('/getProfile', AuthController.checkBlacklist, UserProfile.getProfile)
 router.post('/update-profile', AuthController.checkBlacklist, UserProfile.updateProfile);
 router.post('/upload-profile-image', AuthController.checkBlacklist, upload.single('image'), UserProfile.uploadProfileImage);
 router.post('/update-user-info', AuthController.checkBlacklist, UserProfile.updateUserInfo);
+router.post('/update-password', AuthController.checkBlacklist, UserProfile.updatePassword);
 module.exports = router;

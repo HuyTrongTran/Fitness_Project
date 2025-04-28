@@ -4,7 +4,7 @@ import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/run_stats_controller.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/run_chart_controller.dart';
-import 'package:fitness_tracker/features/services/run_history_service.dart';
+import 'package:fitness_tracker/features/services/run_services/run_history_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 

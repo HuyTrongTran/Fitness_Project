@@ -1,6 +1,6 @@
 import 'package:fitness_tracker/features/controllers/runControllers/mapControllers/calculate_distance_controller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:fitness_tracker/features/services/getProfile.dart';
+import 'package:fitness_tracker/features/services/user_profile_services/getProfile.dart';
 
 class StepCalculator {
   // Độ dài bước chân trung bình (mét)

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
-import 'package:fitness_tracker/features/services/run_history_service.dart';
+import 'package:fitness_tracker/features/services/run_services/run_history_service.dart';
 
 class RunStatsController {
   // Lấy session có quãng đường dài nhất

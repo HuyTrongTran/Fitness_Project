@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
-import 'package:fitness_tracker/features/services/getProfile.dart';
-import 'package:fitness_tracker/features/services/settings/update_profile.dart';
-import 'package:fitness_tracker/userProfile/profile_data.dart';
+import 'package:fitness_tracker/features/services/user_profile_services/getProfile.dart';
+import 'package:fitness_tracker/features/services/user_profile_services/update_profile.dart';
+import 'package:fitness_tracker/screens/userProfile/profile_data.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
@@ -146,34 +146,30 @@ class _ChangeProfileScreenState extends State<ChangeProfileScreen> {
 
       // Cập nhật hình ảnh nếu có
       if (_image != null) {
-        print('Bắt đầu tải lên ảnh...');
         final imageSuccess = await UpdateProfileService.uploadProfileImage(
           _image!,
         );
         if (!imageSuccess) {
           success = false;
-          errorMessage = 'Không thể tải lên ảnh đại diện';
+          errorMessage = 'Cannot upload profile image';
         }
-        print('Kết quả tải lên ảnh: $imageSuccess');
       }
 
       // Cập nhật tên người dùng
       if (success) {
-        print('Bắt đầu cập nhật thông tin người dùng...');
         final nameSuccess = await UpdateProfileService.updateUserInfo(
           userName: _nameController.text,
         );
         if (!nameSuccess) {
           success = false;
-          errorMessage = 'Không thể cập nhật tên người dùng';
+          errorMessage = 'Cannot update username';
         }
-        print('Kết quả cập nhật tên: $nameSuccess');
       }
 
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Cập nhật thông tin thành công'),
+            content: Text('Update information successfully'),
             backgroundColor: Colors.green,
           ),
         );
@@ -181,17 +177,16 @@ class _ChangeProfileScreenState extends State<ChangeProfileScreen> {
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Lỗi: $errorMessage'),
+            content: Text('Error: $errorMessage'),
             backgroundColor: Colors.red,
           ),
         );
       }
     } catch (e) {
-      print('Lỗi trong quá trình cập nhật: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Lỗi: ${e.toString()}'),
+            content: Text('Error: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );

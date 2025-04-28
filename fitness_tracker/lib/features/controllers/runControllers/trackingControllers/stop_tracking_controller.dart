@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/RunResultPage.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
-import 'package:fitness_tracker/features/services/run_history_service.dart';
+import 'package:fitness_tracker/features/services/run_services/run_history_service.dart';
 import 'package:flutter/foundation.dart';
 
 class StopTrackingController {

@@ -1,4 +1,3 @@
-import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,15 +16,15 @@ void showCustomSnackbar(
 
   switch (type) {
     case SnackbarType.success:
-      backgroundColor = TColors.white;
+      backgroundColor = Colors.green;
       icon = Icons.check_circle;
       break;
     case SnackbarType.error:
-      backgroundColor = TColors.error; // Giả định TColors.error là màu đỏ
+      backgroundColor = Colors.red; // Giả định TColors.error là màu đỏ
       icon = Icons.error;
       break;
     case SnackbarType.processing:
-      backgroundColor = TColors.warning; // Giả định TColors.warning là màu cam
+      backgroundColor = Colors.orange; // Giả định TColors.warning là màu cam
       icon = Icons.hourglass_empty;
       break;
   }
@@ -37,7 +36,7 @@ void showCustomSnackbar(
     titleText: Text(
       title,
       style: const TextStyle(
-        color: TColors.primary,
+        color: Colors.white,
         fontFamily: 'Nunito',
         fontWeight: FontWeight.bold,
         fontSize: 16,
@@ -47,7 +46,7 @@ void showCustomSnackbar(
     messageText: Text(
       message,
       style: const TextStyle(
-        color: TColors.primary,
+        color: Colors.white,
         fontFamily: 'Nunito',
         fontSize: 14,
       ),
@@ -67,13 +66,13 @@ void showCustomSnackbar(
     // Bóng đổ
     boxShadows: [
       BoxShadow(
-        color: Colors.black.withOpacity(0.2),
+        color: Colors.black.withOpacity(0.5),
         blurRadius: 8,
         offset: const Offset(0, 2),
       ),
     ],
     // Icon
-    icon: Icon(icon, color: TColors.primary, size: 24),
+    icon: Icon(icon, color: Colors.white, size: 24),
     // Khoảng cách giữa icon và nội dung
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
   );
