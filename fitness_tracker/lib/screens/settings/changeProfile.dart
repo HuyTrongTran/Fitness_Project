@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:fitness_tracker/common/widgets/custome_shape/custome_snackbar/customSnackbar.dart';
 
 class ChangeProfileScreen extends StatefulWidget {
   const ChangeProfileScreen({super.key});
@@ -68,13 +69,10 @@ class _ChangeProfileScreenState extends State<ChangeProfileScreen> {
 
           if (sizeInMB > 5) {
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Image too large. Please choose an image smaller than 5MB',
-                  ),
-                  backgroundColor: Colors.red,
-                ),
+              showCustomSnackbar(
+                'Error',
+                'Image too large. Please choose an image smaller than 5MB',
+                type: SnackbarType.error,
               );
             }
             return;
@@ -85,11 +83,10 @@ class _ChangeProfileScreenState extends State<ChangeProfileScreen> {
           });
 
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Pick image successfully'),
-                backgroundColor: Colors.green,
-              ),
+            showCustomSnackbar(
+              'Success',
+              'Pick image successfully',
+              type: SnackbarType.success,
             );
           }
         }
@@ -123,11 +120,10 @@ class _ChangeProfileScreenState extends State<ChangeProfileScreen> {
       }
     } on Exception catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error when picking image: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+        showCustomSnackbar(
+          'Error',
+          'Error when picking image: ${e.toString()}',
+          type: SnackbarType.error,
         );
       }
     }
@@ -167,28 +163,25 @@ class _ChangeProfileScreenState extends State<ChangeProfileScreen> {
       }
 
       if (success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Update information successfully'),
-            backgroundColor: Colors.green,
-          ),
+        showCustomSnackbar(
+          'Success',
+          'Update information successfully',
+          type: SnackbarType.success,
         );
         Navigator.of(context).pop();
       } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $errorMessage'),
-            backgroundColor: Colors.red,
-          ),
+        showCustomSnackbar(
+          'Error',
+          'Error: $errorMessage',
+          type: SnackbarType.error,
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+        showCustomSnackbar(
+          'Error',
+          'Error: ${e.toString()}',
+          type: SnackbarType.error,
         );
       }
     } finally {

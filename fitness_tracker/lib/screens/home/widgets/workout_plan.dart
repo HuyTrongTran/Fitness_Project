@@ -233,7 +233,7 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                             child: Row(
                               children: [
                                 Icon(
-                                  Icons.play_arrow,
+                                  Iconsax.direct_right,
                                   size: 30,
                                   color: iconColor,
                                 ),

@@ -115,4 +115,4 @@ flutter_launcher_icons:
   adaptive_icon_foreground: "assets/icons/logos/app_logo.png"
   remove_alpha_ios: true
   adaptive_icon_padding: true
-  adaptive_icon_padding_android: 1 
+  adaptive_icon_padding_android: 1  

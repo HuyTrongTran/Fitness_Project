@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fitness_tracker/features/models/chat_message.dart';
 import 'package:fitness_tracker/features/services/chat_service/mongo_service.dart';

@@ -69,4 +69,56 @@ class ApiService {
       return null;
     }
   }
+
+  // Hàm cập nhật thông tin profile
+  static Future<ProfileData?> updateProfile({
+    String? username,
+    String? email,
+    String? profileImage,
+  }) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token');
+
+      if (token == null) {
+        Get.snackbar('Error', 'No token found. Please log in again.');
+        return null;
+      }
+
+      final response = await http.put(
+        Uri.parse('$baseUrl/updateProfile'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'username': username,
+          'email': email,
+          'profileImage': profileImage,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        if (responseData['success'] == true) {
+          return await fetchProfileData();
+        } else {
+          Get.snackbar(
+            'Error',
+            responseData['message'] ?? 'Failed to update profile',
+          );
+          return null;
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Failed to update profile: ${response.statusCode}',
+        );
+        return null;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'An error occurred while updating profile: $e');
+      return null;
+    }
+  }
 }

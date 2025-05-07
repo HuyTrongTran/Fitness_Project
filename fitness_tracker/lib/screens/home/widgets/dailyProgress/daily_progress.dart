@@ -180,8 +180,8 @@ class _DailyProgressState extends State<DailyProgress>
             children: [
               Text(
                 label,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w500,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
                   color: color,
                 ),
               ),
@@ -283,7 +283,7 @@ class ProgressRingsPainter extends CustomPainter {
       canvas: canvas,
       center: center,
       radius: size.width / 2 - strokeWidth - gap - strokeWidth / 2,
-      progress: caloriesProgress,
+      progress: stepsProgress,
       color: const Color(0xFFFF9999),
       strokeWidth: strokeWidth,
     );
@@ -292,7 +292,7 @@ class ProgressRingsPainter extends CustomPainter {
       canvas: canvas,
       center: center,
       radius: size.width / 2 - (strokeWidth + gap) * 2 - strokeWidth / 2,
-      progress: stepsProgress,
+      progress: caloriesProgress,
       color: const Color(0xFFFFCC99),
       strokeWidth: strokeWidth,
     );
