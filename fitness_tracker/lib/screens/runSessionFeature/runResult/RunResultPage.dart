@@ -1,7 +1,10 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
+import 'package:fitness_tracker/common/widgets/bottomNavi/bottomNavigationBar.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runViewMap.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/runHistory.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
+import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -104,11 +107,16 @@ class _RunResultPageState extends State<RunResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TAppBar(
+      appBar: TAppBar(
         centerTitle: true,
         showBackButton: true,
         color: TColors.black,
-        title: Text("Your session"),
+        title: Text(
+          "Your session",
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
+        ),
       ),
       body:
           _isLoading
@@ -120,69 +128,70 @@ class _RunResultPageState extends State<RunResultPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Thanh chọn ngày
-                      SizedBox(
-                        height: 50,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _weekDates.length,
-                          itemBuilder: (context, index) {
-                            DateTime date = _weekDates[index];
-                            bool isSelected =
-                                date.day == _selectedDate.day &&
-                                date.month == _selectedDate.month &&
-                                date.year == _selectedDate.year;
-                            return GestureDetector(
-                              onTap: () {
-                                _onDateSelected(date);
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color:
-                                      isSelected
-                                          ? TColors.primary
-                                          : Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(32),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    date.day == DateTime.now().day
-                                        ? "Today, ${DateFormat('d MMM').format(date)}"
-                                        : DateFormat('d').format(date),
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge?.copyWith(
-                                      color:
-                                          isSelected
-                                              ? Colors.white
-                                              : Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 16),
+                      // SizedBox(
+                      //   height: 50,
+                      //   child: ListView.builder(
+                      //     scrollDirection: Axis.horizontal,
+                      //     itemCount: _weekDates.length,
+                      //     itemBuilder: (context, index) {
+                      //       DateTime date = _weekDates[index];
+                      //       bool isSelected =
+                      //           date.day == _selectedDate.day &&
+                      //           date.month == _selectedDate.month &&
+                      //           date.year == _selectedDate.year;
+                      //       return GestureDetector(
+                      //         onTap: () {
+                      //           _onDateSelected(date);
+                      //         },
+                      //         child: Container(
+                      //           margin: const EdgeInsets.symmetric(
+                      //             horizontal: 8,
+                      //           ),
+                      //           padding: const EdgeInsets.symmetric(
+                      //             vertical: 8,
+                      //             horizontal: 16,
+                      //           ),
+                      //           decoration: BoxDecoration(
+                      //             color:
+                      //                 isSelected
+                      //                     ? TColors.primary
+                      //                     : Colors.grey[200],
+                      //             borderRadius: BorderRadius.circular(32),
+                      //           ),
+                      //           child: Center(
+                      //             child: Text(
+                      //               date.day == DateTime.now().day
+                      //                   ? "Today, ${DateFormat('d MMM').format(date)}"
+                      //                   : DateFormat('d').format(date),
+                      //               style: Theme.of(
+                      //                 context,
+                      //               ).textTheme.bodyLarge?.copyWith(
+                      //                 color:
+                      //                     isSelected
+                      //                         ? Colors.white
+                      //                         : Colors.black,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
+
                       // Kiểm tra nếu không có dữ liệu phiên chạy
                       if (!_hasSessionData) ...[
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 10,
-                                spreadRadius: 2,
+                                color: TColors.accent.withOpacity(0.18),
+                                offset: Offset(0, 8),
+                                blurRadius: 18,
+                                spreadRadius: 0,
                               ),
                             ],
                           ),
@@ -202,12 +211,13 @@ class _RunResultPageState extends State<RunResultPage> {
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 10,
-                                spreadRadius: 2,
+                                color: TColors.accent.withOpacity(0.18),
+                                offset: Offset(0, 8),
+                                blurRadius: 18,
+                                spreadRadius: 0,
                               ),
                             ],
                           ),
@@ -341,7 +351,7 @@ class _RunResultPageState extends State<RunResultPage> {
                                       child: const Text(
                                         "View run map",
                                         style: TextStyle(
-                                          color: Colors.blue,
+                                          color: TColors.primary,
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -360,46 +370,85 @@ class _RunResultPageState extends State<RunResultPage> {
                         Icons.directions_run,
                         "Distance",
                         "${_selectedSession!.distanceInKm.toStringAsFixed(2)} km",
+                        Images.distance,
                       ),
                       const SizedBox(height: 16),
                       _buildInfoRow(
                         Icons.directions_walk,
                         "Step",
                         "${_selectedSession!.steps} steps",
+                        Images.distance,
                       ),
                       const SizedBox(height: 16),
                       _buildInfoRow(
                         Icons.local_fire_department,
                         "Calories",
                         "${_selectedSession!.calories.toStringAsFixed(0)} calo",
+                        Images.calories,
                       ),
                     ],
                   ),
                 ),
               ),
+      bottomNavigationBar: TBottomNavigationBar(
+        label: 'Run History',
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const RunHistoryScreen()),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value) {
+  Widget _buildInfoRow(
+    IconData icon,
+    String label,
+    String value, [
+    String? assetImage,
+  ]) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 2),
+          BoxShadow(
+            color: TColors.accent.withOpacity(0.18),
+            offset: Offset(0, 8),
+            blurRadius: 18,
+            spreadRadius: 0,
+          ),
         ],
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.blue, size: 24),
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: TColors.primary,
+            ),
+            child: Center(
+              child:
+                  assetImage != null
+                      ? Image.asset(
+                        assetImage,
+                        width: 22,
+                        height: 22,
+                        fit: BoxFit.contain,
+                      )
+                      : Icon(icon, color: Colors.white, size: 22),
+            ),
+          ),
           const SizedBox(width: 16),
           Expanded(
             child: Text(
               label,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.normal,
               ),
             ),
           ),

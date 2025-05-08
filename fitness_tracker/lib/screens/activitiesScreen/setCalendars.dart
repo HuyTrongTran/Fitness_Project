@@ -194,6 +194,7 @@ class _SetCalendarsState extends State<SetCalendars> {
                             'Added ${widget.title} to your calendar on ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
                             type: SnackbarType.success,
                           );
+                          Navigator.pop(context, true);
                         } catch (e) {
                           showCustomSnackbar(
                             'Error',

@@ -1,12 +1,17 @@
+import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/RunResultPage.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/runHistory.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runTrackingScreen.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
+import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/run_stats_controller.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/run_chart_controller.dart';
 import 'package:fitness_tracker/features/services/run_services/run_history_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:iconsax/iconsax.dart';
 
 class RunPage extends StatefulWidget {
   const RunPage({super.key});
@@ -86,18 +91,22 @@ class _RunPageState extends State<RunPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          "Move your body",
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
+      appBar: TAppBar(
+        showBackButton: true,
+        title: const Text("Start your run"),
+        color: Colors.black,
         centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RunHistoryScreen()),
+              );
+            },
+            icon: const Icon(Iconsax.calendar_search, size: 24),
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       body: Padding(

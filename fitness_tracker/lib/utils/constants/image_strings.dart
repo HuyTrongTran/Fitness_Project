@@ -58,4 +58,10 @@ class Images {
   static const String fish = "assets/categories/looseWeight/fish.png";
   static const String egg_broccoli =
       "assets/categories/looseWeight/egg_broccoli.png";
+
+  // Run Session Images
+  static const String runHistory = "assets/icons/app_icons/run_icons/run_history.png";
+  static const String distance = "assets/icons/app_icons/run_icons/Shoe-run.png";
+  static const String calories = "assets/icons/app_icons/run_icons/cal.png";
+  static const String map = "assets/icons/app_icons/run_icons/map.png";
 }

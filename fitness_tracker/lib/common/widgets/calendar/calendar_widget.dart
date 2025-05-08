@@ -7,9 +7,11 @@ class CalenderCountericon extends StatelessWidget {
     super.key,
     required this.iconColor,
     required this.onPressed,
+    required this.exerciseCount,
   });
   final Color? iconColor;
   final VoidCallback onPressed;
+  final int exerciseCount;
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +28,12 @@ class CalenderCountericon extends StatelessWidget {
             width: 18,
             height: 18,
             decoration: BoxDecoration(
-              color: TColors.black,
+              color: Colors.black,
               borderRadius: BorderRadius.circular(100),
             ),
             child: Center(
               child: Text(
-                '2',
+                exerciseCount > 0 ? '$exerciseCount' : '0',
                 style: Theme.of(context).textTheme.labelLarge!.apply(
                   color: TColors.white,
                   fontSizeFactor: 0.8,

@@ -18,217 +18,275 @@ class Activities extends StatefulWidget {
 }
 
 class _ActivitiesState extends State<Activities> {
-  // Hàm reload dữ liệu (giả lập)
-  Future<void> _refreshData() async {
-    // Thêm logic tải lại dữ liệu ở đây, ví dụ gọi API
-    await Future.delayed(const Duration(seconds: 1)); // Giả lập thời gian chờ
+  List activities = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadActivities();
+  }
+
+  Future<void> _loadActivities() async {
     setState(() {
-      // Cập nhật lại giao diện nếu cần
+      isLoading = true;
     });
+    final newData = await fetchDataFromApi();
+    setState(() {
+      activities = newData;
+      isLoading = false;
+    });
+  }
+
+  Future<List> fetchDataFromApi() async {
+    // TODO: Thay bằng API thực tế
+    await Future.delayed(const Duration(seconds: 1));
+    return [
+      {"title": "Bicep", "desc": "Improve your Bicep"},
+      // ... dữ liệu khác ...
+    ];
+  }
+
+  Future<void> _refreshData() async {
+    await _loadActivities();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: _refreshData, // Hàm được gọi khi kéo xuống để reload
-        color: TColors.primary, // Màu của vòng tròn loading
-        child: CustomScrollView(
-          physics:
-              const BouncingScrollPhysics(), // Cuộn mượt mà với hiệu ứng bật lại
-          slivers: [
-            // Fixed Header
-            SliverToBoxAdapter(
-              child: PrimaryHeaderContainer(
-                child: Column(
-                  children: [
-                    TAppBar(
-                      color: TColors.white,
-                      title: Text(
-                        "Start Workout",
-                        style: Theme.of(
-                          context,
-                        ).textTheme.headlineMedium!.apply(color: TColors.white),
-                      ),
+      body: Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: _refreshData,
+            color: TColors.primary,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                // Fixed Header
+                SliverToBoxAdapter(
+                  child: PrimaryHeaderContainer(
+                    child: Column(
+                      children: [
+                        TAppBar(
+                          color: TColors.white,
+                          title: Text(
+                            "Start Workout",
+                            style: Theme.of(context).textTheme.headlineMedium!
+                                .apply(color: TColors.white),
+                          ),
+                        ),
+                        WorkoutPlan(
+                          selectedDate:
+                              DateTime.now(), // Luôn hiển thị ngày hiện tại
+                          isInPopup: false,
+                        ),
+                        const SizedBox(height: TSizes.spaceBtwSections),
+                      ],
                     ),
-                    WorkoutPlan(
-                      selectedDate:
-                          DateTime.now(), // Luôn hiển thị ngày hiện tại
-                      isInPopup: false,
-                    ),
-                    const SizedBox(height: TSizes.spaceBtwSections),
-                  ],
+                  ),
                 ),
+                // Scrollable Content
+                SliverPadding(
+                  padding: const EdgeInsets.all(TSizes.defaultSpace),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      SectionHeading(title: 'Body workout', onPressed: () {}),
+                      const SizedBox(height: TSizes.spaceBtwItems),
+                      ExerciseTitle(
+                        imagePath: Images.bicep,
+                        title: "Bicep",
+                        subTitle: "Improve your Bicep",
+                        color: TColors.primary,
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const SetCalendars(
+                                    icon: Images.bicep,
+                                    title: 'Bicep',
+                                    subTitle: 'Improve your Bicep',
+                                  ),
+                            ),
+                          );
+                          if (result == true) {
+                            await _loadActivities();
+                          }
+                        },
+                      ),
+                      ExerciseTitle(
+                        imagePath: Images.body_back,
+                        title: "Body-Back",
+                        subTitle: "Improve your Body Back",
+                        color: TColors.primary,
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const SetCalendars(
+                                    icon: Images.body_back,
+                                    title: 'Body-Back',
+                                    subTitle: 'Improve your Body Back',
+                                  ),
+                            ),
+                          );
+                          if (result == true) {
+                            await _loadActivities();
+                          }
+                        },
+                      ),
+                      ExerciseTitle(
+                        imagePath: Images.body_butt,
+                        title: "Body Butt",
+                        subTitle: "Improve your Body Butt",
+                        color: TColors.primary,
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const SetCalendars(
+                                    icon: Images.body_butt,
+                                    title: 'Body Butt',
+                                    subTitle: 'Improve your Body Butt',
+                                  ),
+                            ),
+                          );
+                          if (result == true) {
+                            await _loadActivities();
+                          }
+                        },
+                      ),
+                      ExerciseTitle(
+                        imagePath: Images.sit_leg_core,
+                        title: "Legs and core",
+                        subTitle: "Improve legs and core",
+                        color: TColors.primary,
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const SetCalendars(
+                                    icon: Images.sit_leg_core,
+                                    title: 'Legs and core',
+                                    subTitle: 'Improve legs and core',
+                                  ),
+                            ),
+                          );
+                          if (result == true) {
+                            await _loadActivities();
+                          }
+                        },
+                      ),
+                      ExerciseTitle(
+                        imagePath: Images.pectoral_machine,
+                        title: "Pectoral Machine",
+                        subTitle:
+                            "Improve your pectoral machine skills and attributes",
+                        color: TColors.primary,
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const SetCalendars(
+                                    icon: Images.pectoral_machine,
+                                    title: 'Pectoral Machine',
+                                    subTitle:
+                                        'Improve your pectoral machine skills and attributes',
+                                  ),
+                            ),
+                          );
+                          if (result == true) {
+                            await _loadActivities();
+                          }
+                        },
+                      ),
+                      ExerciseTitle(
+                        imagePath: Images.stand_leg_core,
+                        title: "Legs and core",
+                        subTitle: "Improve legs and core",
+                        color: TColors.primary,
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const SetCalendars(
+                                    icon: Images.stand_leg_core,
+                                    title: 'Legs and core',
+                                    subTitle: 'Improve legs and core',
+                                  ),
+                            ),
+                          );
+                          if (result == true) {
+                            await _loadActivities();
+                          }
+                        },
+                      ),
+                      ExerciseTitle(
+                        imagePath: Images.weight_loss,
+                        title: "Weight Loss",
+                        subTitle:
+                            "This will helpful for your loss weight journey",
+                        color: TColors.primary,
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const SetCalendars(
+                                    icon: Images.weight_loss,
+                                    title: 'Weight Loss',
+                                    subTitle:
+                                        'This will helpful for your loss weight journey',
+                                  ),
+                            ),
+                          );
+                          if (result == true) {
+                            await _loadActivities();
+                          }
+                        },
+                      ),
+                      ExerciseTitle(
+                        imagePath: Images.woman_up_front,
+                        title: "Woman up front",
+                        subTitle: "This will helpful for your up front journey",
+                        color: TColors.primary,
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const SetCalendars(
+                                    icon: Images.woman_up_front,
+                                    title: 'Woman up front',
+                                    subTitle:
+                                        'This will helpful for your up front journey',
+                                  ),
+                            ),
+                          );
+                          if (result == true) {
+                            await _loadActivities();
+                          }
+                        },
+                      ),
+                    ]),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.5), // Nền đen mờ
+              child: const Center(
+                child: CircularProgressIndicator(color: TColors.primary),
               ),
             ),
-            // Scrollable Content
-            SliverPadding(
-              padding: const EdgeInsets.all(TSizes.defaultSpace),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  SectionHeading(title: 'Body workout', onPressed: () {}),
-                  const SizedBox(height: TSizes.spaceBtwItems),
-                  ExerciseTitle(
-                    imagePath: Images.bicep,
-                    title: "Bicep",
-                    subTitle: "Improve your Bicep",
-                    color: TColors.primary,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const SetCalendars(
-                                icon: Images.bicep,
-                                title: 'Bicep',
-                                subTitle: 'Improve your Bicep',
-                              ),
-                        ),
-                      );
-                    },
-                  ),
-                  ExerciseTitle(
-                    imagePath: Images.body_back,
-                    title: "Body-Back",
-                    subTitle: "Improve your Body Back",
-                    color: TColors.primary,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const SetCalendars(
-                                icon: Images.body_back,
-                                title: 'Body-Back',
-                                subTitle: 'Improve your Body Back',
-                              ),
-                        ),
-                      );
-                    },
-                  ),
-                  ExerciseTitle(
-                    imagePath: Images.body_butt,
-                    title: "Body Butt",
-                    subTitle: "Improve your Body Butt",
-                    color: TColors.primary,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const SetCalendars(
-                                icon: Images.body_butt,
-                                title: 'Body Butt',
-                                subTitle: 'Improve your Body Butt',
-                              ),
-                        ),
-                      );
-                    },
-                  ),
-                  ExerciseTitle(
-                    imagePath: Images.sit_leg_core,
-                    title: "Legs and core",
-                    subTitle: "Improve legs and core",
-                    color: TColors.primary,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const SetCalendars(
-                                icon: Images.sit_leg_core,
-                                title: 'Legs and core',
-                                subTitle: 'Improve legs and core',
-                              ),
-                        ),
-                      );
-                    },
-                  ),
-                  ExerciseTitle(
-                    imagePath: Images.pectoral_machine,
-                    title: "Pectoral Machine",
-                    subTitle:
-                        "Improve your pectoral machine skills and attributes",
-                    color: TColors.primary,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const SetCalendars(
-                                icon: Images.pectoral_machine,
-                                title: 'Pectoral Machine',
-                                subTitle:
-                                    'Improve your pectoral machine skills and attributes',
-                              ),
-                        ),
-                      );
-                    },
-                  ),
-                  ExerciseTitle(
-                    imagePath: Images.stand_leg_core,
-                    title: "Legs and core",
-                    subTitle: "Improve legs and core",
-                    color: TColors.primary,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const SetCalendars(
-                                icon: Images.stand_leg_core,
-                                title: 'Legs and core',
-                                subTitle: 'Improve legs and core',
-                              ),
-                        ),
-                      );
-                    },
-                  ),
-                  ExerciseTitle(
-                    imagePath: Images.weight_loss,
-                    title: "Weight Loss",
-                    subTitle: "This will helpful for your loss weight journey",
-                    color: TColors.primary,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const SetCalendars(
-                                icon: Images.weight_loss,
-                                title: 'Weight Loss',
-                                subTitle:
-                                    'This will helpful for your loss weight journey',
-                              ),
-                        ),
-                      );
-                    },
-                  ),
-                  ExerciseTitle(
-                    imagePath: Images.woman_up_front,
-                    title: "Woman up front",
-                    subTitle: "This will helpful for your up front journey",
-                    color: TColors.primary,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const SetCalendars(
-                                icon: Images.woman_up_front,
-                                title: 'Woman up front',
-                                subTitle:
-                                    'This will helpful for your up front journey',
-                              ),
-                        ),
-                      );
-                    },
-                  ),
-                ]),
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

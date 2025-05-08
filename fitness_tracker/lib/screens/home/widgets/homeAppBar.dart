@@ -6,6 +6,10 @@ import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'calendar_popup.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fitness_tracker/api/apiUrl.dart';
 
 class HomeAppBar extends StatelessWidget {
   final Function(DateTime) onDaySelected;
@@ -105,9 +109,9 @@ class HomeAppBar extends StatelessWidget {
                   return Text(
                     snapshot.data?.email ?? TTexts.homeAppbarTitle,
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   );
                 },
               ),
@@ -116,16 +120,55 @@ class HomeAppBar extends StatelessWidget {
         ],
       ),
       actions: [
-        CalenderCountericon(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => CalendarPopup(onDaySelected: onDaySelected),
+        FutureBuilder<http.Response>(
+          future: _fetchWorkoutPlanForToday(),
+          builder: (context, snapshot) {
+            int exerciseCount = 0;
+            if (snapshot.hasData && snapshot.data != null) {
+              try {
+                final data = snapshot.data!.body;
+                final decoded = data != null ? jsonDecode(data) : null;
+                if (decoded != null &&
+                    decoded['success'] == true &&
+                    decoded['data'] != null &&
+                    decoded['data']['exercises'] != null) {
+                  exerciseCount = (decoded['data']['exercises'] as List).length;
+                }
+              } catch (e) {
+                exerciseCount = 0;
+              }
+            }
+            return CalenderCountericon(
+              exerciseCount: exerciseCount,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder:
+                      (context) => CalendarPopup(onDaySelected: onDaySelected),
+                );
+              },
+              iconColor: TColors.white,
             );
           },
-          iconColor: TColors.white,
         ),
       ],
+    );
+  }
+
+  Future<http.Response> _fetchWorkoutPlanForToday() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('jwt_token');
+    if (token == null) {
+      throw Exception('No token found');
+    }
+    final today = DateTime.now().toIso8601String().split('T')[0];
+    final String apiUrl = '${ApiConfig.baseUrl}/activity-data?date=$today';
+    return await http.get(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
     );
   }
 }

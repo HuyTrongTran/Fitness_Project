@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'package:fitness_tracker/screens/activitiesScreen/activityList.dart';
 
 class WorkoutPlan extends StatefulWidget {
   final DateTime selectedDate;
@@ -131,6 +132,20 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
     });
   }
 
+  int getTotalSetsForDay(Map<String, dynamic> workoutPlan) {
+    if (workoutPlan['exercises'] == null) return 0;
+    return (workoutPlan['exercises'] as List).fold(
+      0,
+      (sum, e) => sum + (e['set_to_do'] as int),
+    );
+  }
+
+  Future<void> reloadWorkoutPlan() async {
+    final formattedDate = widget.selectedDate.toIso8601String().split('T')[0];
+    _cache.remove(formattedDate); // Xóa cache ngày hiện tại để luôn fetch mới
+    await _fetchWorkoutPlan();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Color containerColor =
@@ -166,132 +181,151 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                         style: const TextStyle(color: Colors.red),
                       ),
                     )
-                    : Container(
-                      width: containerWidth,
-                      padding: const EdgeInsets.all(TSizes.defaultSpace),
-                      decoration: BoxDecoration(
-                        color: containerColor,
-                        borderRadius: BorderRadius.circular(
-                          TSizes.cardRadiusLg,
+                    : GestureDetector(
+                      onTap:
+                          _workoutPlan.isNotEmpty
+                              ? () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => ActivityListScreen(
+                                          workoutPlan: _workoutPlan,
+                                        ),
+                                  ),
+                                );
+                                if (result == true) {
+                                  await reloadWorkoutPlan();
+                                }
+                              }
+                              : null,
+                      child: Container(
+                        width: containerWidth,
+                        padding: const EdgeInsets.all(TSizes.defaultSpace),
+                        decoration: BoxDecoration(
+                          color: containerColor,
+                          borderRadius: BorderRadius.circular(
+                            TSizes.cardRadiusLg,
+                          ),
                         ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(TSizes.sm),
-                                decoration: const BoxDecoration(
-                                  color: TColors.white,
-                                  shape: BoxShape.circle,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(TSizes.sm),
+                                  decoration: const BoxDecoration(
+                                    color: TColors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Iconsax.flash_1,
+                                    color: TColors.primary,
+                                    size: 24,
+                                  ),
                                 ),
-                                child: const Icon(
-                                  Iconsax.flash_1,
-                                  color: TColors.primary,
-                                  size: 24,
+                                const SizedBox(width: TSizes.spaceBtwItems),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _workoutPlan['date'] ??
+                                          widget.selectedDate.toString().split(
+                                            ' ',
+                                          )[0],
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium?.copyWith(
+                                        color: textColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      _workoutPlan['type'] ?? 'Rest Day',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: textColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwItems),
+                            Container(
+                              padding: const EdgeInsets.all(TSizes.sm),
+                              decoration: BoxDecoration(
+                                color: nextExerciseContainerColor,
+                                borderRadius: BorderRadius.circular(
+                                  TSizes.cardRadiusLg,
                                 ),
                               ),
-                              const SizedBox(width: TSizes.spaceBtwItems),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Row(
                                 children: [
-                                  Text(
-                                    _workoutPlan['date'] ??
-                                        widget.selectedDate.toString().split(
-                                          ' ',
-                                        )[0],
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium?.copyWith(
-                                      color: textColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  Icon(
+                                    Iconsax.direct_right,
+                                    size: 30,
+                                    color: iconColor,
                                   ),
-                                  Text(
-                                    _workoutPlan['type'] ?? 'Rest Day',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: textColor,
+                                  const SizedBox(width: TSizes.spaceBtwItems),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Next exercise',
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium?.copyWith(
+                                            color: nextExerciseTextColor,
+                                          ),
+                                        ),
+                                        if (_workoutPlan['exercises'] != null &&
+                                            (_workoutPlan['exercises'] as List)
+                                                .isNotEmpty) ...[
+                                          Text(
+                                            _workoutPlan['exercises'][0]['exercise_name'] ??
+                                                'No exercises planned',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleLarge?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: nextExerciseTextColor,
+                                            ),
+                                          ),
+                                          if (!widget.isInPopup) ...[
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              '${_workoutPlan['exercises'][0]['set_to_do'] ?? 0} sets • ${_workoutPlan['exercises'][0]['time_to_do'] ?? 0} mins • ${_workoutPlan['exercises'][0]['kcal_to_do'] ?? 0} kcal',
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.bodyMedium?.copyWith(
+                                                color: nextExerciseTextColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ] else
+                                          Text(
+                                            'No exercises planned',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleLarge?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: nextExerciseTextColor,
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: TSizes.spaceBtwItems),
-                          Container(
-                            padding: const EdgeInsets.all(TSizes.sm),
-                            decoration: BoxDecoration(
-                              color: nextExerciseContainerColor,
-                              borderRadius: BorderRadius.circular(
-                                TSizes.cardRadiusLg,
-                              ),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Iconsax.direct_right,
-                                  size: 30,
-                                  color: iconColor,
-                                ),
-                                const SizedBox(width: TSizes.spaceBtwItems),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Next exercise',
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyMedium?.copyWith(
-                                          color: nextExerciseTextColor,
-                                        ),
-                                      ),
-                                      if (_workoutPlan['exercises'] != null &&
-                                          (_workoutPlan['exercises'] as List)
-                                              .isNotEmpty) ...[
-                                        Text(
-                                          _workoutPlan['exercises'][0]['exercise_name'] ??
-                                              'No exercises planned',
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.titleLarge?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: nextExerciseTextColor,
-                                          ),
-                                        ),
-                                        if (!widget.isInPopup) ...[
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            '${_workoutPlan['exercises'][0]['set_to_do'] ?? 0} sets • ${_workoutPlan['exercises'][0]['time_to_do'] ?? 0} mins • ${_workoutPlan['exercises'][0]['kcal_to_do'] ?? 0} kcal',
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.bodyMedium?.copyWith(
-                                              color: nextExerciseTextColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ] else
-                                        Text(
-                                          'No exercises planned',
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.titleLarge?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: nextExerciseTextColor,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
             secondChild:
@@ -302,131 +336,150 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                         style: const TextStyle(color: Colors.red),
                       ),
                     )
-                    : Container(
-                      width: containerWidth,
-                      padding: const EdgeInsets.all(TSizes.defaultSpace),
-                      decoration: BoxDecoration(
-                        color: containerColor,
-                        borderRadius: BorderRadius.circular(
-                          TSizes.cardRadiusLg,
+                    : GestureDetector(
+                      onTap:
+                          _workoutPlan.isNotEmpty
+                              ? () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => ActivityListScreen(
+                                          workoutPlan: _workoutPlan,
+                                        ),
+                                  ),
+                                );
+                                if (result == true) {
+                                  await reloadWorkoutPlan();
+                                }
+                              }
+                              : null,
+                      child: Container(
+                        width: containerWidth,
+                        padding: const EdgeInsets.all(TSizes.defaultSpace),
+                        decoration: BoxDecoration(
+                          color: containerColor,
+                          borderRadius: BorderRadius.circular(
+                            TSizes.cardRadiusLg,
+                          ),
                         ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(TSizes.sm),
-                                decoration: const BoxDecoration(
-                                  color: TColors.white,
-                                  shape: BoxShape.circle,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(TSizes.sm),
+                                  decoration: const BoxDecoration(
+                                    color: TColors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Iconsax.flash_1,
+                                    color: TColors.primary,
+                                    size: 24,
+                                  ),
                                 ),
-                                child: const Icon(
-                                  Iconsax.flash_1,
-                                  color: TColors.primary,
-                                  size: 24,
+                                const SizedBox(width: TSizes.spaceBtwItems),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _workoutPlan['date'] ??
+                                          widget.selectedDate.toString().split(
+                                            ' ',
+                                          )[0],
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(color: textColor),
+                                    ),
+                                    Text(
+                                      _workoutPlan['type'] ?? 'Rest Day',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: textColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwItems),
+                            Container(
+                              padding: const EdgeInsets.all(TSizes.md),
+                              decoration: BoxDecoration(
+                                color: nextExerciseContainerColor,
+                                borderRadius: BorderRadius.circular(
+                                  TSizes.cardRadiusLg,
                                 ),
                               ),
-                              const SizedBox(width: TSizes.spaceBtwItems),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Row(
                                 children: [
-                                  Text(
-                                    _workoutPlan['date'] ??
-                                        widget.selectedDate.toString().split(
-                                          ' ',
-                                        )[0],
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(color: textColor),
+                                  Icon(
+                                    Iconsax.direct_right,
+                                    size: 30,
+                                    color: iconColor,
                                   ),
-                                  Text(
-                                    _workoutPlan['type'] ?? 'Rest Day',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: textColor,
+                                  const SizedBox(width: TSizes.spaceBtwItems),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Next exercise',
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium?.copyWith(
+                                            color: nextExerciseTextColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        if (_workoutPlan['exercises'] != null &&
+                                            (_workoutPlan['exercises'] as List)
+                                                .isNotEmpty) ...[
+                                          Text(
+                                            _workoutPlan['exercises'][0]['exercise_sub_title'] ??
+                                                'No exercises planned',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleLarge?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: nextExerciseTextColor,
+                                            ),
+                                          ),
+                                          if (!widget.isInPopup) ...[
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              '${_workoutPlan['exercises'][0]['set_to_do'] ?? 0} sets • ${_workoutPlan['exercises'][0]['time_to_do'] ?? 0} mins • ${_workoutPlan['exercises'][0]['kcal_to_do'] ?? 0} kcal',
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.bodyMedium?.copyWith(
+                                                color: nextExerciseTextColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ] else
+                                          Text(
+                                            'No exercises planned',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleLarge?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: nextExerciseTextColor,
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: TSizes.spaceBtwItems),
-                          Container(
-                            padding: const EdgeInsets.all(TSizes.md),
-                            decoration: BoxDecoration(
-                              color: nextExerciseContainerColor,
-                              borderRadius: BorderRadius.circular(
-                                TSizes.cardRadiusLg,
-                              ),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.play_arrow,
-                                  size: 30,
-                                  color: iconColor,
-                                ),
-                                const SizedBox(width: TSizes.spaceBtwItems),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Next exercise',
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyMedium?.copyWith(
-                                          color: nextExerciseTextColor,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      if (_workoutPlan['exercises'] != null &&
-                                          (_workoutPlan['exercises'] as List)
-                                              .isNotEmpty) ...[
-                                        Text(
-                                          _workoutPlan['exercises'][0]['exercise_sub_title'] ??
-                                              'No exercises planned',
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.titleLarge?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: nextExerciseTextColor,
-                                          ),
-                                        ),
-                                        if (!widget.isInPopup) ...[
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            '${_workoutPlan['exercises'][0]['set_to_do'] ?? 0} sets • ${_workoutPlan['exercises'][0]['time_to_do'] ?? 0} mins • ${_workoutPlan['exercises'][0]['kcal_to_do'] ?? 0} kcal',
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.bodyMedium?.copyWith(
-                                              color: nextExerciseTextColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ] else
-                                        Text(
-                                          'No exercises planned',
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.titleLarge?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: nextExerciseTextColor,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
             crossFadeState:

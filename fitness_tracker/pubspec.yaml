@@ -66,7 +66,7 @@ flutter:
     - assets/icons/app_icons/activity_icons/
     - assets/categories/looseWeight/
     - assets/.env
-
+    - assets/icons/app_icons/run_icons/
   fonts:
     - family: Nunito
       fonts:
