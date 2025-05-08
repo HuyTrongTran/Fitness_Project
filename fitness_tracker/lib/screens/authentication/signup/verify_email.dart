@@ -1,4 +1,4 @@
-import 'package:fitness_tracker/common/widgets/success_screen/success_screen.dart';
+import 'package:fitness_tracker/common/success_screen/success_screen.dart';
 import 'package:fitness_tracker/screens/authentication/Login/login.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';

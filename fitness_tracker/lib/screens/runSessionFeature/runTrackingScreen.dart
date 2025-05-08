@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:fitness_tracker/common/widgets/custome_shape/custome_snackbar/customSnackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -564,26 +565,13 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  // Log thông tin trước khi gửi
-                                  debugPrint(
-                                    '=== Start sending run session data ===',
-                                  );
-                                  debugPrint(
-                                    'Number of points on the map: ${_routePoints.length}',
-                                  );
-                                  debugPrint(
-                                    'Time: $_elapsedTimeInSeconds seconds',
-                                  );
-                                  debugPrint('Distance: $_distanceInKm km');
+                                  
 
                                   if (_routePoints.isEmpty) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'No location data to save',
-                                        ),
-                                        backgroundColor: Colors.red,
-                                      ),
+                                    showCustomSnackbar(
+                                      'Error',
+                                      'No location data to save',
+                                      type: SnackbarType.error,
                                     );
                                     return;
                                   }
@@ -612,14 +600,7 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
                                   // Nếu thời gian hoặc khoảng cách là 0, chỉ dừng phiên chạy mà không lưu
                                   if (_elapsedTimeInSeconds == 0 ||
                                       _distanceInKm == 0) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Session stopped but not saved (time or distance is 0)',
-                                        ),
-                                        backgroundColor: Colors.orange,
-                                      ),
-                                    );
+                                    showCustomSnackbar('Warning', 'Session stopped but not saved (time or distance is 0)', type: SnackbarType.processing);
                                     // Chuyển đến trang kết quả mà không lưu
                                     if (context.mounted) {
                                       Navigator.pushReplacement(

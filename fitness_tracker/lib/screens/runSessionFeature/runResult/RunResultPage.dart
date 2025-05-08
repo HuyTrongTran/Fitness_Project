@@ -1,5 +1,6 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/common/widgets/bottomNavi/bottomNavigationBar.dart';
+import 'package:fitness_tracker/common/widgets/custome_shape/custome_snackbar/customSnackbar.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runViewMap.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/runHistory.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
@@ -397,6 +398,7 @@ class _RunResultPageState extends State<RunResultPage> {
             context,
             MaterialPageRoute(builder: (context) => const RunHistoryScreen()),
           );
+          
         },
       ),
     );
@@ -447,9 +449,9 @@ class _RunResultPageState extends State<RunResultPage> {
           Expanded(
             child: Text(
               label,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.normal,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.normal),
             ),
           ),
           Text(

@@ -88,15 +88,8 @@ class RunHistoryService {
         return false;
       }
 
-      debugPrint('Token found: ${token.substring(0, 10)}...');
 
-      // Kiểm tra dữ liệu session
-      debugPrint('Session data:');
-      debugPrint('- Time: ${session.elapsedTimeInSeconds} seconds');
-      debugPrint('- Distance: ${session.distanceInKm} km');
-      debugPrint('- Steps: ${session.steps}');
-      debugPrint('- Calories: ${session.calories}');
-      debugPrint('- Route points: ${session.routePoints.length} points');
+
 
       // Chuyển đổi route_points thành format phù hợp với API
       List<Map<String, double>> routePoints =
@@ -115,14 +108,7 @@ class RunHistoryService {
         'calories': session.calories,
       };
 
-      // Log request details
-      debugPrint('\nRequest details:');
-      debugPrint('URL: ${ApiConfig.baseUrl}/run-history');
-      debugPrint('Headers:');
-      debugPrint('- Content-Type: application/json');
-      debugPrint('- Authorization: Bearer ${token.substring(0, 10)}...');
-      debugPrint('Body:');
-      debugPrint(json.encode(requestBody));
+
 
       final response = await http.post(
         Uri.parse('${ApiConfig.baseUrl}/submitRunSession'),
@@ -132,10 +118,6 @@ class RunHistoryService {
         },
         body: json.encode(requestBody),
       );
-
-      debugPrint('\nResponse details:');
-      debugPrint('Status code: ${response.statusCode}');
-      debugPrint('Body: ${response.body}');
 
       if (response.statusCode != 201) {
         final errorBody = json.decode(response.body);

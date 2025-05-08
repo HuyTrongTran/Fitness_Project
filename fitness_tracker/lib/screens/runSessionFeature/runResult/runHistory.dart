@@ -1,11 +1,13 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/common/widgets/bottomNavi/bottomNavigationBar.dart';
+import 'package:fitness_tracker/screens/home/home.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/widgets/runSumaryCard.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/run_screen.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:fitness_tracker/navigation_menu.dart';
 
 class RunHistoryScreen extends StatefulWidget {
   const RunHistoryScreen({super.key});
@@ -38,13 +40,20 @@ class _RunHistoryScreenState extends State<RunHistoryScreen> {
       appBar: TAppBar(
         title: Text(
           'Your run history',
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         showBackButton: true,
         color: TColors.black,
+        onLeadingPressed: () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const NavigationMenu()),
+            (route) => false,
+          );
+        },
       ),
       body: Column(
         children: [
@@ -116,9 +125,7 @@ class _RunHistoryScreenState extends State<RunHistoryScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const RunPage(),
-            ),
+            MaterialPageRoute(builder: (context) => const RunPage()),
           );
         },
       ),
