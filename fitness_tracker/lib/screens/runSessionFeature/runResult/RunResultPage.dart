@@ -3,7 +3,7 @@ import 'package:fitness_tracker/common/widgets/bottomNavi/bottomNavigationBar.da
 import 'package:fitness_tracker/common/widgets/custome_shape/custome_snackbar/customSnackbar.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runViewMap.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/runHistory.dart';
-import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runSession.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
@@ -337,8 +337,10 @@ class _RunResultPageState extends State<RunResultPage> {
                                       ),
                                     ),
                                     const SizedBox(height: 8),
-                                    TextButton(
-                                      onPressed: () {
+                                    SizedBox(
+                                      height: 28,
+                                      child: ElevatedButton(
+                                        onPressed: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -349,12 +351,27 @@ class _RunResultPageState extends State<RunResultPage> {
                                           ),
                                         );
                                       },
-                                      child: const Text(
-                                        "View run map",
-                                        style: TextStyle(
-                                          color: TColors.primary,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color(
+                                            0xFF6C7DFA,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 14,
+                                          ),
+                                          elevation: 0,
+                                        ),
+                                        child: const Text(
+                                          'Run map',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 13,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -398,7 +415,6 @@ class _RunResultPageState extends State<RunResultPage> {
             context,
             MaterialPageRoute(builder: (context) => const RunHistoryScreen()),
           );
-          
         },
       ),
     );
@@ -429,7 +445,7 @@ class _RunResultPageState extends State<RunResultPage> {
           Container(
             width: 40,
             height: 40,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: TColors.primary,
             ),

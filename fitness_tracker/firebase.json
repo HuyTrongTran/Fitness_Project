@@ -1,1 +1,24 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"fitness-tracking-ccf2a","appId":"1:420533027078:android:ec6e18c7119894bfb29e87","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"fitness-tracking-ccf2a","configurations":{"android":"1:420533027078:android:ec6e18c7119894bfb29e87","ios":"1:420533027078:ios:d7a1a7c20ed7771fb29e87","macos":"1:420533027078:ios:d7a1a7c20ed7771fb29e87","windows":"1:420533027078:web:59de935dc6d5acebb29e87"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "fitness-tracking-ccf2a",
+          "appId": "1:420533027078:android:ec6e18c7119894bfb29e87",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "fitness-tracking-ccf2a",
+          "configurations": {
+            "android": "1:420533027078:android:ec6e18c7119894bfb29e87",
+            "ios": "1:420533027078:ios:d7a1a7c20ed7771fb29e87",
+            "macos": "1:420533027078:ios:d7a1a7c20ed7771fb29e87",
+            "windows": "1:420533027078:web:59de935dc6d5acebb29e87"
+          }
+        }
+      }
+    }
+  }
+}

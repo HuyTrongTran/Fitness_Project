@@ -35,7 +35,7 @@ class StepCalculator {
       }
 
       // Lấy thông tin profile để lấy cân nặng
-      final profileData = await ApiService.fetchProfileData();
+      final profileData = await GetProfileService.fetchProfileData();
       if (profileData == null) {
         print('Không thể lấy thông tin profile');
         return 0;

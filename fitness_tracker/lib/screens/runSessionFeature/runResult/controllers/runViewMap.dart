@@ -1,8 +1,9 @@
+import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
-import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runSession.dart';
 
 class RunViewMapPage extends StatefulWidget {
   final RunSession session;
@@ -17,7 +18,7 @@ class _RunViewMapPageState extends State<RunViewMapPage> {
   GoogleMapController? _mapController;
   bool _isExpanded = false;
   bool _is3DMode = false;
-  double _currentZoom = 14.0;
+  double _currentZoom = 8.0;
 
   @override
   void initState() {
@@ -50,7 +51,6 @@ class _RunViewMapPageState extends State<RunViewMapPage> {
   void _centerMapToRoute() {
     if (_mapController == null || widget.session.routePoints.isEmpty) return;
 
-    // Tính toán bounds để hiển thị toàn bộ quãng đường
     double minLat = widget.session.routePoints.first.latitude;
     double maxLat = widget.session.routePoints.first.latitude;
     double minLng = widget.session.routePoints.first.longitude;
@@ -63,13 +63,23 @@ class _RunViewMapPageState extends State<RunViewMapPage> {
       maxLng = point.longitude > maxLng ? point.longitude : maxLng;
     }
 
+    // Nếu các điểm quá gần nhau, mở rộng bounds ra một chút
+    if ((maxLat - minLat).abs() < 0.001) {
+      minLat -= 0.005;
+      maxLat += 0.005;
+    }
+    if ((maxLng - minLng).abs() < 0.001) {
+      minLng -= 0.005;
+      maxLng += 0.005;
+    }
+
     _mapController?.animateCamera(
       CameraUpdate.newLatLngBounds(
         LatLngBounds(
           southwest: LatLng(minLat, minLng),
           northeast: LatLng(maxLat, maxLng),
         ),
-        50, // padding
+        300, // padding lớn hơn nữa
       ),
     );
   }
@@ -112,12 +122,11 @@ class _RunViewMapPageState extends State<RunViewMapPage> {
         _isExpanded ? (size.height * 0.5 - 220) : size.height * 0.4;
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text("Route Details"),
+      appBar: const TAppBar(
+        title: Text("Route Details"),
+        showBackButton: true,
+        centerTitle: true,
+        color: TColors.black,
       ),
       body: Stack(
         children: [

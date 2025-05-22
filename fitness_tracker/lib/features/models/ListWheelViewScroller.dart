@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/constants/colors.dart';
+import '../../utils/constants/colors.dart';
 
 class Listwheelviewscroller extends StatelessWidget {
   final List<String> items;

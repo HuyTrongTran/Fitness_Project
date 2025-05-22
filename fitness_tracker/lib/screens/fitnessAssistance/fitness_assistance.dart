@@ -1,13 +1,12 @@
+import 'package:fitness_tracker/features/services/fitbot_assitance/mongo_service.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/screens/fitnessAssistance/widgets/chat/chat_message.dart';
 import 'package:fitness_tracker/screens/fitnessAssistance/widgets/chat/chat_input.dart';
 import 'package:fitness_tracker/screens/fitnessAssistance/widgets/chat/chat_header.dart';
 import 'package:fitness_tracker/screens/fitnessAssistance/widgets/chat/typing_indicator.dart';
-import 'package:fitness_tracker/screens/fitnessAssistance/widgets/chat/animated_text.dart';
-import 'package:fitness_tracker/features/services/chat_service/chatServices.dart';
+import 'package:fitness_tracker/features/services/fitbot_assitance/chatServices.dart';
 import 'package:fitness_tracker/features/models/chat_message.dart' as Model;
-import 'package:provider/provider.dart';
 
 class FitnessAssistance extends StatefulWidget {
   const FitnessAssistance({Key? key}) : super(key: key);
@@ -32,8 +31,8 @@ class _FitnessAssistanceState extends State<FitnessAssistance> {
   }
 
   void _scrollToBottom() {
-    if (_scrollController.hasClients) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 100), () {
         if (_scrollController.hasClients) {
           _scrollController.animateTo(
             _scrollController.position.maxScrollExtent,
@@ -42,28 +41,26 @@ class _FitnessAssistanceState extends State<FitnessAssistance> {
           );
         }
       });
-    }
+    });
   }
 
   Future<void> _loadChatHistory() async {
     final messages = await _chatService.getChatHistory();
-    if (messages.isEmpty) {
-      final welcomeMessage = Model.ChatMessage(
-        id: 'welcome',
-        message: "Hello! I'm your fitness assistant. How can I help you today?",
-        isBot: true,
-        timestamp: DateTime.now(),
-        isWelcomeMessage: true,
-      );
-      await _chatService.saveMessage(welcomeMessage.message, true);
-      setState(() {
+    setState(() {
+      if (messages.isEmpty) {
+        final welcomeMessage = Model.ChatMessage(
+          id: 'welcome',
+          message:
+              "Hello! I'm your fitness assistant. How can I help you today?",
+          isBot: true,
+          timestamp: DateTime.now(),
+          isWelcomeMessage: true,
+        );
         _messages.add(welcomeMessage);
-      });
-    } else {
-      setState(() {
+      } else {
         _messages.addAll(messages);
-      });
-    }
+      }
+    });
     _scrollToBottom();
   }
 
@@ -84,8 +81,6 @@ class _FitnessAssistanceState extends State<FitnessAssistance> {
     });
     _scrollToBottom();
 
-    await _chatService.saveMessage(message, false);
-
     try {
       final response = await _chatService.getFitnessResponse(message);
       setState(() {
@@ -98,8 +93,6 @@ class _FitnessAssistanceState extends State<FitnessAssistance> {
         isBot: true,
         timestamp: DateTime.now(),
       );
-
-      await _chatService.saveMessage(response, true);
 
       setState(() {
         _messages.add(botMessage);

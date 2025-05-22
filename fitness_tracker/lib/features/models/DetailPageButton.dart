@@ -1,6 +1,6 @@
 import 'package:fitness_tracker/utils/helpers/helpers_function.dart';
 import 'package:flutter/material.dart';
-import '../utils/constants/colors.dart';
+import '../../utils/constants/colors.dart';
 
 class DetailPageButton extends StatelessWidget {
   final String text;
@@ -31,10 +31,9 @@ class DetailPageButton extends StatelessWidget {
               child: Center(
                 child: Text(
                   "Back",
-                  style: TextStyle(
-                    color:TColors.white,
-                    fontSize: size.width * 0.05,
-                    fontWeight: FontWeight.w500,
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    color: TColors.white,
+                    fontSize: size.width * 0.04,
                   ),
                 ),
               ),

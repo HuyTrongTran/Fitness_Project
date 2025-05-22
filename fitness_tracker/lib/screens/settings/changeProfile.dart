@@ -37,7 +37,7 @@ class _ChangeProfileScreenState extends State<ChangeProfileScreen> {
 
   Future<void> _loadUserProfile() async {
     try {
-      final profile = await ApiService.fetchProfileData();
+      final profile = await GetProfileService.fetchProfileData();
       if (profile != null && mounted) {
         setState(() {
           _nameController.text = profile.username ?? '';
@@ -222,7 +222,7 @@ class _ChangeProfileScreenState extends State<ChangeProfileScreen> {
               Stack(
                 children: [
                   FutureBuilder<ProfileData?>(
-                    future: ApiService.fetchProfileData(),
+                    future: GetProfileService.fetchProfileData(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return Container(

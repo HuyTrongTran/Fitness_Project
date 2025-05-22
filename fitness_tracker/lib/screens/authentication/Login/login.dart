@@ -9,29 +9,27 @@ import 'package:fitness_tracker/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 
-
 class Login extends StatelessWidget {
   const Login({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
+    return const Scaffold(
       body: SingleChildScrollView(
         child: Padding(
           padding: TSpacingStyles.paddingWithAppBarHeght,
           child: Column(
             children: [
               // Login Header
-              const LoginHeader(),
+              LoginHeader(),
               // Login Form
-              const LoginForm(),
+              LoginForm(),
 
               // Divider
-              FormDivider(dividerText: TTexts.orSignInWith.capitalize!),
-              const SizedBox(height: TSizes.spaceBtwItems / 2),
+              // FormDivider(dividerText: TTexts.orSignInWith.capitalize!),
+              // const SizedBox(height: TSizes.spaceBtwItems / 2),
               // Social Button
-              const Socialbutton(),
+              // const Socialbutton(),
             ],
           ),
         ),

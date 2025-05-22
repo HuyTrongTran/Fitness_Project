@@ -1,23 +1,31 @@
 import 'dart:math';
 import '../../../screens/userProfile/profile_data.dart';
+import 'package:fitness_tracker/features/services/fitbot_assitance/recommend_activityLevel.dart';
 
 /// Lớp chứa thông tin về mục tiêu hoạt động của người dùng
 class ActivityTarget {
   final double targetDistance; // km
   final int targetSteps;
   final int targetCalories;
-  final int bonusPoints;
+  final double targetWater;
 
   ActivityTarget({
     required this.targetDistance,
     required this.targetSteps,
     required this.targetCalories,
-    required this.bonusPoints,
+    required this.targetWater,
   });
+
+  @override
+  String toString() {
+    return 'ActivityTarget(distance: '
+        '[32m$targetDistance[0m, steps: '
+        '[34m$targetSteps[0m, calories: '
+        '[31m$targetCalories[0m)';
+  }
 
   /// Tính toán mục tiêu dựa trên thông tin người dùng
   static ActivityTarget calculateFromProfile(ProfileData profile) {
-    // Lấy thông tin cơ bản từ profile
     final weight = profile.weight ?? 60.0; // kg
     final height = profile.height ?? 170.0; // cm
     final age = profile.age ?? 30;
@@ -96,25 +104,29 @@ class ActivityTarget {
 
     // Điều chỉnh mục tiêu bước chân dựa trên mục tiêu
     if (goal == 'lose') {
-      targetSteps = (targetSteps * 1.2).round(); // Tăng 20% nếu muốn giảm cân
+      targetSteps = (targetSteps * 1.2).round();
     } else if (goal == 'gain') {
-      targetSteps = (targetSteps * 0.8).round(); // Giảm 20% nếu muốn tăng cân
+      targetSteps = (targetSteps * 0.8).round();
     }
 
-    // Tính mục tiêu khoảng cách dựa trên mục tiêu bước chân
-    // Giả sử mỗi bước trung bình 0.7m
-    final targetDistance = (targetSteps * 0.7) / 1000; // km
+    // Tính chiều dài bước chân (mét)
+    double stepLength;
+    if (gender == 'male') {
+      stepLength = height * 0.415 / 100; // cm -> m
+    } else {
+      stepLength = height * 0.413 / 100;
+    }
 
-    // Tính điểm thưởng dựa trên mục tiêu
-    // Công thức: 10 điểm cho mỗi km + 1 điểm cho mỗi 100 bước + 1 điểm cho mỗi 10 calories
-    final bonusPoints =
-        (targetDistance * 10) + (targetSteps / 100) + (activityCalories / 10);
+    // Tính quãng đường (km)
+    double targetDistance = (targetSteps * stepLength) / 1000;
 
     return ActivityTarget(
-      targetDistance: targetDistance,
+      targetDistance: double.parse(
+        targetDistance.toStringAsFixed(2),
+      ), // làm tròn 2 số lẻ
       targetSteps: targetSteps,
       targetCalories: activityCalories,
-      bonusPoints: bonusPoints.round(),
+      targetWater: 2.0,
     );
   }
 
@@ -151,41 +163,59 @@ class ActivityTarget {
       targetCalories = 600;
     }
 
-    // Tính điểm thưởng
-    final bonusPoints =
-        (targetDistance * 10) + (targetSteps / 100) + (targetCalories / 10);
-
     return ActivityTarget(
       targetDistance: targetDistance,
       targetSteps: targetSteps,
       targetCalories: targetCalories,
-      bonusPoints: bonusPoints.round(),
+      targetWater: 2.0,
     );
   }
 
   /// Lấy mục tiêu phù hợp nhất dựa trên profile
-  static ActivityTarget getRecommendedTarget(ProfileData profile) {
-    // Nếu có đủ thông tin, sử dụng phương pháp tính toán chi tiết
+  static Future<ActivityTarget> getRecommendedTarget(
+    ProfileData profile,
+  ) async {
+    // Luôn thử lấy target từ AI nếu đủ thông tin profile
+    if (profile.age != null &&
+        profile.weight != null &&
+        profile.height != null &&
+        profile.bmi != null &&
+        profile.goal != null) {
+      final aiResult = await recommendDailyTarget(
+        userId: 'default_user',
+        age: profile.age!,
+        weight: profile.weight!,
+        height: profile.height!,
+        bmi: profile.bmi!,
+        goal: profile.goal!,
+      );
+      if (aiResult.isNotEmpty) {
+        return ActivityTarget(
+          targetDistance: (aiResult['distance'] as num?)?.toDouble() ?? 7.0,
+          targetSteps: (aiResult['steps'] as num?)?.toInt() ?? 10000,
+          targetCalories: (aiResult['calories'] as num?)?.toInt() ?? 400,
+          targetWater: (aiResult['water'] as num?)?.toDouble() ?? 8.0,
+        );
+      } else {
+        print(
+          '[DEBUG] aiResult rỗng hoặc parse lỗi, fallback về logic truyền thống',
+        );
+      }
+    }
+    // Nếu không đủ thông tin hoặc AI không trả về, fallback logic cũ
     if (profile.weight != null &&
         profile.height != null &&
         profile.age != null) {
       return calculateFromProfile(profile);
-    }
-    // Nếu chỉ có BMI, sử dụng phương pháp tính toán dựa trên BMI
-    else if (profile.bmi != null) {
+    } else if (profile.bmi != null) {
       return calculateFromBMI(profile);
-    }
-    // Nếu không có đủ thông tin, sử dụng mục tiêu mặc định
-    else {
+    } else {
       return ActivityTarget(
-        targetDistance: 7.0, // 7 km
-        targetSteps: 10000, // 10,000 bước
-        targetCalories: 400, // 400 calories
-        bonusPoints: 1000, // 1000 điểm
+        targetDistance: 7.0,
+        targetSteps: 10000,
+        targetCalories: 400,
+        targetWater: 2.0,
       );
     }
   }
 }
-
-
-

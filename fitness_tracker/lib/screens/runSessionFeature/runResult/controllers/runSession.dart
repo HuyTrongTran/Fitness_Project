@@ -7,6 +7,7 @@ class RunSession {
   final List<LatLng> routePoints;
   final int steps;
   final double calories;
+  final String address;
 
   RunSession({
     required this.date,
@@ -15,6 +16,7 @@ class RunSession {
     required this.routePoints,
     required this.steps,
     required this.calories,
+    required this.address,
   });
 }
 

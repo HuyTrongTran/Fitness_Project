@@ -20,7 +20,6 @@ class TBottomNavigationBar extends StatelessWidget {
         width: double.infinity,
         child: ElevatedButton.icon(
           onPressed: onPressed,
-          icon: icon != null ? Icon(icon) : const SizedBox.shrink(),
           label: Text(label),
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -28,6 +27,7 @@ class TBottomNavigationBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
+          icon: icon != null ? Icon(icon) : const SizedBox.shrink(),
         ),
       ),
     );

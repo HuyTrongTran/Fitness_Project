@@ -1,4 +1,5 @@
-import 'package:fitness_tracker/navigation_menu.dart';
+import 'package:fitness_tracker/features/services/home_services/recent_plan/suggestCheck.dart';
+import 'package:fitness_tracker/screens/suggestScreen/suggestScreen.dart';
 import 'package:fitness_tracker/screens/onboardingFeature/OnBoardingScreen/onboardingScreen.dart';
 import 'package:fitness_tracker/api/apiUrl.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
@@ -10,6 +11,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fitness_tracker/screens/suggestScreen/suggestScreen.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -99,8 +101,12 @@ class _LoginFormState extends State<LoginForm> {
       final responseData = jsonDecode(response.body);
 
       // Kiểm tra điều kiện đăng nhập thành công
-      if (response.statusCode == 200 && responseData['success'] == true) {
-        final token = responseData['data']['token'];
+      final token = responseData['data']?['token'];
+
+      if (response.statusCode == 200 &&
+          responseData['success'] == true &&
+          token != null &&
+          token.isNotEmpty) {
         final firstName = responseData['data']['firstName'];
         final lastName = responseData['data']['lastName'];
         final userName = responseData['data']['userName'];
@@ -118,7 +124,7 @@ class _LoginFormState extends State<LoginForm> {
 
         // Điều hướng dựa trên hasCompletedOnboarding
         if (hasCompletedOnboarding) {
-          Get.offAll(() => const NavigationMenu());
+          await checkAndNavigate(context);
         } else {
           Get.offAll(() => const OnboardingScreen());
         }

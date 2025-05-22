@@ -16,9 +16,10 @@ import 'package:fitness_tracker/features/controllers/runControllers/mapControlle
 import 'package:fitness_tracker/features/controllers/runControllers/mapControllers/calculate_distance_controller.dart';
 import 'package:fitness_tracker/features/controllers/runControllers/trackingControllers/start_timer_controller.dart';
 import 'package:fitness_tracker/features/controllers/runControllers/trackingControllers/stop_tracking_controller.dart';
-import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runSession.dart';
 import 'package:fitness_tracker/common/formulas/step_calculate.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/RunResultPage.dart';
+import 'package:fitness_tracker/utils/location_utils.dart';
 
 class RunTrackingPage extends StatefulWidget {
   const RunTrackingPage({super.key});
@@ -565,8 +566,6 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  
-
                                   if (_routePoints.isEmpty) {
                                     showCustomSnackbar(
                                       'Error',
@@ -587,6 +586,12 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
                                         _elapsedTimeInSeconds,
                                       );
 
+                                  // Lấy địa chỉ từ điểm cuối cùng
+                                  String address = await getAddressFromLatLng(
+                                    _routePoints.last.latitude,
+                                    _routePoints.last.longitude,
+                                  );
+
                                   // Tạo session object
                                   final session = RunSession(
                                     date: DateTime.now(),
@@ -595,12 +600,17 @@ class _RunTrackingPageState extends State<RunTrackingPage> {
                                     routePoints: List.from(_routePoints),
                                     steps: steps,
                                     calories: calories,
+                                    address: address,
                                   );
 
                                   // Nếu thời gian hoặc khoảng cách là 0, chỉ dừng phiên chạy mà không lưu
                                   if (_elapsedTimeInSeconds == 0 ||
                                       _distanceInKm == 0) {
-                                    showCustomSnackbar('Warning', 'Session stopped but not saved (time or distance is 0)', type: SnackbarType.processing);
+                                    showCustomSnackbar(
+                                      'Warning',
+                                      'Session stopped but not saved (time or distance is 0)',
+                                      type: SnackbarType.processing,
+                                    );
                                     // Chuyển đến trang kết quả mà không lưu
                                     if (context.mounted) {
                                       Navigator.pushReplacement(

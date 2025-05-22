@@ -23,7 +23,7 @@ class HomeAppBar extends StatelessWidget {
       title: Row(
         children: [
           FutureBuilder<ProfileData?>(
-            future: ApiService.fetchProfileData(),
+            future: GetProfileService.fetchProfileData(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container(
@@ -76,7 +76,7 @@ class HomeAppBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FutureBuilder<ProfileData?>(
-                future: ApiService.fetchProfileData(),
+                future: GetProfileService.fetchProfileData(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Text(
@@ -95,7 +95,7 @@ class HomeAppBar extends StatelessWidget {
                 },
               ),
               FutureBuilder<ProfileData?>(
-                future: ApiService.fetchProfileData(),
+                future: GetProfileService.fetchProfileData(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Text(

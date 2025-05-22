@@ -1,10 +1,10 @@
 // ignore: file_names
 import 'dart:convert';
 
-import 'package:fitness_tracker/models/DetailPageButton.dart';
-import 'package:fitness_tracker/models/DetailPageTitle.dart';
-import 'package:fitness_tracker/models/ListWheelViewScroller.dart';
-import 'package:fitness_tracker/models/user_onboarding_data.dart';
+import 'package:fitness_tracker/features/models/DetailPageButton.dart';
+import 'package:fitness_tracker/features/models/DetailPageTitle.dart';
+import 'package:fitness_tracker/features/models/ListWheelViewScroller.dart';
+import 'package:fitness_tracker/features/models/user_onboarding_data.dart';
 import 'package:fitness_tracker/api/apiUrl.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';

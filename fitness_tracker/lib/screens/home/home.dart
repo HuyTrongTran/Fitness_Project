@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fitness_tracker/features/services/home_services/getTodayActivity.dart';
 import 'package:fitness_tracker/features/services/home_services/prefer_target.dart';
 import 'package:fitness_tracker/screens/userProfile/profile_data.dart';
+import 'package:fitness_tracker/features/services/user_profile_services/getProfile.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -35,19 +36,19 @@ class _HomeState extends State<Home> {
     });
 
     try {
-      // Lấy dữ liệu hoạt động từ API
       final activityData = await GetTodayActivityService.getTodayActivity();
-
-      // Tạo một profile mặc định
-      final defaultProfile = ProfileData(
-        weight: 60.0,
-        height: 170.0,
-        age: 30,
-        gender: 'male',
-        activityLevel: 'moderate',
-        goal: 'maintain',
-      );
-      final targetData = ActivityTarget.getRecommendedTarget(defaultProfile);
+      final profileData = await GetProfileService.fetchProfileData();
+      final userProfile =
+          profileData ??
+          ProfileData(
+            weight: 60.0,
+            height: 170.0,
+            age: 30,
+            gender: 'male',
+            activityLevel: 'moderate',
+            goal: 'maintain',
+          );
+      final targetData = await ActivityTarget.getRecommendedTarget(userProfile);
 
       setState(() {
         _todayActivityData = activityData;

@@ -10,7 +10,7 @@ import 'package:fitness_tracker/screens/authentication/signup/signup.dart';
 import 'package:fitness_tracker/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:fitness_tracker/models/user_onboarding_data.dart';
+import 'package:fitness_tracker/features/models/user_onboarding_data.dart';
 import 'screens/onboardingFeature/ageScreen/ageScreen.dart';
 import 'screens/onboardingFeature/heightScreen/heightScreen.dart';
 import 'screens/onboardingFeature/weightPage/weightPage.dart';
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Fitness Tracker',
-      initialRoute: '/login',
+      home: initialScreen,
       themeMode: ThemeMode.system,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

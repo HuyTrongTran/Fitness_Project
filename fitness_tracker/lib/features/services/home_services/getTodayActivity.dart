@@ -98,16 +98,32 @@ class ActivityItem {
   factory ActivityItem.fromJson(Map<String, dynamic> json) {
     try {
       return ActivityItem(
-        id: json['_id'] as String,
-        date: DateTime.parse(json['activity_date'] as String),
-        timeInSeconds: json['time_in_seconds'] as int,
-        distanceInKm: (json['distance_in_km'] as num).toDouble(),
-        calories: (json['calories'] as num).toDouble(),
-        steps: json['steps'] as int,
+        id: json['_id']?.toString() ?? '',
+        date:
+            DateTime.tryParse(json['activity_date']?.toString() ?? '') ??
+            DateTime.now(),
+        timeInSeconds:
+            json['time_in_seconds'] is int
+                ? json['time_in_seconds']
+                : int.tryParse(json['time_in_seconds']?.toString() ?? '0') ?? 0,
+        distanceInKm:
+            json['distance_in_km'] is num
+                ? (json['distance_in_km'] as num).toDouble()
+                : double.tryParse(json['distance_in_km']?.toString() ?? '0') ??
+                    0.0,
+        calories:
+            json['calories'] is num
+                ? (json['calories'] as num).toDouble()
+                : double.tryParse(json['calories']?.toString() ?? '0') ?? 0.0,
+        steps:
+            json['steps'] is int
+                ? json['steps']
+                : int.tryParse(json['steps']?.toString() ?? '0') ?? 0,
         routePoints:
-            (json['route_points'] as List)
-                .map((point) => RoutePoint.fromJson(point))
-                .toList(),
+            (json['route_points'] as List?)
+                ?.map((point) => RoutePoint.fromJson(point))
+                .toList() ??
+            [],
       );
     } catch (e) {
       print('Error parsing ActivityItem: $e');
@@ -166,9 +182,6 @@ class GetTodayActivityService {
       }
 
       const apiUrl = '${ApiConfig.baseUrl}/today-activity';
-      // Log API URL
-      print('API URL get today activity: $apiUrl');
-
       // Gọi API để lấy dữ liệu hoạt động của ngày hôm nay
       final response = await http.get(
         Uri.parse(apiUrl),
@@ -183,7 +196,6 @@ class GetTodayActivityService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print('Decoded response: $data');
 
         if (data['success'] == true) {
           return TodayActivityData.fromJson(data);

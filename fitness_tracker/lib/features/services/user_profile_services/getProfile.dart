@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 
-class ApiService {
+class GetProfileService {
   static const String baseUrl = ApiConfig.baseUrl;
 
   // Hàm lấy dữ liệu profile từ API

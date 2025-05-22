@@ -1,6 +1,6 @@
-import 'package:fitness_tracker/models/DetailPageButton.dart';
-import 'package:fitness_tracker/models/DetailPageTitle.dart';
-import 'package:fitness_tracker/models/user_onboarding_data.dart';
+import 'package:fitness_tracker/features/models/DetailPageButton.dart';
+import 'package:fitness_tracker/features/models/DetailPageTitle.dart';
+import 'package:fitness_tracker/features/models/user_onboarding_data.dart';
 import 'package:fitness_tracker/api/apiUrl.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +18,25 @@ class WeightPage extends StatefulWidget {
 class _WeightPageState extends State<WeightPage> {
   double weight = 60.0;
 
+  FixedExtentScrollController? _controller;
+  late List<String> levels;
+
+  @override
+  void initState() {
+    super.initState();
+    // Tạo list từ 30kg đến 150kg, mỗi bước 0.5kg
+    levels = List.generate(241, (i) => (30 + (i * 0.5)).toStringAsFixed(1));
+    _controller = FixedExtentScrollController(
+      initialItem: ((weight - 30) * 2).round(), // Điều chỉnh vị trí initial
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
   Future<void> _updateWeight(double weight) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('jwt_token');
@@ -25,7 +44,9 @@ class _WeightPageState extends State<WeightPage> {
     if (token == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No token found. Please log in again.')),
+        // navigate to login page
       );
+      Navigator.pushNamed(context, '/login');
       return;
     }
 
@@ -69,11 +90,6 @@ class _WeightPageState extends State<WeightPage> {
   Widget build(BuildContext context) {
     final UserOnboardingData data =
         ModalRoute.of(context)!.settings.arguments as UserOnboardingData;
-    List<String> levels = [];
-    for (var i = 30; i <= 500; i++) {
-      levels.add(i.isEven ? "|" : " I ");
-    }
-
     var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: TColors.light,
@@ -114,7 +130,7 @@ class _WeightPageState extends State<WeightPage> {
                   ),
                   SizedBox(height: size.height * 0.12),
                   Text(
-                    "$weight kg",
+                    "${weight.toStringAsFixed(1)} kg",
                     style: Theme.of(
                       context,
                     ).textTheme.headlineLarge?.copyWith(color: Colors.white),
@@ -123,32 +139,48 @@ class _WeightPageState extends State<WeightPage> {
                     height: size.height * 0.2,
                     child: RotatedBox(
                       quarterTurns: -1,
-                      child: ListWheelScrollView(
-                        itemExtent: size.height * 0.036,
-                        magnification: 1,
-                        useMagnifier: true,
-                        overAndUnderCenterOpacity: 0.3,
-                        physics: const FixedExtentScrollPhysics(),
-                        controller: FixedExtentScrollController(
-                          initialItem: (weight * 2).round() - 60,
-                        ),
-                        onSelectedItemChanged: (index) {
-                          setState(() {
-                            weight = (index + 30) / 2;
-                          });
-                        },
-                        children:
-                            levels.map((level) {
-                              return RotatedBox(
-                                quarterTurns: 1,
-                                child: Text(
-                                  level,
-                                  style: Theme.of(context).textTheme.bodyMedium
-                                      ?.copyWith(color: Colors.white),
-                                ),
-                              );
-                            }).toList(),
-                      ),
+                      child:
+                          _controller == null
+                              ? const SizedBox.shrink()
+                              : ListWheelScrollView(
+                                itemExtent: 4.0,
+                                magnification: 1.1,
+                                useMagnifier: true,
+                                squeeze: 0.9,
+                                overAndUnderCenterOpacity: 0.3,
+                                physics: const FixedExtentScrollPhysics(),
+                                controller: _controller!,
+                                onSelectedItemChanged: (index) {
+                                  setState(() {
+                                    weight =
+                                        30 +
+                                        (index *
+                                            0.5); // Cập nhật công thức tính weight
+                                  });
+                                },
+                                children: List.generate(levels.length, (index) {
+                                  bool isLongLine = index % 4 == 0;
+                                  return RotatedBox(
+                                    quarterTurns: 1,
+                                    child: Container(
+                                      width:
+                                          isLongLine
+                                              ? 1.5
+                                              : 0.8, // Giảm độ dày của thanh
+                                      height:
+                                          isLongLine
+                                              ? 30.0
+                                              : 15.0, // Giảm chiều cao của thanh
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(
+                                          0.5,
+                                        ), // Bo góc nhỏ hơn
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ),
                     ),
                   ),
                   SizedBox(height: size.height * 0.19),

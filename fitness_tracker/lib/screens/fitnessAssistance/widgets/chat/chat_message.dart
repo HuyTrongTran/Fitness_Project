@@ -47,7 +47,7 @@ class ChatMessage extends StatelessWidget {
       );
     } else {
       return FutureBuilder<ProfileData?>(
-        future: ApiService.fetchProfileData(),
+        future: GetProfileService.fetchProfileData(),
         builder: (context, snapshot) {
           return Container(
             width: 35,

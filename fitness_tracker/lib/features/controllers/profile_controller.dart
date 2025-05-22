@@ -17,7 +17,7 @@ class ProfileController extends GetxController {
   Future<void> loadProfileData() async {
     try {
       isLoading.value = true;
-      final data = await ApiService.fetchProfileData();
+      final data = await GetProfileService.fetchProfileData();
       profileData.value = data;
     } catch (e) {
       print('Error loading profile data: $e');
@@ -33,7 +33,7 @@ class ProfileController extends GetxController {
   }) async {
     try {
       isLoading.value = true;
-      final updatedData = await ApiService.updateProfile(
+      final updatedData = await GetProfileService.updateProfile(
         username: username,
         email: email,
         profileImage: profileImage,

@@ -1,9 +1,27 @@
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runSession.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runViewMap.dart';
 
 class RunSummaryCard extends StatelessWidget {
+  final RunSession session;
+  final DateTime selectedDate;
+  const RunSummaryCard({
+    Key? key,
+    required this.session,
+    required this.selectedDate,
+  }) : super(key: key);
+
+  String _formatTime(int seconds) {
+    int hours = seconds ~/ 3600;
+    int minutes = (seconds % 3600) ~/ 60;
+    int secs = seconds % 60;
+    return "${hours > 0 ? '${hours.toString().padLeft(2, '0')}:' : ''}${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}";
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -28,11 +46,7 @@ class RunSummaryCard extends StatelessWidget {
                     color: Colors.grey[100],
                   ),
                   child: Center(
-                    child: Image.asset(
-                      Images.map,
-                      width: 100,
-                      height: 100,
-                    ),
+                    child: Image.asset(Images.map, width: 100, height: 100),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -57,7 +71,15 @@ class RunSummaryCard extends StatelessWidget {
                           SizedBox(
                             height: 28,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (_) => RunViewMapPage(session: session),
+                                  ),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF6C7DFA),
                                 shape: RoundedRectangleBorder(
@@ -82,7 +104,7 @@ class RunSummaryCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '1:20:20',
+                        _formatTime(session.elapsedTimeInSeconds),
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -91,7 +113,7 @@ class RunSummaryCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Doan Van Bo, 4 District, Ho Chi Minh City',
+                        session.address,
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           color: Colors.black.withOpacity(0.6),
                           fontSize: 11,
@@ -105,22 +127,23 @@ class RunSummaryCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            const Row(
+            
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 StatRowIndicator(
                   assetImage: Images.distance,
-                  value: '5.56',
+                  value: session.distanceInKm.toStringAsFixed(2),
                   label: 'km',
                 ),
                 StatRowIndicator(
                   assetImage: Images.distance,
-                  value: '700',
+                  value: session.steps.toString(),
                   label: 'steps',
                 ),
                 StatRowIndicator(
                   assetImage: Images.calories,
-                  value: '3000',
+                  value: session.calories.toStringAsFixed(0),
                   label: 'cal',
                 ),
               ],

@@ -12,6 +12,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_generative_ai: ^0.2.0
   shimmer: ^3.0.0
+  geocoding: ^2.1.0
+  jwt_decode: ^0.3.1
 
 flutter:
   uses-material-design: true 

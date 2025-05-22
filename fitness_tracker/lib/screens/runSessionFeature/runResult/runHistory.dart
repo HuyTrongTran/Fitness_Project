@@ -1,6 +1,5 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/common/widgets/bottomNavi/bottomNavigationBar.dart';
-import 'package:fitness_tracker/screens/home/home.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/widgets/runSumaryCard.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/run_screen.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
@@ -8,6 +7,8 @@ import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fitness_tracker/navigation_menu.dart';
+import 'package:fitness_tracker/features/services/run_services/run_history_service.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runSession.dart';
 
 class RunHistoryScreen extends StatefulWidget {
   const RunHistoryScreen({super.key});
@@ -17,25 +18,53 @@ class RunHistoryScreen extends StatefulWidget {
 }
 
 class _RunHistoryScreenState extends State<RunHistoryScreen> {
+  int selectedDayIndex = 0;
+  List<DateTime> weekDates = [];
+  List<RunSession> activities = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    weekDates = getWeekDates();
+    // Cập nhật selectedDayIndex là index của ngày hôm nay nếu có
+    final today = DateTime.now();
+    final todayIndex = weekDates.indexWhere(
+      (date) =>
+          date.day == today.day &&
+          date.month == today.month &&
+          date.year == today.year,
+    );
+    if (todayIndex != -1) {
+      selectedDayIndex = todayIndex;
+    }
+    _loadActivitiesForSelectedDay();
+  }
+
+  void _loadActivitiesForSelectedDay() async {
+    setState(() {
+      isLoading = true;
+    });
+    final date = weekDates[selectedDayIndex];
+    final result = await RunHistoryService.getRunHistoryByDate(date);
+    setState(() {
+      activities = result;
+      isLoading = false;
+    });
+  }
+
   // Function to generate 7 days starting from 4 days before today
   List<DateTime> getWeekDates() {
-    DateTime today = DateTime(
-      2025,
-      5,
-      8,
-    ); // Hardcoded for example (8th May 2025)
+    DateTime today = DateTime.now(); // Lấy ngày hiện tại
     DateTime startDate = today.subtract(
       const Duration(days: 4),
-    ); // Start from 4th May
+    ); // Bắt đầu từ 4 ngày trước
     return List.generate(7, (index) => startDate.add(Duration(days: index)));
   }
 
-  int selectedDayIndex = 3; // Default to 8th May (index 3)
-
   @override
   Widget build(BuildContext context) {
-    List<DateTime> weekDates = getWeekDates();
-
+    weekDates = getWeekDates();
     return Scaffold(
       appBar: TAppBar(
         title: Text(
@@ -73,17 +102,15 @@ class _RunHistoryScreenState extends State<RunHistoryScreen> {
                         setState(() {
                           selectedDayIndex = index;
                         });
+                        _loadActivitiesForSelectedDay();
                       },
                       borderRadius: BorderRadius.circular(20),
                       child: AnimatedContainer(
-                        duration: const Duration(
-                          milliseconds: 300,
-                        ), // Animation duration
-                        curve: Curves.easeInOut, // Smooth curve for animation
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
                         padding: EdgeInsets.symmetric(
                           vertical: 8,
-                          horizontal:
-                              isSelected ? 16 : 12, // Wider when selected
+                          horizontal: isSelected ? 16 : 12,
                         ),
                         decoration: BoxDecoration(
                           color:
@@ -92,7 +119,7 @@ class _RunHistoryScreenState extends State<RunHistoryScreen> {
                         ),
                         child: Text(
                           isSelected
-                              ? 'Today, ${date.day} ${DateFormat('MMM').format(date)}'
+                              ? '${date.day} ${DateFormat('MMM').format(date)}'
                               : '${date.day}',
                           style: Theme.of(
                             context,
@@ -108,14 +135,28 @@ class _RunHistoryScreenState extends State<RunHistoryScreen> {
           ),
           // Run summary cards
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(10),
-              children: [
-                RunSummaryCard(),
-                const SizedBox(height: TSizes.spaceBtwItems),
-                RunSummaryCard(),
-              ],
-            ),
+            child:
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : activities.isEmpty
+                    ? const Center(child: Text('No activity for this day'))
+                    : ListView.builder(
+                      padding: const EdgeInsets.all(10),
+                      itemCount: activities.length,
+                      itemBuilder: (context, idx) {
+                        final session = activities[idx];
+                        final selectedDate = weekDates[selectedDayIndex];
+                        return Column(
+                          children: [
+                            RunSummaryCard(
+                              session: session,
+                              selectedDate: selectedDate,
+                            ),
+                            const SizedBox(height: TSizes.spaceBtwItems),
+                          ],
+                        );
+                      },
+                    ),
           ),
         ],
       ),

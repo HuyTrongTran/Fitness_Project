@@ -1,7 +1,7 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/RunResultPage.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/runHistory.dart';
-import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runSession.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runTrackingScreen.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';

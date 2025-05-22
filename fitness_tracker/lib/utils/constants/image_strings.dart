@@ -64,4 +64,16 @@ class Images {
   static const String distance = "assets/icons/app_icons/run_icons/Shoe-run.png";
   static const String calories = "assets/icons/app_icons/run_icons/cal.png";
   static const String map = "assets/icons/app_icons/run_icons/map.png";
+
+
+  // Suggest screen images
+  static const String backgroundPie = "assets/backgrounds/suggest/Pie-Ellipse.png";
+  static const String bmiBackground = "assets/backgrounds/suggest/Banner.png";
+
+
+  // Suggest screen icons
+  static const String runIcon = "assets/backgrounds/suggest/icons/run.png";
+  static const String stepsIcon = "assets/backgrounds/suggest/icons/step.png";
+  static const String caloriesIcon = "assets/backgrounds/suggest/icons/cal.png";
+  static const String waterIcon = "assets/backgrounds/suggest/icons/water.png";
 }

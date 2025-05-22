@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runSession.dart';
 import 'package:fitness_tracker/features/services/run_services/run_history_service.dart';
 
 class RunStatsController {

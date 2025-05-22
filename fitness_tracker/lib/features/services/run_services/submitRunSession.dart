@@ -9,7 +9,11 @@ class ApiService {
   static const String _submitRunSessionEndpoint = '/submitRunSession';
 
   // Hàm Future để gửi dữ liệu chạy lên server
-  Future<bool> submitRunSession(int timeInSeconds, double distanceInKm) async {
+  Future<bool> submitRunSession(
+    int timeInSeconds,
+    double distanceInKm,
+    String address,
+  ) async {
     try {
       final url = Uri.parse('$_apiBaseUrl$_submitRunSessionEndpoint');
       final prefs = await SharedPreferences.getInstance();
@@ -23,6 +27,7 @@ class ApiService {
       final body = jsonEncode({
         'time_in_seconds': timeInSeconds,
         'distance_in_km': distanceInKm,
+        'address': address,
       });
       print('Sending to API: $body');
 

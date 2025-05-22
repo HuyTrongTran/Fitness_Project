@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'package:fitness_tracker/models/user_onboarding_data.dart';
-import 'package:fitness_tracker/navigation_menu.dart';
+import 'package:fitness_tracker/features/models/user_onboarding_data.dart';
+import 'package:fitness_tracker/features/services/home_services/recent_plan/suggestCheck.dart';
+import 'package:fitness_tracker/screens/suggestScreen/suggestScreen.dart';
 import 'package:fitness_tracker/features/services/user_profile_services/getProfile.dart';
 import 'package:fitness_tracker/api/apiUrl.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
@@ -66,7 +67,7 @@ class _BMIScreenState extends State<BMIScreen> {
       final onboardingData = jsonDecode(onboardingResponse.body);
       if (onboardingResponse.statusCode == 200 && onboardingData['success']) {
         // Get.snackbar('Success', 'Onboarding completed successfully!');
-        Get.offAll(() => const NavigationMenu());
+        await checkAndNavigate(context);
       } else {
         throw Exception(
           onboardingData['message'] ?? 'Failed to complete onboarding',
@@ -88,7 +89,7 @@ class _BMIScreenState extends State<BMIScreen> {
 
     try {
       // Lấy dữ liệu từ API
-      final profileData = await ApiService.fetchProfileData();
+      final profileData = await GetProfileService.fetchProfileData();
 
       double? height;
       double? weight;

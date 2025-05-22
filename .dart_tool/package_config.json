@@ -32,6 +32,30 @@
       "languageVersion": "3.7"
     },
     {
+      "name": "geocoding",
+      "rootUri": "file:///C:/Users/Trong%20Tran/AppData/Local/Pub/Cache/hosted/pub.dev/geocoding-2.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "geocoding_android",
+      "rootUri": "file:///C:/Users/Trong%20Tran/AppData/Local/Pub/Cache/hosted/pub.dev/geocoding_android-3.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "geocoding_ios",
+      "rootUri": "file:///C:/Users/Trong%20Tran/AppData/Local/Pub/Cache/hosted/pub.dev/geocoding_ios-2.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "geocoding_platform_interface",
+      "rootUri": "file:///C:/Users/Trong%20Tran/AppData/Local/Pub/Cache/hosted/pub.dev/geocoding_platform_interface-3.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "google_generative_ai",
       "rootUri": "file:///C:/Users/Trong%20Tran/AppData/Local/Pub/Cache/hosted/pub.dev/google_generative_ai-0.2.3",
       "packageUri": "lib/",
@@ -50,6 +74,12 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "jwt_decode",
+      "rootUri": "file:///C:/Users/Trong%20Tran/AppData/Local/Pub/Cache/hosted/pub.dev/jwt_decode-0.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "material_color_utilities",
       "rootUri": "file:///C:/Users/Trong%20Tran/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.11.1",
       "packageUri": "lib/",
@@ -66,6 +96,12 @@
       "rootUri": "file:///C:/Users/Trong%20Tran/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
+    },
+    {
+      "name": "plugin_platform_interface",
+      "rootUri": "file:///C:/Users/Trong%20Tran/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "shimmer",
@@ -122,7 +158,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2025-05-07T15:17:57.807260Z",
+  "generated": "2025-05-12T08:42:09.430935Z",
   "generator": "pub",
   "generatorVersion": "3.7.2",
   "flutterRoot": "file:///C:/src/flutter/flutter",

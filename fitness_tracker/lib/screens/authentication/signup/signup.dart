@@ -54,12 +54,12 @@ class Signup extends StatelessWidget {
               const SignUpForm(),
               const SizedBox(height: TSizes.spaceBtwSections),
 
-              // Divider
-              FormDivider(dividerText: TTexts.orSignUpWith.capitalize!),
-              const SizedBox(height: TSizes.spaceBtwItems),
+              // // Divider
+              // FormDivider(dividerText: TTexts.orSignUpWith.capitalize!),
+              // const SizedBox(height: TSizes.spaceBtwItems),
 
-              // Social Buttons
-              const Socialbutton(),
+              // // Social Buttons
+              // const Socialbutton(),
             ],
           ),
         ),

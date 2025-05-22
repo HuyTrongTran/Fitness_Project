@@ -125,13 +125,6 @@ class _RecentPlansState extends State<RecentPlans>
           _errorMessage = 'No suggestions available for your goal';
         });
       } else {
-        for (var food in foods) {
-          print('- ${food.title} (${food.id})');
-          print('  Description: ${food.description}');
-          print('  Image: ${food.image}');
-          print('  Steps: ${food.steps.length}');
-        }
-
         setState(() {
           _suggestedFoods = foods.take(4).toList();
           _isLoading = false;

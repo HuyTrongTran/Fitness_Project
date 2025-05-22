@@ -96,7 +96,6 @@ class _ActivitiesState extends State<Activities> {
                         imagePath: Images.bicep,
                         title: "Bicep",
                         subTitle: "Improve your Bicep",
-                        color: TColors.primary,
                         onTap: () async {
                           final result = await Navigator.push(
                             context,
@@ -118,7 +117,6 @@ class _ActivitiesState extends State<Activities> {
                         imagePath: Images.body_back,
                         title: "Body-Back",
                         subTitle: "Improve your Body Back",
-                        color: TColors.primary,
                         onTap: () async {
                           final result = await Navigator.push(
                             context,
@@ -140,7 +138,6 @@ class _ActivitiesState extends State<Activities> {
                         imagePath: Images.body_butt,
                         title: "Body Butt",
                         subTitle: "Improve your Body Butt",
-                        color: TColors.primary,
                         onTap: () async {
                           final result = await Navigator.push(
                             context,
@@ -162,7 +159,6 @@ class _ActivitiesState extends State<Activities> {
                         imagePath: Images.sit_leg_core,
                         title: "Legs and core",
                         subTitle: "Improve legs and core",
-                        color: TColors.primary,
                         onTap: () async {
                           final result = await Navigator.push(
                             context,
@@ -185,7 +181,6 @@ class _ActivitiesState extends State<Activities> {
                         title: "Pectoral Machine",
                         subTitle:
                             "Improve your pectoral machine skills and attributes",
-                        color: TColors.primary,
                         onTap: () async {
                           final result = await Navigator.push(
                             context,
@@ -205,33 +200,10 @@ class _ActivitiesState extends State<Activities> {
                         },
                       ),
                       ExerciseTitle(
-                        imagePath: Images.stand_leg_core,
-                        title: "Legs and core",
-                        subTitle: "Improve legs and core",
-                        color: TColors.primary,
-                        onTap: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => const SetCalendars(
-                                    icon: Images.stand_leg_core,
-                                    title: 'Legs and core',
-                                    subTitle: 'Improve legs and core',
-                                  ),
-                            ),
-                          );
-                          if (result == true) {
-                            await _loadActivities();
-                          }
-                        },
-                      ),
-                      ExerciseTitle(
                         imagePath: Images.weight_loss,
                         title: "Weight Loss",
                         subTitle:
                             "This will helpful for your loss weight journey",
-                        color: TColors.primary,
                         onTap: () async {
                           final result = await Navigator.push(
                             context,
@@ -254,7 +226,6 @@ class _ActivitiesState extends State<Activities> {
                         imagePath: Images.woman_up_front,
                         title: "Woman up front",
                         subTitle: "This will helpful for your up front journey",
-                        color: TColors.primary,
                         onTap: () async {
                           final result = await Navigator.push(
                             context,

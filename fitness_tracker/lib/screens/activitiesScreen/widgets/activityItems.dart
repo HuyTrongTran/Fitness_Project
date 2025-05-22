@@ -62,7 +62,6 @@ class ActivityTodayItem extends StatelessWidget {
                   iconAsset,
                   width: 24,
                   height: 24,
-                  color: Colors.white,
                 ),
               ),
             ),

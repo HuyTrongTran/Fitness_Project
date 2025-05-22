@@ -1,6 +1,7 @@
+import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/screens/runSessionFeature/runResult/RunResultPage.dart';
-import 'package:fitness_tracker/screens/runSessionFeature/runSession.dart';
+import 'package:fitness_tracker/screens/runSessionFeature/runResult/controllers/runSession.dart';
 import 'package:fitness_tracker/features/services/run_services/run_history_service.dart';
 import 'package:flutter/foundation.dart';
 
@@ -15,7 +16,9 @@ class StopTrackingController {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(
+            color: TColors.primary,
+          ));
         },
       );
 

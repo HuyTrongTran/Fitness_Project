@@ -18,7 +18,7 @@ class Settings extends StatelessWidget {
   const Settings({super.key});
 
   Future<ProfileData?> fetchProfileData() async {
-    final response = await ApiService.fetchProfileData();
+    final response = await GetProfileService.fetchProfileData();
     return response;
   }
 
@@ -42,7 +42,7 @@ class Settings extends StatelessWidget {
                   ),
                   UserProfileTitle(
                     profileImage: FutureBuilder<ProfileData?>(
-                      future: ApiService.fetchProfileData(),
+                      future: GetProfileService.fetchProfileData(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Container(
@@ -101,7 +101,7 @@ class Settings extends StatelessWidget {
                       },
                     ),
                     name: FutureBuilder<ProfileData?>(
-                      future: ApiService.fetchProfileData(),
+                      future: GetProfileService.fetchProfileData(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Text(
@@ -119,7 +119,7 @@ class Settings extends StatelessWidget {
                       },
                     ),
                     email: FutureBuilder<ProfileData?>(
-                      future: ApiService.fetchProfileData(),
+                      future: GetProfileService.fetchProfileData(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Text(
@@ -188,6 +188,19 @@ class Settings extends StatelessWidget {
                       await LogoutService.logout();
                     },
                   ),
+                  // SettingMenuTitle(
+                  //   icon: Iconsax.logout,
+                  //   title: "Test function",
+                  //   subTitle: "Logout from your account",
+                  //   onTap: () async {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const SuggestScreen(),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
                 ],
               ),
             ),
