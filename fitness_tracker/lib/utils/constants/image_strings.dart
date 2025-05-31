@@ -56,6 +56,7 @@ class Images {
   static const String chicken = "assets/categories/looseWeight/chicken.png";
   static const String pumpkin = "assets/categories/looseWeight/pumpkin.png";
   static const String fish = "assets/categories/looseWeight/fish.png";
+  // ignore: constant_identifier_names
   static const String egg_broccoli =
       "assets/categories/looseWeight/egg_broccoli.png";
 

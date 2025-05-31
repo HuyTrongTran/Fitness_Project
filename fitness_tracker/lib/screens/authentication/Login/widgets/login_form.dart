@@ -1,5 +1,5 @@
 import 'package:fitness_tracker/features/services/home_services/recent_plan/suggestCheck.dart';
-import 'package:fitness_tracker/screens/suggestScreen/suggestScreen.dart';
+import 'package:fitness_tracker/screens/authentication/signup/widgets/verify_email.dart';
 import 'package:fitness_tracker/screens/onboardingFeature/OnBoardingScreen/onboardingScreen.dart';
 import 'package:fitness_tracker/api/apiUrl.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
@@ -11,7 +11,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fitness_tracker/screens/suggestScreen/suggestScreen.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -103,6 +102,11 @@ class _LoginFormState extends State<LoginForm> {
       // Kiểm tra điều kiện đăng nhập thành công
       final token = responseData['data']?['token'];
 
+      if(response.statusCode == 401 &&
+          responseData['success'] == false){
+          Get.offAll(() => const VerifyEmail());
+      }
+
       if (response.statusCode == 200 &&
           responseData['success'] == true &&
           token != null &&
@@ -128,6 +132,7 @@ class _LoginFormState extends State<LoginForm> {
         } else {
           Get.offAll(() => const OnboardingScreen());
         }
+      
       } else {
         setState(() {
           _showLoginError = true;

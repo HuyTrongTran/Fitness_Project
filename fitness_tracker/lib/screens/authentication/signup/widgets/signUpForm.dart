@@ -1,5 +1,5 @@
 import 'package:fitness_tracker/common/widgets/custome_shape/custome_snackbar/customSnackbar.dart';
-import 'package:fitness_tracker/screens/authentication/Login/login.dart';
+import 'package:fitness_tracker/screens/authentication/signup/widgets/verify_email.dart';
 import 'package:fitness_tracker/api/apiUrl.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
 
@@ -75,14 +75,20 @@ class _SignUpFormState extends State<SignUpForm> {
             },
           );
       final responseData = jsonDecode(response.body);
+      // Save information in shared preferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('firstName', _firstNameController.text.trim());
+      prefs.setString('lastName', _lastNameController.text.trim());
+      prefs.setString('userName', _userNameController.text.trim());
+      prefs.setString('email', _emailController.text.trim());
 
       if (response.statusCode == 201 && responseData['success'] == true) {
         showCustomSnackbar(
           'Success',
-          'Registration successful! Please log in.',
+          'Registration successful! Please verify your email.',
           type: SnackbarType.success,
         );
-        Get.off(() => const Login());
+        Get.to(() => const VerifyEmail());
       } else {
         Get.snackbar('Error', responseData['message'] ?? 'Registration failed');
       }
@@ -216,7 +222,7 @@ class _SignUpFormState extends State<SignUpForm> {
               return null;
             },
           ),
-          const SizedBox(height: TSizes.spaceBtwSections),
+          const SizedBox(height: TSizes.spaceBtwInputfields),
           TextFormField(
             controller: _confirmPasswordController,
             obscureText: !_isConfirmPasswordVisible,
@@ -273,7 +279,12 @@ class _SignUpFormState extends State<SignUpForm> {
                   borderRadius: BorderRadius.circular(TSizes.borderRadiusLg),
                 ),
               ),
-              onPressed: _isLoading ? null : _signUp,
+              onPressed:() {
+                if (_isLoading) {
+                  return;
+                }
+                _signUp();              
+              },
               child:
                   _isLoading
                       ? const SizedBox(

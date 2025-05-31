@@ -84,13 +84,13 @@ class ChatService {
       String finalPrompt = userInput;
       final userPrompt = buildUserPrompt(userProfile);
       finalPrompt = '''$historyText. User's information:
-$userPrompt
-$userInput  
-- Base on User's information:$userProfile to answer the question about suggestion fitness plan or recommend nutrition
-- If answer question related about fitness plan or something about schedule you only remind the user's body information: height, weight and BMI in the beginning or end of the answer.
-- If answer question related about nutrition, you only remind the user's goal and base on the user's body index you should calculate the calories for the user and suggest for user about the nutrition plan or food should eat or drink.
-- If user ask about other things not related to fitness, health, diet, exercise, and nutrition, you should say "I'm sorry, I can only answer questions related to fitness and health."
-''';
+                $userPrompt
+                $userInput  
+                - Base on User's information:$userProfile to answer the question about suggestion fitness plan or recommend nutrition
+                - If answer question related about fitness plan or something about schedule you only remind the user's body information: height, weight and BMI in the beginning or end of the answer.
+                - If answer question related about nutrition, you only remind the user's goal and base on the user's body index you should calculate the calories for the user and suggest for user about the nutrition plan or food should eat or drink.
+                - If user ask about other things not related to fitness, health, diet, exercise, and nutrition, you should say "I'm sorry, I can only answer questions related to fitness and health."
+                ''';
       final response = await _chat!.sendMessage(Content.text(finalPrompt));
       final responseText = response.text ?? 'Error: No response from API';
       if (shouldSaveLog) {

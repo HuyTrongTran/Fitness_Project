@@ -1,4 +1,5 @@
 import 'package:fitness_tracker/common/widgets/appbar/appbar.dart';
+import 'package:fitness_tracker/common/widgets/bottomNavi/bottomNavigationBar.dart';
 import 'package:fitness_tracker/common/widgets/custome_shape/containers/primary_header_container.dart';
 import 'package:fitness_tracker/common/widgets/custome_shape/custome_snackbar/customSnackbar.dart';
 import 'package:fitness_tracker/common/widgets/texts/section_heading.dart';
@@ -6,9 +7,11 @@ import 'package:fitness_tracker/features/services/workout_plan/api_workout_plan.
 
 import 'package:fitness_tracker/screens/activitiesScreen/widgets/calendar_widget.dart';
 import 'package:fitness_tracker/screens/activitiesScreen/widgets/exerciseWidget.dart';
+import 'package:fitness_tracker/screens/activitiesScreen/widgets/TimerPicker.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
 class SetCalendars extends StatefulWidget {
   const SetCalendars({
@@ -28,6 +31,11 @@ class SetCalendars extends StatefulWidget {
 
 class _SetCalendarsState extends State<SetCalendars> {
   DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedTimeFrom = TimeOfDay.now();
+  TimeOfDay _selectedTimeTo = TimeOfDay(
+    hour: TimeOfDay.now().hour + 1,
+    minute: TimeOfDay.now().minute,
+  );
 
   // Hàm reload dữ liệu (giả lập)
   Future<void> _refreshData() async {
@@ -124,7 +132,7 @@ class _SetCalendarsState extends State<SetCalendars> {
                             color: TColors.primary.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(32),
                           ),
-                          child: Image.asset(widget.icon, color: TColors.white),
+                          child: Image.asset(widget.icon),
                         ),
                         const SizedBox(width: TSizes.spaceBtwItems),
                         Expanded(
@@ -174,43 +182,200 @@ class _SetCalendarsState extends State<SetCalendars> {
                     ),
                   ),
                   const SizedBox(height: TSizes.spaceBtwSections),
-
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: () async {
-                        try {
-                          await WorkoutPlan().submitWorkoutPlan(
-                            widget.title,
-                            widget.subTitle,
-                            _selectedDate.toIso8601String(),
-                            exercise.sets,
-                            exercise.kcal,
-                            exercise.minutes,
-                          );
-
-                          showCustomSnackbar(
-                            'Success',
-                            'Added ${widget.title} to your calendar on ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                            type: SnackbarType.success,
-                          );
-                          Navigator.pop(context, true);
-                        } catch (e) {
-                          showCustomSnackbar(
-                            'Error',
-                            'Failed to add exercise: ${e.toString()}',
-                            type: SnackbarType.error,
-                          );
-                        }
-                      },
-                      child: const Text('Set to your calendar'),
-                    ),
+                  // Time picker UI - From and To
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Time to do',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: const Color(0xFF040415),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          // From Time Picker
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () async {
+                                final TimeOfDay? picked =
+                                    await showCustomTimePicker(
+                                      context: context,
+                                      initialTime: _selectedTimeFrom,
+                                    );
+                                if (picked != null &&
+                                    picked != _selectedTimeFrom) {
+                                  setState(() {
+                                    _selectedTimeFrom = picked;
+                                  });
+                                }
+                              },
+                              child: Container(
+                                width: 143, 
+                                height: 39,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: const Color(0xFFBFBFBF),
+                                    width: 1.5,
+                                  ),
+                                  borderRadius: BorderRadius.circular(34),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _selectedTimeFrom.format(context),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium?.copyWith(
+                                        color: const Color(0xFF7F7F7F),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Iconsax.timer_1,
+                                        size: 20,
+                                        color: Color(0xFF7F7F7F),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 9),
+                          // "to" text
+                          Text(
+                            'to',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: const Color(0xFF040415),
+                            ),
+                          ),
+                          const SizedBox(width: 9),
+                          // To Time Picker
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () async {
+                                final TimeOfDay? picked =
+                                    await showCustomTimePicker(
+                                      context: context,
+                                      initialTime: _selectedTimeTo,
+                                    );
+                                if (picked != null &&
+                                    picked != _selectedTimeTo) {
+                                  setState(() {
+                                    _selectedTimeTo = picked;
+                                  });
+                                }
+                              },
+                              child: Container(
+                                width: 143,
+                                height: 39,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: const Color(0xFFBFBFBF),
+                                    width: 1.5,
+                                  ),
+                                  borderRadius: BorderRadius.circular(34),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _selectedTimeTo.format(context),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium?.copyWith(
+                                        color: const Color(0xFF7F7F7F),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Iconsax.timer_1,
+                                        size: 20,
+                                        color: Color(0xFF7F7F7F),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ]),
               ),
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: TBottomNavigationBar(
+        label: 'Set Calendar',
+        onPressed: () async {
+          try {
+            // Combine selected date with selected start time
+            final DateTime scheduledDateTimeFrom = DateTime(
+              _selectedDate.year,
+              _selectedDate.month,
+              _selectedDate.day,
+              _selectedTimeFrom.hour,
+              _selectedTimeFrom.minute,
+            );
+
+            await WorkoutPlan().submitWorkoutPlan(
+              widget.title,
+              widget.subTitle,
+              scheduledDateTimeFrom.toIso8601String(),
+              exercise.sets,
+              exercise.kcal,
+              exercise.minutes,
+            );
+
+            showCustomSnackbar(
+              'Success',
+              'Added ${widget.title} to your calendar on ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year} from ${_selectedTimeFrom.format(context)} to ${_selectedTimeTo.format(context)}',
+              type: SnackbarType.success,
+            );
+            Navigator.pop(context, true);
+          } catch (e) {
+            showCustomSnackbar(
+              'Error',
+              'Failed to add exercise: ${e.toString()}',
+              type: SnackbarType.error,
+            );
+          }
+        },
       ),
     );
   }

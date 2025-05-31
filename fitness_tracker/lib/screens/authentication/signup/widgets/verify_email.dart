@@ -1,4 +1,5 @@
 import 'package:fitness_tracker/common/success_screen/success_screen.dart';
+import 'package:fitness_tracker/features/services/authentication_services/verifyEmailServices.dart';
 import 'package:fitness_tracker/screens/authentication/Login/login.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
@@ -7,11 +8,27 @@ import 'package:fitness_tracker/utils/helpers/helpers_function.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class VerifyEmail extends StatelessWidget {
+class VerifyEmail extends StatefulWidget {
   const VerifyEmail({super.key});
 
   @override
+  State<VerifyEmail> createState() => _VerifyEmailState();
+}
+
+class _VerifyEmailState extends State<VerifyEmail> {
+  Future<String> getEmail() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('email') ?? '';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getEmail();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -24,7 +41,7 @@ class VerifyEmail extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(TSizes.defaultSpace),
+          padding: const EdgeInsets.all(TSizes.defaultSpace),
           child: Column(
             children: [
               //Image
@@ -53,28 +70,22 @@ class VerifyEmail extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: TSizes.spaceBtwSections),
-
               // Buttons
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed:
-                      () => Get.to(
-                        () => SuccessScreen(
-                          image: Images.success,
-                          title: TTexts.yourAccountCreatedTitle,
-                          subTitle: TTexts.yourAccountCreatedSubtitle,
-                          onPressed: () => Get.to(() => const Login()),
-                        ),
-                      ),
+                  onPressed: () => Get.to(() => const Login()),
                   child: const Text(TTexts.iContinue),
                 ),
               ),
-              const SizedBox(height: TSizes.spaceBtwSections),
+              const SizedBox(height: TSizes.spaceBtwInputfields),
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await VerifyEmailServices().resendEmail(await getEmail());
+                    print('Resend email: ${await getEmail()}');
+                  },
                   child: const Text(TTexts.resendEmail),
                 ),
               ),

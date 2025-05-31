@@ -152,7 +152,7 @@ class _BMICardState extends State<BMICard> with SingleTickerProviderStateMixin {
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Color(0xFFE8B7FF).withOpacity(0.7),
+                                  color: const Color(0xFFE8B7FF).withOpacity(0.7),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
                                 ),
