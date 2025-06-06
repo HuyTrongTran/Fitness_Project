@@ -49,7 +49,7 @@ class LoginService {
           'username': user.email?.split('@').first ?? '',
           'password': "111111",
         };
-        print(userData);
+  
 
         await _syncUserToMongoDB(userData, idToken!, context);
         showCustomSnackbar(

@@ -14,6 +14,7 @@ class RunHistoryScreen extends StatefulWidget {
   const RunHistoryScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _RunHistoryScreenState createState() => _RunHistoryScreenState();
 }
 

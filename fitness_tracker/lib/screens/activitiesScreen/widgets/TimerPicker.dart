@@ -1,3 +1,4 @@
+import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class TimerPicker extends StatefulWidget {
@@ -11,6 +12,7 @@ class TimerPicker extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _TimerPickerState createState() => _TimerPickerState();
 }
 
@@ -45,31 +47,39 @@ class _TimerPickerState extends State<TimerPicker> {
   }
 
   void _scrollToInitialPositions() {
-    Future.delayed(Duration(milliseconds: 150), () {
+    // Use a slightly longer delay to ensure controllers are fully initialized
+    Future.delayed(Duration(milliseconds: 200), () {
       if (_hourController.hasClients &&
           _hourController.position.hasContentDimensions) {
         _hourController.animateTo(
           (_selectedHour - 1) * 50.0,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeOutCubic,
+          duration: Duration(milliseconds: 800),
+          curve: Curves.easeOutQuint,
         );
       }
-      if (_minuteController.hasClients &&
-          _minuteController.position.hasContentDimensions) {
-        _minuteController.animateTo(
-          _selectedMinute * 50.0,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeOutCubic,
-        );
-      }
-      if (_ampmController.hasClients &&
-          _ampmController.position.hasContentDimensions) {
-        _ampmController.animateTo(
-          _selectedAMPM * 50.0,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeOutCubic,
-        );
-      }
+
+      // Stagger the animations slightly for a smoother visual effect
+      Future.delayed(Duration(milliseconds: 50), () {
+        if (_minuteController.hasClients &&
+            _minuteController.position.hasContentDimensions) {
+          _minuteController.animateTo(
+            _selectedMinute * 50.0,
+            duration: Duration(milliseconds: 800),
+            curve: Curves.easeOutQuint,
+          );
+        }
+      });
+
+      Future.delayed(Duration(milliseconds: 100), () {
+        if (_ampmController.hasClients &&
+            _ampmController.position.hasContentDimensions) {
+          _ampmController.animateTo(
+            _selectedAMPM * 50.0,
+            duration: Duration(milliseconds: 800),
+            curve: Curves.easeOutQuint,
+          );
+        }
+      });
     });
   }
 
@@ -112,10 +122,10 @@ class _TimerPickerState extends State<TimerPicker> {
             right: 0,
             child: Container(
               height: 50,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 border: Border(
-                  top: BorderSide(color: const Color(0xFFBABABA), width: 1),
-                  bottom: BorderSide(color: const Color(0xFFBABABA), width: 1),
+                  top: BorderSide(color: Color(0xFFBABABA), width: 1),
+                  bottom: BorderSide(color: Color(0xFFBABABA), width: 1),
                 ),
               ),
             ),
@@ -174,25 +184,20 @@ class _TimerPickerState extends State<TimerPicker> {
                     onChanged(index);
                   },
                   child: AnimatedContainer(
-                    duration: Duration(milliseconds: 200),
+                    duration: const Duration(milliseconds: 200),
                     curve: Curves.easeInOut,
                     height: 50,
                     alignment: Alignment.center,
                     child: AnimatedOpacity(
-                      duration: Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 200),
                       opacity: isSelected ? 1.0 : 0.5,
                       child: AnimatedDefaultTextStyle(
-                        duration: Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 200),
                         curve: Curves.easeInOut,
-                        style: TextStyle(
-                          fontFamily: 'SF Pro',
-                          fontSize: 17,
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           fontWeight:
                               isSelected ? FontWeight.w500 : FontWeight.w400,
-                          color:
-                              isSelected
-                                  ? const Color(0xFF00487C)
-                                  : Colors.black,
+                          color: isSelected ? TColors.primary : Colors.black,
                         ),
                         child: Text(items[index]),
                       ),
@@ -235,7 +240,7 @@ class _TimerPickerState extends State<TimerPicker> {
       color: Colors.transparent,
       child: Container(
         width: 360,
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           color: const Color(0xFFE8E8E8),
           borderRadius: BorderRadius.circular(16),
@@ -264,9 +269,7 @@ class _TimerPickerState extends State<TimerPicker> {
                   Center(
                     child: Text(
                       'Pick a time',
-                      style: TextStyle(
-                        fontFamily: 'SF Pro',
-                        fontSize: 17,
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),

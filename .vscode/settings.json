@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/Study/Fitness_Project/fitness_tracker/linux"
+    "cmake.sourceDirectory": "D:/Study/Fitness_Project/fitness_tracker/linux",
+    "github.copilot.nextEditSuggestions.enabled": true
 }
