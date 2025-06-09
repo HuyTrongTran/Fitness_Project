@@ -36,19 +36,16 @@ class StartTrackingController {
           if (position.latitude == null || position.longitude == null) return;
 
           final LatLng newPoint = LatLng(position.latitude, position.longitude);
-          print("New position: ${position.latitude}, ${position.longitude}");
 
           onPointAdded(newPoint);
           onPositionUpdated(position);
           onDistanceUpdated(_calculateDistance(newPoint));
         },
         onError: (e) {
-          print("Position stream error: $e");
           showCustomSnackbar('Error', 'Location tracking failed.', type: SnackbarType.error);
         },
       );
     } catch (e) {
-      print("Error starting tracking: $e");
       showCustomSnackbar('Error', 'Failed to start tracking.', type: SnackbarType.error);
     }
   }

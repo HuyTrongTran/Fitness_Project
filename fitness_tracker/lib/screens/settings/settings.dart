@@ -3,6 +3,7 @@ import 'package:fitness_tracker/common/widgets/custome_shape/containers/primary_
 import 'package:fitness_tracker/common/widgets/texts/section_heading.dart';
 import 'package:fitness_tracker/screens/authentication/changePassword/change_password.dart';
 import 'package:fitness_tracker/screens/settings/bodyIndex.dart';
+import 'package:fitness_tracker/screens/settings/notification.dart';
 import 'package:fitness_tracker/screens/settings/widgets/setting_menu_title.dart';
 import 'package:fitness_tracker/screens/settings/widgets/user_profile_title.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
@@ -165,7 +166,14 @@ class Settings extends StatelessWidget {
                     icon: Iconsax.notification,
                     title: "Notifications",
                     subTitle: "Set notifications preferences",
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NotificationScreen(),
+                        ),
+                      );
+                    },
                   ),
                   SettingMenuTitle(
                     icon: Iconsax.key,
@@ -210,4 +218,3 @@ class Settings extends StatelessWidget {
     );
   }
 }
-
