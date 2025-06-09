@@ -199,7 +199,6 @@ lib/
 
 - **JWT Token Authentication** cho bảo mật API
 - **Mã hóa Mật khẩu** và lưu trữ bảo mật
-- **OAuth 2.0** cho đăng nhập mạng xã hội
 - **Xác thực Đầu vào** và làm sạch dữ liệu
 - **Giao tiếp API Bảo mật** với HTTPS
 
