@@ -79,7 +79,7 @@ Trước khi chạy ứng dụng này, đảm bảo bạn có:
 
 ### 1. Sao chép Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/HuyTrongTran/Fitness_Project.git
 cd fitness_tracker
 ```
 
@@ -239,7 +239,7 @@ lib/
 
 Để được hỗ trợ kỹ thuật hoặc có câu hỏi:
 - **Email:** fitness.app@support.com.vn
-- **Repository Dự án:** [GitHub Link]
+- **Repository Dự án:** https://github.com/HuyTrongTran/Fitness_Project.git
 - **Tài liệu API:** Có sẵn tại repository backend
 
 ## 📄 Giấy phép
