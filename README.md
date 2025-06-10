@@ -133,7 +133,7 @@ flutter run --release
 ### Tài khoản Demo
 ```
 Email: demo@fitnessapp.com
-Mật khẩu: demo123
+Mật khẩu: password123
 ```
 
 ## 📱 Hướng dẫn Sử dụng
