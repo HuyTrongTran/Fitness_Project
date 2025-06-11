@@ -1,5 +1,4 @@
-# Ứng dụng Theo dõi Sức khỏe - Flutter Application
-
+# Ứng dụng Theo dõi Sức khỏe - Fitness Tracking
 Ứng dụng theo dõi sức khỏe toàn diện được xây dựng trên nền tảng Flutter, giúp người dùng theo dõi sức khỏe, lập kế hoạch tập luyện, theo dõi tiến độ và nhận hướng dẫn thể dục thông minh từ AI. Được phát triển với các công nghệ hiện đại bao gồm xác thực Firebase, tích hợp Google Maps và Gemini AI cho việc huấn luyện thể dục thông minh.
 
 ## 📱 Tính năng
@@ -134,7 +133,7 @@ flutter run --release
 ### Tài khoản Demo
 ```
 Email: demo@fitnessapp.com
-Mật khẩu: demo123
+Mật khẩu: password123
 ```
 
 ## 📱 Hướng dẫn Sử dụng
