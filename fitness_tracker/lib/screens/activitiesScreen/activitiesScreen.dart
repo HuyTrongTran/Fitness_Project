@@ -8,7 +8,6 @@ import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class Activities extends StatefulWidget {
   const Activities({super.key});
@@ -39,7 +38,6 @@ class _ActivitiesState extends State<Activities> {
   }
 
   Future<List> fetchDataFromApi() async {
-    // TODO: Thay bằng API thực tế
     await Future.delayed(const Duration(seconds: 1));
     return [
       {"title": "Bicep", "desc": "Improve your Bicep"},

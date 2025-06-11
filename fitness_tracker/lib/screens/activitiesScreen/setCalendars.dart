@@ -4,7 +4,6 @@ import 'package:fitness_tracker/common/widgets/custome_shape/containers/primary_
 import 'package:fitness_tracker/common/widgets/custome_shape/custome_snackbar/customSnackbar.dart';
 import 'package:fitness_tracker/common/widgets/texts/section_heading.dart';
 import 'package:fitness_tracker/features/services/workout_plan/api_workout_plan.dart';
-
 import 'package:fitness_tracker/screens/activitiesScreen/widgets/calendar_widget.dart';
 import 'package:fitness_tracker/screens/activitiesScreen/widgets/exerciseWidget.dart';
 import 'package:fitness_tracker/screens/activitiesScreen/widgets/TimerPicker.dart';
@@ -26,6 +25,7 @@ class SetCalendars extends StatefulWidget {
   final String icon;
 
   @override
+  // ignore: library_private_types_in_public_api
   _SetCalendarsState createState() => _SetCalendarsState();
 }
 
@@ -43,6 +43,12 @@ class _SetCalendarsState extends State<SetCalendars> {
     await Future.delayed(const Duration(seconds: 1)); // Giả lập thời gian chờ
     setState(() {
       // Cập nhật lại giao diện nếu cần
+      _selectedDate = DateTime.now();
+      _selectedTimeFrom = TimeOfDay.now();
+      _selectedTimeTo = TimeOfDay(
+        hour: TimeOfDay.now().hour + 1,
+        minute: TimeOfDay.now().minute,
+      );
     });
   }
 
@@ -192,11 +198,11 @@ class _SetCalendarsState extends State<SetCalendars> {
                           context,
                         ).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: const Color(0xFF040415),
+                          fontSize: 14,
+                          color: Colors.black,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: TSizes.spaceBtwItems),
                       Row(
                         children: [
                           // From Time Picker
@@ -216,14 +222,21 @@ class _SetCalendarsState extends State<SetCalendars> {
                                 }
                               },
                               child: Container(
-                                width: 143, 
+                                width: 143,
                                 height: 39,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(
-                                    color: const Color(0xFFBFBFBF),
+                                    color: TColors.primary.withOpacity(0.2),
                                     width: 1.5,
                                   ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.1),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                    ),
+                                  ],
                                   borderRadius: BorderRadius.circular(34),
                                 ),
                                 child: Row(
@@ -234,7 +247,7 @@ class _SetCalendarsState extends State<SetCalendars> {
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodyMedium?.copyWith(
-                                        color: const Color(0xFF7F7F7F),
+                                        color: Colors.grey,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 14,
                                       ),
@@ -250,7 +263,7 @@ class _SetCalendarsState extends State<SetCalendars> {
                                       child: const Icon(
                                         Iconsax.timer_1,
                                         size: 20,
-                                        color: Color(0xFF7F7F7F),
+                                        color: Colors.grey,
                                       ),
                                     ),
                                   ],
@@ -258,7 +271,7 @@ class _SetCalendarsState extends State<SetCalendars> {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 9),
+                          const SizedBox(width: TSizes.spaceBtwItems),
                           // "to" text
                           Text(
                             'to',
@@ -293,9 +306,16 @@ class _SetCalendarsState extends State<SetCalendars> {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(
-                                    color: const Color(0xFFBFBFBF),
+                                    color: TColors.primary.withOpacity(0.2),
                                     width: 1.5,
                                   ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.1),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                    ),
+                                  ],
                                   borderRadius: BorderRadius.circular(34),
                                 ),
                                 child: Row(

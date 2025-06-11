@@ -97,11 +97,11 @@ Future<Map<String, dynamic>> recommendDailyTarget({
     date: today,
   );
 
-  // Log toàn bộ SharedPreferences
-  final allPrefs = prefs.getKeys();
-  for (final key in allPrefs) {
-    print('SharedPreferences: $key => ${prefs.get(key)}');
-  }
+  // // Log toàn bộ SharedPreferences
+  // final allPrefs = prefs.getKeys();
+  // for (final key in allPrefs) {
+  //   print('SharedPreferences: $key => ${prefs.get(key)}');
+  // }
 
   // Kiểm tra cache local (SharedPreferences) với try-catch
   final cachedData = prefs.getString(cacheKey);

@@ -1,7 +1,7 @@
 import 'package:fitness_tracker/features/services/home_services/recent_plan/suggestCheck.dart';
-import 'package:fitness_tracker/screens/authentication/signup/widgets/verify_email.dart';
 import 'package:fitness_tracker/screens/onboardingFeature/OnBoardingScreen/onboardingScreen.dart';
 import 'package:fitness_tracker/api/apiUrl.dart';
+import 'package:fitness_tracker/screens/password_configuration/passwordReset.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
@@ -80,6 +80,7 @@ class _LoginFormState extends State<LoginForm> {
 
     const String apiUrl = '${ApiConfig.baseUrl}/login';
 
+
     try {
       final response = await http
           .post(
@@ -102,10 +103,6 @@ class _LoginFormState extends State<LoginForm> {
       // Kiểm tra điều kiện đăng nhập thành công
       final token = responseData['data']?['token'];
 
-      if(response.statusCode == 401 &&
-          responseData['success'] == false){
-          Get.offAll(() => const VerifyEmail());
-      }
 
       if (response.statusCode == 200 &&
           responseData['success'] == true &&
@@ -126,13 +123,30 @@ class _LoginFormState extends State<LoginForm> {
 
         await _saveRememberMe();
 
+        if(responseData['data']['isVerified'] == false) {
+          // Navigate to Verify Email screen if not verified
+          Get.off(() => const ResetPassword());
+          return;
+        }
+
+        if(responseData['data']['needsPasswordReset'] == true) {
+          // Navigate to Reset Password screen if needed
+          Get.off(() => const ResetPassword());
+          return;
+        }
+        
+
+        // Navigate if needResetPassword is true
+        // if (needsPasswordReset == true) {
+        //   Get.off(() => const ResetPassword(), arguments: email);
+        //   return;
+        // }
         // Điều hướng dựa trên hasCompletedOnboarding
         if (hasCompletedOnboarding) {
           await checkAndNavigate(context);
         } else {
           Get.offAll(() => const OnboardingScreen());
         }
-      
       } else {
         setState(() {
           _showLoginError = true;
@@ -140,7 +154,6 @@ class _LoginFormState extends State<LoginForm> {
         });
       }
     } catch (e) {
-      print('Error occurred: $e');
       setState(() {
         _showLoginError = true;
         _formKey.currentState!.validate();
