@@ -42,7 +42,7 @@ class TTexts {
   static const String forgetPasswordTitle = "Forget password?";
   static const String forgetPasswordSubTitle =
       "Enter your email to reset your password";
-  static const String changePasswordTitle = "Password Resent Email Sent";
+  static const String changePasswordTitle = "New password has been sent to your email";
   static const String changePasswordSubTitle =
       "Your account security is our priority. We have sent a Secure link to Change your password. Check your email address.";
   static const String confirmEmail = "Verify your email address";

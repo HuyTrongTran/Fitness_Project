@@ -1,6 +1,5 @@
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class MonthYearPickerDialog {
   static Future<DateTime?> show(BuildContext context, DateTime initialDate) async {

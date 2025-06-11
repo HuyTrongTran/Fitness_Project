@@ -1,3 +1,4 @@
+import 'package:fitness_tracker/screens/authentication/Login/login.dart';
 import 'package:fitness_tracker/utils/constants/image_strings.dart';
 import 'package:fitness_tracker/utils/constants/sizes.dart';
 import 'package:fitness_tracker/utils/constants/text_strings.dart';
@@ -6,8 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ResetPassword extends StatelessWidget {
-  const ResetPassword({super.key});
+class TemporaryPasswordSent extends StatelessWidget {
+  const TemporaryPasswordSent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +23,10 @@ class ResetPassword extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(TSizes.defaultSpace),
+        padding: const EdgeInsets.all(TSizes.defaultSpace),
         child: Column(
           children: [
-            Image(image: AssetImage(Images.success), width: HelpersFunction.screenWidth() * 0.6),
+            Image(image: const AssetImage(Images.success), width: HelpersFunction.screenWidth() * 0.6),
               const SizedBox(height: TSizes.spaceBtwSections),
 
               //Title & Subtitle
@@ -46,7 +47,7 @@ class ResetPassword extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => Get.to(() => const()),
+                  onPressed: () => Get.to(() => const Login()),
                   child: const Text(TTexts.iContinue),
                 ),
               ),
