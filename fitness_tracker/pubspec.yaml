@@ -62,6 +62,7 @@ flutter:
     - assets/onboardingImages/
     - assets/icons/logos/
     - assets/icons/location/
+    - assets/icons/app_icons/food_icons/nutrition_icons/
     - assets/animations/
     - assets/categories/
     - assets/slider_images/

@@ -200,11 +200,7 @@ Please suggest a complete daily nutrition menu suitable for Asian people (especi
 - Rice/noodle/pho portions suitable for Asian eating culture
 
 **IMPORTANT FOR IMAGES:**
-- Use REAL image URLs of the actual Vietnamese dishes
-- For Phở: use real pho bowl images
-- For Cơm: use real Vietnamese rice dish images  
-- For Bún: use real Vietnamese noodle images
-- For Vietnamese snacks: use real Vietnamese dessert images
+- Use REAL image URLs on website
 
 **Return format (return only JSON, no additional explanation):**
 {
@@ -454,30 +450,30 @@ DailyFoodPlan parseAIResponse(String response) {
 
 /// Function to get reliable food image URL
 String getReliableFoodImageUrl(String foodName, String mealType) {
-  // Map of reliable food images from Unsplash
+  // Map of reliable food images with stable URLs
   final Map<String, String> foodImages = {
     'pho':
-        'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=300&fit=crop&q=80',
+        'https://cdn.tgdd.vn/Files/2017/05/10/980838/cach-nau-pho-ga-thom-ngon-chuan-vi-ha-noi-tai-nha-202201101114052418.jpg',
     'com_tam':
-        'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500&h=300&fit=crop&q=80',
+        'https://sunhouse.com.vn/pic/news/images/7-cach-nau-com-tam-bang-noi-com-dien.jpg',
     'bun_bo':
-        'https://images.unsplash.com/photo-1559847844-d721426d6edc?w=500&h=300&fit=crop&q=80',
+        'https://i2.ex-cdn.com/crystalbay.com/files/content/2024/08/15/bun-bo-hue-2-0933.jpg',
     'banh_mi':
-        'https://images.unsplash.com/photo-1598511726623-d2e9996892f0?w=500&h=300&fit=crop&q=80',
+        'https://cdn.tgdd.vn/Files/2021/08/20/1376583/cach-lam-banh-mi-thit-nuong-cuc-don-gian-bang-chai-nhua-co-san-tai-nha-202108201640593483.jpg',
     'rice':
-        'https://images.unsplash.com/photo-1516684732162-798a0062be99?w=500&h=300&fit=crop&q=80',
+        'https://cdn.tgdd.vn/Files/2020/03/18/1246611/cach-nau-com-ngon-bang-noi-com-dien-don-gian-ma-hieu-qua-202003181444515871.jpg',
     'noodles':
-        'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=500&h=300&fit=crop&q=80',
+        'https://cdn.tgdd.vn/Files/2020/09/14/1287659/cach-lam-bun-rieu-cua-dong-chuan-vi-mien-bac-thom-ngon-202009141411451094.jpg',
     'soup':
-        'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500&h=300&fit=crop&q=80',
+        'https://cdn.tgdd.vn/Files/2021/01/26/1319624/cach-nau-canh-chua-ca-bong-lau-ngon-chua-cay-202101261053145562.jpg',
     'vietnamese_food':
-        'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=500&h=300&fit=crop&q=80',
+        'https://cdn.tgdd.vn/Files/2022/03/30/1420742/tong-hop-45-mon-an-truyen-thong-viet-nam-noi-tieng-nhat-ma-ban-nen-thu-202203300133261524.jpg',
     'spring_rolls':
-        'https://images.unsplash.com/photo-1563379091339-03246963d96a?w=500&h=300&fit=crop&q=80',
+        'https://cdn.tgdd.vn/Files/2019/09/03/1195348/cach-lam-goi-cuon-tom-thit-chuan-vi-mien-nam-202109031604003140.jpg',
     'fried_rice':
-        'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500&h=300&fit=crop&q=80',
+        'https://cdn.tgdd.vn/Files/2020/06/30/1268870/bi-quyet-lam-com-chien-duong-chau-ngon-chuan-vi-trung-hoa-202006301421139734.jpg',
     'default':
-        'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=500&h=300&fit=crop&q=80',
+        'https://cdn.tgdd.vn/Files/2022/03/30/1420742/tong-hop-45-mon-an-truyen-thong-viet-nam-noi-tieng-nhat-ma-ban-nen-thu-202203300133261524.jpg',
   };
 
   // Try to match food name with available images

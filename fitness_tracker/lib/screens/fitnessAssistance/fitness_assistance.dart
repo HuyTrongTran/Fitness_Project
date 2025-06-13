@@ -1,5 +1,6 @@
 import 'package:fitness_tracker/features/services/fitbot_assitance/mongo_service.dart';
 import 'package:fitness_tracker/utils/constants/colors.dart';
+import 'package:fitness_tracker/screens/foodSuggestion/foodSuggestion.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/screens/fitnessAssistance/widgets/chat/chat_message.dart';
 import 'package:fitness_tracker/screens/fitnessAssistance/widgets/chat/chat_input.dart';
@@ -117,6 +118,63 @@ class _FitnessAssistanceState extends State<FitnessAssistance> {
         child: Column(
           children: [
             const ChatHeader(),
+            // Quick Actions Section
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey[200]!, width: 1),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Quick Actions',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      _buildQuickActionButton(
+                        context,
+                        icon: Icons.restaurant,
+                        label: 'Suggest food',
+                        color: Colors.orange,
+                        onTap: () {
+                          
+                        },
+                      ),
+                      const SizedBox(width: 12),
+                      _buildQuickActionButton(
+                        context,
+                        icon: Icons.fitness_center,
+                        label: 'Workout',
+                        color: Colors.blue,
+                        onTap: () {
+                          _sendMessage('Gợi ý bài tập phù hợp cho tôi');
+                        },
+                      ),
+                      const SizedBox(width: 12),
+                      _buildQuickActionButton(
+                        context,
+                        icon: Icons.health_and_safety,
+                        label: 'Health',
+                        color: Colors.green,
+                        onTap: () {
+                          _sendMessage('Tư vấn về sức khỏe và dinh dưỡng');
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             Expanded(
               child: NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification scrollInfo) {
@@ -161,6 +219,46 @@ class _FitnessAssistanceState extends State<FitnessAssistance> {
               controller: _messageController,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickActionButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: color.withOpacity(0.3), width: 1),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 20),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ),
     );

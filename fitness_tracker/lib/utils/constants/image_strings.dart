@@ -77,4 +77,11 @@ class Images {
   static const String stepsIcon = "assets/backgrounds/suggest/icons/step.png";
   static const String caloriesIcon = "assets/backgrounds/suggest/icons/cal.png";
   static const String waterIcon = "assets/backgrounds/suggest/icons/water.png";
+
+
+  // Food Suggestion Images
+  static const String caloriesFood = "assets/icons/app_icons/food_icons/nutrion_icons/Calories-Icon.png";
+  static const String proteinFood = "assets/icons/app_icons/food_icons/nutrion_icons/Proteins-Icon.png";
+  static const String carbsFood = "assets/icons/app_icons/food_icons/nutrion_icons/Carbo-Icon.png";
+  static const String fatFood = "assets/icons/app_icons/food_icons/nutrion_icons/trans-fat.png";
 }

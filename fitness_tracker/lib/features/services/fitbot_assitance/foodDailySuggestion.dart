@@ -26,11 +26,7 @@ class CookingStep {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'step_number': stepNumber,
-      'instruction': instruction,
-      '_id': id,
-    };
+    return {'step_number': stepNumber, 'instruction': instruction, '_id': id};
   }
 }
 
@@ -75,9 +71,10 @@ class FoodSuggestion {
       fat: (json['fat'] ?? 0.0).toDouble(),
       carbs: (json['carbs'] ?? 0.0).toDouble(),
       ingredients: List<String>.from(json['ingredients'] ?? []),
-      steps: (json['steps'] as List<dynamic>? ?? [])
-          .map((step) => CookingStep.fromJson(step))
-          .toList(),
+      steps:
+          (json['steps'] as List<dynamic>? ?? [])
+              .map((step) => CookingStep.fromJson(step))
+              .toList(),
       mealType: json['mealType'] ?? 'breakfast',
       difficultyLevel: json['difficultyLevel'] ?? 'easy',
     );
@@ -355,67 +352,87 @@ DailyFoodPlan parseAIResponse(String response) {
 
     // Parse the response and ensure reliable images
     final plan = DailyFoodPlan.fromJson(jsonData);
-    
+
     // Update images with reliable URLs
-    final updatedBreakfast = plan.breakfast.map((food) => FoodSuggestion(
-      title: food.title,
-      description: food.description,
-      image: getReliableFoodImageUrl(food.title, food.mealType),
-      supportFor: food.supportFor,
-      calories: food.calories,
-      protein: food.protein,
-      fat: food.fat,
-      carbs: food.carbs,
-      ingredients: food.ingredients,
-      steps: food.steps,
-      mealType: food.mealType,
-      difficultyLevel: food.difficultyLevel,
-    )).toList();
+    final updatedBreakfast =
+        plan.breakfast
+            .map(
+              (food) => FoodSuggestion(
+                title: food.title,
+                description: food.description,
+                image: getReliableFoodImageUrl(food.title, food.mealType),
+                supportFor: food.supportFor,
+                calories: food.calories,
+                protein: food.protein,
+                fat: food.fat,
+                carbs: food.carbs,
+                ingredients: food.ingredients,
+                steps: food.steps,
+                mealType: food.mealType,
+                difficultyLevel: food.difficultyLevel,
+              ),
+            )
+            .toList();
 
-    final updatedLunch = plan.lunch.map((food) => FoodSuggestion(
-      title: food.title,
-      description: food.description,
-      image: getReliableFoodImageUrl(food.title, food.mealType),
-      supportFor: food.supportFor,
-      calories: food.calories,
-      protein: food.protein,
-      fat: food.fat,
-      carbs: food.carbs,
-      ingredients: food.ingredients,
-      steps: food.steps,
-      mealType: food.mealType,
-      difficultyLevel: food.difficultyLevel,
-    )).toList();
+    final updatedLunch =
+        plan.lunch
+            .map(
+              (food) => FoodSuggestion(
+                title: food.title,
+                description: food.description,
+                image: getReliableFoodImageUrl(food.title, food.mealType),
+                supportFor: food.supportFor,
+                calories: food.calories,
+                protein: food.protein,
+                fat: food.fat,
+                carbs: food.carbs,
+                ingredients: food.ingredients,
+                steps: food.steps,
+                mealType: food.mealType,
+                difficultyLevel: food.difficultyLevel,
+              ),
+            )
+            .toList();
 
-    final updatedDinner = plan.dinner.map((food) => FoodSuggestion(
-      title: food.title,
-      description: food.description,
-      image: getReliableFoodImageUrl(food.title, food.mealType),
-      supportFor: food.supportFor,
-      calories: food.calories,
-      protein: food.protein,
-      fat: food.fat,
-      carbs: food.carbs,
-      ingredients: food.ingredients,
-      steps: food.steps,
-      mealType: food.mealType,
-      difficultyLevel: food.difficultyLevel,
-    )).toList();
+    final updatedDinner =
+        plan.dinner
+            .map(
+              (food) => FoodSuggestion(
+                title: food.title,
+                description: food.description,
+                image: getReliableFoodImageUrl(food.title, food.mealType),
+                supportFor: food.supportFor,
+                calories: food.calories,
+                protein: food.protein,
+                fat: food.fat,
+                carbs: food.carbs,
+                ingredients: food.ingredients,
+                steps: food.steps,
+                mealType: food.mealType,
+                difficultyLevel: food.difficultyLevel,
+              ),
+            )
+            .toList();
 
-    final updatedSnacks = plan.snacks.map((food) => FoodSuggestion(
-      title: food.title,
-      description: food.description,
-      image: getReliableFoodImageUrl(food.title, food.mealType),
-      supportFor: food.supportFor,
-      calories: food.calories,
-      protein: food.protein,
-      fat: food.fat,
-      carbs: food.carbs,
-      ingredients: food.ingredients,
-      steps: food.steps,
-      mealType: food.mealType,
-      difficultyLevel: food.difficultyLevel,
-    )).toList();
+    final updatedSnacks =
+        plan.snacks
+            .map(
+              (food) => FoodSuggestion(
+                title: food.title,
+                description: food.description,
+                image: getReliableFoodImageUrl(food.title, food.mealType),
+                supportFor: food.supportFor,
+                calories: food.calories,
+                protein: food.protein,
+                fat: food.fat,
+                carbs: food.carbs,
+                ingredients: food.ingredients,
+                steps: food.steps,
+                mealType: food.mealType,
+                difficultyLevel: food.difficultyLevel,
+              ),
+            )
+            .toList();
 
     return DailyFoodPlan(
       breakfast: updatedBreakfast,
@@ -429,7 +446,7 @@ DailyFoodPlan parseAIResponse(String response) {
     );
   } catch (e) {
     debugPrint('Error parsing AI response: $e');
-    
+
     // Return default plan if parsing fails
     return _getDefaultFoodPlan();
   }
@@ -437,44 +454,60 @@ DailyFoodPlan parseAIResponse(String response) {
 
 /// Function to get reliable food image URL
 String getReliableFoodImageUrl(String foodName, String mealType) {
-  // Map of reliable food images from Unsplash
+  // Map of reliable food images with stable URLs
   final Map<String, String> foodImages = {
-    'pho': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=300&fit=crop&q=80',
-    'com_tam': 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500&h=300&fit=crop&q=80',
-    'bun_bo': 'https://images.unsplash.com/photo-1559847844-d721426d6edc?w=500&h=300&fit=crop&q=80',
-    'banh_mi': 'https://images.unsplash.com/photo-1598511726623-d2e9996892f0?w=500&h=300&fit=crop&q=80',
-    'rice': 'https://images.unsplash.com/photo-1516684732162-798a0062be99?w=500&h=300&fit=crop&q=80',
-    'noodles': 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=500&h=300&fit=crop&q=80',
-    'soup': 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500&h=300&fit=crop&q=80',
-    'vietnamese_food': 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=500&h=300&fit=crop&q=80',
-    'spring_rolls': 'https://images.unsplash.com/photo-1563379091339-03246963d96a?w=500&h=300&fit=crop&q=80',
-    'fried_rice': 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500&h=300&fit=crop&q=80',
-    'default': 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=500&h=300&fit=crop&q=80',
+    'pho':
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsln1DDCYMtfnpPU-wGUii1rYP9XEjlJPNCw&s',
+    'com_tam':
+        'https://sunhouse.com.vn/pic/news/images/7-cach-nau-com-tam-bang-noi-com-dien.jpg',
+    'bun_bo':
+        'https://www.shutterstock.com/image-photo/hue-beef-noodle-authentic-traditional-600nw-2554158773.jpg',
+    'banh_mi':
+        'https://cdn.tgdd.vn/Files/2021/08/20/1376583/cach-lam-banh-mi-thit-nuong-cuc-don-gian-bang-chai-nhua-co-san-tai-nha-202108201640593483.jpg',
+    'rice':
+        'https://cdn.tgdd.vn/Files/2020/03/18/1246611/cach-nau-com-ngon-bang-noi-com-dien-don-gian-ma-hieu-qua-202003181444515871.jpg',
+    'noodles':
+        'https://www.allrecipes.com/thmb/K0rliBG9KK5j3TCNxZgF5XoAY-s=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/270770-garlic-noodles-ddmfs-4x3-0189-95ad30c68efd42e592a70ec82d24f0b9.jpg',
+    'soup':
+        'https://images.getrecipekit.com/20241001155039-untitled-20-10.png?aspect_ratio=16:9&quality=90&',
+    'vietnamese_food':
+        'https://assets.vogue.com/photos/5a3aac8f0193fe386b1e3898/master/w_2560%2Cc_limit/vietnamese-food-holding.jpg',
+    'spring_rolls':
+        'https://www.maggi.co.uk/sites/default/files/srh_recipes/2058a74f39245e0065743463242b5f91.jpg',
+    'fried_rice':
+        'https://i.ytimg.com/vi/FR4DH5sSysI/maxresdefault.jpg',
+    'default':
+        'https://img.freepik.com/free-vector/food-cooking-graphic-illustration_53876-9120.jpg',
   };
-
   // Try to match food name with available images
   final lowerFoodName = foodName.toLowerCase();
-  
+
   if (lowerFoodName.contains('phở') || lowerFoodName.contains('pho')) {
     return foodImages['pho']!;
-  } else if (lowerFoodName.contains('cơm tấm') || lowerFoodName.contains('com tam')) {
+  } else if (lowerFoodName.contains('cơm tấm') ||
+      lowerFoodName.contains('com tam')) {
     return foodImages['com_tam']!;
-  } else if (lowerFoodName.contains('bún bò') || lowerFoodName.contains('bun bo')) {
+  } else if (lowerFoodName.contains('bún bò') ||
+      lowerFoodName.contains('bun bo')) {
     return foodImages['bun_bo']!;
-  } else if (lowerFoodName.contains('bánh mì') || lowerFoodName.contains('banh mi')) {
+  } else if (lowerFoodName.contains('bánh mì') ||
+      lowerFoodName.contains('banh mi')) {
     return foodImages['banh_mi']!;
   } else if (lowerFoodName.contains('cơm') || lowerFoodName.contains('rice')) {
     return foodImages['rice']!;
-  } else if (lowerFoodName.contains('bún') || lowerFoodName.contains('noodle')) {
+  } else if (lowerFoodName.contains('bún') ||
+      lowerFoodName.contains('noodle')) {
     return foodImages['noodles']!;
   } else if (lowerFoodName.contains('soup') || lowerFoodName.contains('canh')) {
     return foodImages['soup']!;
-  } else if (lowerFoodName.contains('spring roll') || lowerFoodName.contains('gỏi cuốn')) {
+  } else if (lowerFoodName.contains('spring roll') ||
+      lowerFoodName.contains('gỏi cuốn')) {
     return foodImages['spring_rolls']!;
-  } else if (lowerFoodName.contains('fried rice') || lowerFoodName.contains('cơm chiên')) {
+  } else if (lowerFoodName.contains('fried rice') ||
+      lowerFoodName.contains('cơm chiên')) {
     return foodImages['fried_rice']!;
   }
-  
+
   return foodImages['default']!;
 }
 
@@ -484,7 +517,8 @@ DailyFoodPlan _getDefaultFoodPlan() {
     breakfast: [
       FoodSuggestion(
         title: 'Phở gà',
-        description: 'Traditional Vietnamese chicken noodle soup, rich in protein and low in fat. Perfect for weight management and muscle building with balanced carbohydrates from rice noodles.',
+        description:
+            'Traditional Vietnamese chicken noodle soup, rich in protein and low in fat. Perfect for weight management and muscle building with balanced carbohydrates from rice noodles.',
         image: getReliableFoodImageUrl('Phở gà', 'breakfast'),
         supportFor: 'Weight loss and muscle building',
         calories: 320,
@@ -503,22 +537,26 @@ DailyFoodPlan _getDefaultFoodPlan() {
         steps: [
           CookingStep(
             stepNumber: 1,
-            instruction: 'Boil chicken breast with ginger for 20 minutes until fully cooked, then remove and slice thinly.',
+            instruction:
+                'Boil chicken breast with ginger for 20 minutes until fully cooked, then remove and slice thinly.',
             id: 'pho_step_1',
           ),
           CookingStep(
             stepNumber: 2,
-            instruction: 'Soak rice noodles in hot water for 10 minutes until soft, then drain.',
+            instruction:
+                'Soak rice noodles in hot water for 10 minutes until soft, then drain.',
             id: 'pho_step_2',
           ),
           CookingStep(
             stepNumber: 3,
-            instruction: 'Heat the chicken broth, season with fish sauce and a pinch of salt.',
+            instruction:
+                'Heat the chicken broth, season with fish sauce and a pinch of salt.',
             id: 'pho_step_3',
           ),
           CookingStep(
             stepNumber: 4,
-            instruction: 'Place noodles in bowl, add sliced chicken, pour hot broth over, garnish with green onions and cilantro.',
+            instruction:
+                'Place noodles in bowl, add sliced chicken, pour hot broth over, garnish with green onions and cilantro.',
             id: 'pho_step_4',
           ),
         ],
@@ -527,8 +565,10 @@ DailyFoodPlan _getDefaultFoodPlan() {
       ),
     ],
     lunch: [
-      FoodSuggestion(        title: 'Cơm tấm sườn nướng',
-        description: 'Grilled pork ribs with broken rice, providing high protein for muscle building and energy for workouts. Served with fresh vegetables for balanced nutrition.',
+      FoodSuggestion(
+        title: 'Cơm tấm sườn nướng',
+        description:
+            'Grilled pork ribs with broken rice, providing high protein for muscle building and energy for workouts. Served with fresh vegetables for balanced nutrition.',
         image: getReliableFoodImageUrl('Cơm tấm sườn nướng', 'lunch'),
         supportFor: 'Muscle building and weight management',
         calories: 450,
@@ -547,22 +587,26 @@ DailyFoodPlan _getDefaultFoodPlan() {
         steps: [
           CookingStep(
             stepNumber: 1,
-            instruction: 'Marinate pork ribs with minced lemongrass, garlic, and fish sauce for 30 minutes.',
+            instruction:
+                'Marinate pork ribs with minced lemongrass, garlic, and fish sauce for 30 minutes.',
             id: 'com_tam_step_1',
           ),
           CookingStep(
             stepNumber: 2,
-            instruction: 'Grill ribs over medium heat for 15-20 minutes, turning occasionally until golden brown.',
+            instruction:
+                'Grill ribs over medium heat for 15-20 minutes, turning occasionally until golden brown.',
             id: 'com_tam_step_2',
           ),
           CookingStep(
             stepNumber: 3,
-            instruction: 'Cook broken rice in rice cooker with 1:1.2 ratio of rice to water.',
+            instruction:
+                'Cook broken rice in rice cooker with 1:1.2 ratio of rice to water.',
             id: 'com_tam_step_3',
           ),
           CookingStep(
             stepNumber: 4,
-            instruction: 'Fry egg sunny-side up and serve rice with grilled ribs, fried egg, and pickled vegetables.',
+            instruction:
+                'Fry egg sunny-side up and serve rice with grilled ribs, fried egg, and pickled vegetables.',
             id: 'com_tam_step_4',
           ),
         ],
@@ -571,8 +615,10 @@ DailyFoodPlan _getDefaultFoodPlan() {
       ),
     ],
     dinner: [
-      FoodSuggestion(        title: 'Bún bò Huế',
-        description: 'Spicy beef noodle soup from Hue, rich in protein and moderate in calories. The spices boost metabolism and the broth provides hydration and nutrients.',
+      FoodSuggestion(
+        title: 'Bún bò Huế',
+        description:
+            'Spicy beef noodle soup from Hue, rich in protein and moderate in calories. The spices boost metabolism and the broth provides hydration and nutrients.',
         image: getReliableFoodImageUrl('Bún bò Huế', 'dinner'),
         supportFor: 'Weight loss and metabolism boost',
         calories: 380,
@@ -591,22 +637,26 @@ DailyFoodPlan _getDefaultFoodPlan() {
         steps: [
           CookingStep(
             stepNumber: 1,
-            instruction: 'Boil beef shank with lemongrass for 1.5 hours until tender, then slice thinly.',
+            instruction:
+                'Boil beef shank with lemongrass for 1.5 hours until tender, then slice thinly.',
             id: 'bun_bo_step_1',
           ),
           CookingStep(
             stepNumber: 2,
-            instruction: 'Season the broth with shrimp paste, chili oil, and salt to taste.',
+            instruction:
+                'Season the broth with shrimp paste, chili oil, and salt to taste.',
             id: 'bun_bo_step_2',
           ),
           CookingStep(
             stepNumber: 3,
-            instruction: 'Boil round noodles for 8-10 minutes until tender, then rinse with cold water.',
+            instruction:
+                'Boil round noodles for 8-10 minutes until tender, then rinse with cold water.',
             id: 'bun_bo_step_3',
           ),
           CookingStep(
             stepNumber: 4,
-            instruction: 'Serve noodles in bowl with beef slices, pour hot broth over, garnish with fresh herbs and lime.',
+            instruction:
+                'Serve noodles in bowl with beef slices, pour hot broth over, garnish with fresh herbs and lime.',
             id: 'bun_bo_step_4',
           ),
         ],
@@ -615,8 +665,10 @@ DailyFoodPlan _getDefaultFoodPlan() {
       ),
     ],
     snacks: [
-      FoodSuggestion(        title: 'Bánh mì thịt nướng',
-        description: 'Vietnamese grilled pork sandwich with fresh vegetables, providing lean protein and fiber. A healthy, portable snack option for active lifestyle.',
+      FoodSuggestion(
+        title: 'Bánh mì thịt nướng',
+        description:
+            'Vietnamese grilled pork sandwich with fresh vegetables, providing lean protein and fiber. A healthy, portable snack option for active lifestyle.',
         image: getReliableFoodImageUrl('Bánh mì thịt nướng', 'snack'),
         supportFor: 'Healthy snacking and protein boost',
         calories: 150,
@@ -633,17 +685,20 @@ DailyFoodPlan _getDefaultFoodPlan() {
         steps: [
           CookingStep(
             stepNumber: 1,
-            instruction: 'Grill marinated pork slices for 8-10 minutes until cooked through and slightly charred.',
+            instruction:
+                'Grill marinated pork slices for 8-10 minutes until cooked through and slightly charred.',
             id: 'banh_mi_step_1',
           ),
           CookingStep(
             stepNumber: 2,
-            instruction: 'Cut baguette lengthwise, remove some of the bread inside to reduce calories.',
+            instruction:
+                'Cut baguette lengthwise, remove some of the bread inside to reduce calories.',
             id: 'banh_mi_step_2',
           ),
           CookingStep(
             stepNumber: 3,
-            instruction: 'Fill bread with grilled pork, pickled carrots, cucumber slices, and fresh cilantro.',
+            instruction:
+                'Fill bread with grilled pork, pickled carrots, cucumber slices, and fresh cilantro.',
             id: 'banh_mi_step_3',
           ),
         ],
@@ -656,6 +711,18 @@ DailyFoodPlan _getDefaultFoodPlan() {
     totalFat: 37.0,
     totalCarbs: 148.0,
   );
+}
+
+// Clear all food image caches to force reload with new URLs
+Future<void> clearFoodImageCache() async {
+  final prefs = await SharedPreferences.getInstance();
+  final keys = prefs.getKeys().where((key) => key.startsWith('food_')).toList();
+
+  for (final key in keys) {
+    await prefs.remove(key);
+  }
+
+  debugPrint('Cleared ${keys.length} food cache entries');
 }
 
 // Get the recommend food daily suggestion from AI the food daily suggestion include image, name, calories, protein, fat, and got the step to do it
@@ -678,7 +745,10 @@ Future<DailyFoodPlan> getFoodDailySuggestion({
   // Round numbers before building cache key
   final roundedWeight = roundDouble(weight, 1);
   final roundedHeight = roundDouble(height, 1);
-  final roundedBmi = roundDouble(bmi, 1);  // Log profile info safely without sensitive data
+  final roundedBmi = roundDouble(
+    bmi,
+    1,
+  ); // Log profile info safely without sensitive data
   debugPrint('Food suggestion requested for user profile');
 
   final cacheKey = buildCacheKey(
@@ -697,13 +767,15 @@ Future<DailyFoodPlan> getFoodDailySuggestion({
       final cacheMap = jsonDecode(cachedData);
       final expire = cacheMap['expire'] as int?;
       final now = DateTime.now().millisecondsSinceEpoch;
-      if (expire != null && expire > now) {        // Not expired, return cache
+      if (expire != null && expire > now) {
+        // Not expired, return cache
         debugPrint('Food suggestion retrieved from cache');
         return DailyFoodPlan.fromJson(cacheMap['data']);
       } else {
         // Expired, remove old cache
         await prefs.remove('food_$cacheKey');
-      }    } catch (e) {
+      }
+    } catch (e) {
       debugPrint('Error parsing food cache: $e');
       await prefs.remove('food_$cacheKey');
     }
@@ -722,7 +794,8 @@ Future<DailyFoodPlan> getFoodDailySuggestion({
       activityLevel: activityLevel,
       allergies: allergies,
       preferences: preferences,
-    );    final response = await chatService.getFitnessResponse(
+    );
+    final response = await chatService.getFitnessResponse(
       prompt,
       shouldSaveLog: false,
       userProfile: userProfile,
@@ -738,11 +811,36 @@ Future<DailyFoodPlan> getFoodDailySuggestion({
       'expire': getExpireTimestamp(),
       'data': foodPlan.toJson(),
     };
-    await prefs.setString('food_$cacheKey', jsonEncode(cacheMap));    debugPrint('AI food suggestion success: ${foodPlan.totalCalories} calories');
+    await prefs.setString('food_$cacheKey', jsonEncode(cacheMap));
+    debugPrint(
+      'AI food suggestion success: ${foodPlan.totalCalories} calories',
+    );
     return foodPlan;
   } catch (e) {
     debugPrint('Error calling AI food suggestion: $e');
     // Return default plan if AI fails
     return _getDefaultFoodPlan();
   }
+}
+
+/// Test all food image URLs to ensure they work
+Future<void> testFoodImageUrls() async {
+  final Map<String, String> testUrls = {
+    'Phở gà': getReliableFoodImageUrl('Phở gà', 'breakfast'),
+    'Cơm tấm sườn nướng': getReliableFoodImageUrl(
+      'Cơm tấm sườn nướng',
+      'lunch',
+    ),
+    'Bún bò Huế': getReliableFoodImageUrl('Bún bò Huế', 'dinner'),
+    'Bánh mì thịt nướng': getReliableFoodImageUrl(
+      'Bánh mì thịt nướng',
+      'snack',
+    ),
+    'Vietnamese food': getReliableFoodImageUrl('Vietnamese food', 'default'),
+  };
+
+  debugPrint('Testing food image URLs:');
+  testUrls.forEach((food, url) {
+    debugPrint('$food: $url');
+  });
 }
